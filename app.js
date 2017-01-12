@@ -7,7 +7,7 @@ var AV = require('leanengine');
 
 var index = require('./routes/index');
 var users = require('./routes/app/users');
-//var todos = require('./routes/app/');
+var topic = require('./routes/app/topic');
 
 var app = express();
 
@@ -37,6 +37,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // 可以将一类的路由单独保存在一个文件中
 app.use('/', index);
 app.use('/users', users);
+app.use('/topic', topic);
 
 
 // 如果任何路由都没匹配到，则认为 404

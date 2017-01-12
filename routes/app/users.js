@@ -34,4 +34,9 @@ router.get('/reg',function(req, res, next) {
   res.render('users/reg', { title: "博士直通车" });
 })
 
+router.get('/forget',function(req, res, next) {
+  res.render('users/forget');
+
+})
+
 module.exports = router;
