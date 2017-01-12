@@ -1,15 +1,18 @@
 var express = require('express');
 var path = require('path');
+var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override')
 var AV = require('leanengine');
 
-var users = require('./routes/users');
-//var todos = require('./routes/todos');
+var index = require('./routes/index');
+var users = require('./routes/app/users');
+//var todos = require('./routes/app/');
 
 var app = express();
 
 // view engine setup
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
@@ -32,12 +35,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // 可以将一类的路由单独保存在一个文件中
-//app.use('/todos', todos);
+app.use('/', index);
 app.use('/users', users);
 
-app.get('/', function(req, res) {
-  res.redirect('/index');
-})
 
 // 如果任何路由都没匹配到，则认为 404
 // 生成一个异常让后面的 err handler 捕获

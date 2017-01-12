@@ -5,7 +5,6 @@ var AV = require('leanengine');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-//  res.send('respond with a resource');
   res.render('users/index');
 });
 
@@ -32,7 +31,7 @@ router.post('/login',function(req, res, next) {
 });
 
 router.get('/reg',function(req, res, next) {
-  res.render('users/reg');
+  res.render('users/reg', { title: "博士直通车" });
 })
 
 module.exports = router;
