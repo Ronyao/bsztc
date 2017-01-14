@@ -2,7 +2,9 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
-var methodOverride = require('method-override')
+var methodOverride = require('method-override');
+var http = require('http');
+var url = require('url');
 var AV = require('leanengine');
 
 var index = require('./routes/index');
@@ -34,11 +36,31 @@ app.use(methodOverride('_method'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(function (req, res, next) {
+  if (req.currentUser) {  // 判断用户是否登录
+    next();
+  } else {
+    // 解析用户请求的路径
+    var arr = req.url.split('/');
+    // 去除 GET 请求路径上携带的参数
+    for (var i = 0, length = arr.length; i < length; i++) {
+      arr[i] = arr[i].split('?')[0];
+    }
+    // 判断请求路径是否为根、登录、注册、登出，如果是不做拦截
+    if (arr.length > 1 && arr[1] == '') {
+      next();
+    } else if (arr.length > 2 && arr[1] == 'users' && (arr[2] == 'register' || arr[2] == 'login' || arr[2] == 'logout')) {
+      next();
+    } else {  // 登录拦截
+      res.redirect('/users/login');  // 将用户重定向到登录页面
+    }
+  }
+});
+
 // 可以将一类的路由单独保存在一个文件中
 app.use('/', index);
 app.use('/users', users);
 app.use('/topic', topic);
-
 
 // 如果任何路由都没匹配到，则认为 404
 // 生成一个异常让后面的 err handler 捕获
@@ -66,7 +88,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message || err,
-    error: {}
+    error: {},
+    user: req.currentUser
   });
 });
 

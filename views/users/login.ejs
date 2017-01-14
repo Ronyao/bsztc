@@ -44,24 +44,24 @@
 
 <%- include("../footer.ejs") %>
 <script>
-//Demo
 
 layui.use(['jquery','layer','form'], function(){
   var layer = layui.layer
   var form = layui.form();
   var $ = layui.jquery;
   //监听提交
-  $("button").click(function(){
-    $.post(
-      "/users/login",
-      {
-        name:"123"
-      },
-      function(data,status){
-        alert(data);
-      }
-    )
-  })
+  // $("button").click(function(){
+  //   $.post(
+  //     "/users/login",
+  //     {
+  //       name:"123"
+  //     },
+  //     function(data,status){
+  //       layer.msg(data);
+  //       alert(data);
+  //     }
+  //   )
+  // })
 });
 </script>
 </body>
