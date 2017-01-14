@@ -47,7 +47,7 @@ app.use(function (req, res, next) {
       arr[i] = arr[i].split('?')[0];
     }
     // 判断请求路径是否为根、登录、注册、登出，如果是不做拦截
-    if (arr.length > 1 && arr[1] == '') {
+    if (arr.length > 1 && arr[1] == '' || arr[1] == 'index') {
       next();
     } else if (arr.length > 2 && arr[1] == 'users' && (arr[2] == 'register' || arr[2] == 'login' || arr[2] == 'logout')) {
       next();
@@ -71,26 +71,33 @@ app.use(function(req, res, next) {
 });
 
 // error handlers
-
-// 如果是开发环境，则将异常堆栈输出到页面，方便开发调试
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message || err,
-      error: err
-    });
-  });
-}
-
-// 如果是非开发环境，则页面只输出简单的错误信息
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message || err,
-    error: {},
+    error: err,
     user: req.currentUser
   });
 });
+// 如果是开发环境，则将异常堆栈输出到页面，方便开发调试
+// if (app.get('env') === 'development') {
+//   app.use(function(err, req, res, next) {
+//     res.status(err.status || 500);
+//     res.render('error', {
+//       message: err.message || err,
+//       error: err
+//     });
+//   });
+// }
+//
+// // 如果是非开发环境，则页面只输出简单的错误信息
+// app.use(function(err, req, res, next) {
+//   res.status(err.status || 500);
+//   res.render('error', {
+//     message: err.message || err,
+//     error: {},
+//     user: req.currentUser
+//   });
+// });
 
 module.exports = app;

@@ -42,10 +42,7 @@ router.get('/forget',function(req, res, next) {
 router.get('/logout',function(req, res, next) {
   req.currentUser.logOut();
   res.clearCurrentUser();
-  return res.render('/',{
-    title: "博士直通车-首页",
-    user: req.currentUser
-  });
+  res.redirect('/');
 });
 
 module.exports = router;
