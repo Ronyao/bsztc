@@ -1,16 +1,16 @@
 var AV = require('leanengine');
 
-AV.init({
-  appId: '6Yy7y0rYEANzSzGbsXNB4PYX',
-  appKey: 'FvPP3qQPPgpfR7zO4hXzOSs7',
-  masterKey: 'YyL8socJ8L94BIo3lkz1QifQ'
-});
-
 // AV.init({
-//   appId: process.env.LEANCLOUD_APP_ID,
-//   appKey: process.env.LEANCLOUD_APP_KEY,
-//   masterKey: process.env.LEANCLOUD_APP_MASTER_KEY
+//   appId: '6Yy7y0rYEANzSzGbsXNB4PYX',
+//   appKey: 'FvPP3qQPPgpfR7zO4hXzOSs7',
+//   masterKey: 'YyL8socJ8L94BIo3lkz1QifQ'
 // });
+
+AV.init({
+  appId: process.env.LEANCLOUD_APP_ID,
+  appKey: process.env.LEANCLOUD_APP_KEY,
+  masterKey: process.env.LEANCLOUD_APP_MASTER_KEY
+});
 
 var app = require('./app');
 
