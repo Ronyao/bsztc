@@ -25,10 +25,11 @@
         <div class="layui-input-inline">
           <input type="password" id="L_pass" name="pass" required lay-verify="required" autocomplete="off" class="layui-input">
         </div>
+        <div class="layui-form-mid layui-word-aux">密码至少为6位</div>
       </div>
 
       <div class="layui-form-item">
-        <button class="layui-btn" lay-filter="test" lay-submit>立即登录</button>
+        <a id="submit" class="layui-btn" lay-filter="test">立即登录</a>
         <span style="padding-left:20px;">
           <a href="/user/forget">忘记密码？</a>
         </span>
@@ -45,23 +46,26 @@
 <%- include("../footer.ejs") %>
 <script>
 
-layui.use(['jquery','layer','form'], function(){
+layui.use(['jquery','layer'], function(){
   var layer = layui.layer
-  var form = layui.form();
   var $ = layui.jquery;
   //监听提交
-  // $("button").click(function(){
-  //   $.post(
-  //     "/users/login",
-  //     {
-  //       name:"123"
-  //     },
-  //     function(data,status){
-  //       layer.msg(data);
-  //       alert(data);
-  //     }
-  //   )
-  // })
+  $("#submit").click(function(){
+    $.post(
+      "/users/login",
+      {
+        phone: $("#L_phone").val(),
+        pass: $("#L_pass").val()
+      },
+      function(data,status){
+        if(data=='success'){
+          window.location.href="/topic";
+        }else{
+          layer.msg(data);
+        }
+      }
+    )
+  });
 });
 </script>
 </body>
