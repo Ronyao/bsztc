@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="format-detection" content="telephone=no">
-<title>{{title}} - {{lay.base.name}}</title>
+<title><%= title %></title>
 <%- include("../link.ejs") %>
 </head>
 <body>
@@ -15,18 +15,22 @@
 <%- include("../header.ejs") %>
 
 <div class="main layui-clear">
-  <h2 class="page-title">{{title}}</h2>
+  <h2 class="page-title">手机验证重置密码</h2>
 
-  {{# if(d.getPass === 1){}}
-  <div class="fly-msg">{{d.username}}，请重置您的密码</div>
   <div class="layui-form layui-form-pane"  style="margin-top: 30px;">
     <form action="/user/repass" method="post">
       <div class="layui-form-item">
-        <label for="L_pass" class="layui-form-label">密码</label>
+        <label for="L_phone" class="layui-form-label">手机号</label>
+        <div class="layui-input-inline">
+          <input type="tel" id="L_phone" name="phone" required lay-verify="phone" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label for="L_pass" class="layui-form-label">新密码</label>
         <div class="layui-input-inline">
           <input type="password" id="L_pass" name="pass" required lay-verify="required" autocomplete="off" class="layui-input">
         </div>
-        <div class="layui-form-mid layui-word-aux">6到16个字符</div>
+        <div class="layui-form-mid layui-word-aux">建议6到16个字符</div>
       </div>
       <div class="layui-form-item">
         <label for="L_repass" class="layui-form-label">确认密码</label>
@@ -35,56 +39,85 @@
         </div>
       </div>
       <div class="layui-form-item">
-        <label for="L_vercode" class="layui-form-label">人类验证</label>
+        <label for="L_vercode" class="layui-form-label">验证码</label>
         <div class="layui-input-inline">
-          <input type="text" id="L_vercode" name="vercode" required lay-verify="required" placeholder="请回答后面的问题" autocomplete="off" class="layui-input">
+          <input type="text" id="L_vercode" name="vercode" required lay-verify="required" placeholder="请输入验证码" autocomplete="off" class="layui-input">
         </div>
-        <div class="layui-form-mid">
-          <span style="color: #c00;">{{d.vercode}}</span>
-        </div>
+        <a id="get_vercode_forget" class="layui-btn layui-btn-primary">获取短信验证码</a>
+        <button class="layui-btn layui-btn-disabled" id="J_resetCode" style="display:none;"><span id="J_second">60</span>秒后重发</button>
       </div>
       <div class="layui-form-item">
         <input type="hidden" name="username" value="{{d.username}}">
         <input type="hidden" name="email" value="{{d.email}}">
-        <button class="layui-btn" alert="1" lay-filter="*" lay-submit>提交</button>
-      </div>
-    </form>
-  </div>
-  {{# } else { }}
-
-  {{# if(d.getPass === 2){ }}
-  <div class="fly-error">该重置密码链接已失效，请重新校验您的信息</div>
-  {{# } else if(d.getPass === 3){ }}
-  <div class="fly-error">非法链接，请重新校验您的信息</div>
-  {{# } }}
-
-  <div class="layui-form layui-form-pane">
-    <form method="post">
-      <div class="layui-form-item">
-        <label for="L_email" class="layui-form-label">邮箱</label>
-        <div class="layui-input-inline">
-          <input type="text" id="L_email" name="email" required lay-verify="required" autocomplete="off" class="layui-input">
-        </div>
-      </div>
-      <div class="layui-form-item">
-        <label for="L_vercode" class="layui-form-label">人类验证</label>
-        <div class="layui-input-inline">
-          <input type="text" id="L_vercode" name="vercode" required lay-verify="required" placeholder="请回答后面的问题" autocomplete="off" class="layui-input">
-        </div>
-        <div class="layui-form-mid">
-          <span style="color: #c00;">{{d.vercode}}</span>
-        </div>
-      </div>
-      <div class="layui-form-item">
-        <button class="layui-btn" alert="1" lay-filter="*" lay-submit>提交</button>
+        <a id="verify_forget" class="layui-btn" alert="1" lay-filter="*">提交</a>
       </div>
     </form>
   </div>
 
-  {{# } }}
+
 </div>
 
 <%- include("../footer.ejs") %>
+
+<script>
+layui.use(['jquery','layer'], function(){
+  var $ = layui.jquery;
+
+  $('#get_vercode_forget').click(function() {
+    $.post(
+      "/users/get_vercode_forget",
+      {
+        phone: $("#L_phone").val()
+      },
+      function(data, status){
+        if(data=='success'){
+          //倒数60s
+          $('#get_vercode_forget').hide();
+          $('#J_second').html('60');
+          $('#J_resetCode').show();
+          var second = 60;
+          var timer = null;
+          timer = setInterval(function(){
+            second -= 1;
+            if(second >0 ){
+              $('#J_second').html(second);
+            }else{
+              clearInterval(timer);
+              $('#get_vercode_forget').show();
+              $('#J_resetCode').hide();
+            }
+          },1000);
+          return ;
+        }else{
+          layer.msg(data);
+        }
+      }
+    )
+  });
+
+  $("#verify_forget").click(function(){
+    $.post(
+      "/users/forget",
+      {
+        phone: $("#L_phone").val(),
+        pass: $("#L_pass").val(),
+        repass: $("#L_repass").val(),
+        vercode: $("#L_vercode").val()
+      },
+      function(data, status){
+        if(data=='success'){
+          //显示修改密码成功，然后跳转登录页面
+          layer.msg("修改密码成功");
+          window.location.href="/users/login";
+        }else{
+          layer.msg(data);
+        }
+      }
+    )
+  });
+
+});
+</script>
 
 </body>
 </html>

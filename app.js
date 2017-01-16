@@ -49,7 +49,7 @@ app.use(function (req, res, next) {
     // 判断请求路径是否为根、登录、注册、登出，如果是不做拦截
     if (arr.length > 1 && arr[1] == '' || arr[1] == 'index') {
       next();
-    } else if (arr.length > 2 && arr[1] == 'users' && (arr[2] == 'reg' || arr[2] == 'login' || arr[2] == 'logout' || arr[2] == 'get_vercode')) {
+    } else if (arr.length > 2 && arr[1] == 'users' && (arr[2] == 'reg' || arr[2] == 'login' || arr[2] == 'logout' || arr[2] == 'get_vercode' || arr[2] == 'forget' || arr[2] == 'get_vercode_forget')) {
       next();
     } else {  // 登录拦截
       res.redirect('/users/login');  // 将用户重定向到登录页面
