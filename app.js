@@ -73,10 +73,22 @@ app.use(function(req, res, next) {
 // error handlers
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
+  var avatar = req.currentUser.get('avatar');
+  var identity = "";
+  if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
+    avatar = "../res/images/avatar/default.png";
+  }
+  if(req.currentUser.get('isEnterprise')=='true'){
+    identity = "认证企业";
+  }else if (req.currentUser.get('isDoctor')=='true') {
+    identity = "认证博士";
+  }
   res.render('error', {
     message: err.message || err,
     error: err,
-    user: req.currentUser
+    user: req.currentUser,
+    avatar: avatar,
+    identity:identity,
   });
 });
 // 如果是开发环境，则将异常堆栈输出到页面，方便开发调试
