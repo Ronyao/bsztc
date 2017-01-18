@@ -4,6 +4,12 @@ var AV = require('leanengine');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  if(!req.currentUser){
+    res.render('index',{
+      title:"首页-博士直通车",
+      user: '',
+    });
+  }
   res.redirect('/topic');
 });
 

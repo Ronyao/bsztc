@@ -26,7 +26,8 @@ router.get('/index', function(req, res, next) {
     identity:identity,
     jointime:req.currentUser.get('createdAt'),
     city:req.currentUser.get('city'),
-    sex:req.currentUser.get('sex')
+    sex:req.currentUser.get('sex'),
+    uid:req.currentUser.get('id')
   });
 });
 
@@ -212,6 +213,65 @@ router.post('/get_vercode_forget',function(req, res, next){
     });
   }
 });
+
+router.get('/set',function(req, res, next) {
+  // var query = new AV.Query('_User');
+  // query.equalTo('isDoctor', true);
+  // query.find().then(function (results) {
+  //   console.log(results);
+  //   // res.render('users/set',{
+  //   //   title: "设置-博士直通车",
+  //   //   user: results
+  //   // });
+  // }, function (error) {
+  //   res.redirect('error');
+  // });
+  var avatar = req.currentUser.get('avatar');
+  var identity = "";
+  if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
+    avatar = "../res/images/avatar/default.png";
+  }
+  if(req.currentUser.get('isEnterprise')=='true'){
+    identity = "认证企业";
+  }else if (req.currentUser.get('isDoctor')=='true') {
+    identity = "认证博士";
+  }
+  res.render('users/set',{
+    title: "设置-博士直通车",
+    user: req.currentUser.get('nickname'),
+    avatar: avatar,
+    identity:identity,
+    jointime:req.currentUser.get('createdAt'),
+    city:req.currentUser.get('city'),
+    sex:req.currentUser.get('sex'),
+    currentUser:req.currentUser
+  });
+})
+
+router.get('/home',function(req, res, next){
+  var avatar = req.currentUser.get('avatar');
+  var identity = "";
+  if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
+    avatar = "../res/images/avatar/default.png";
+  }
+  if(req.currentUser.get('isEnterprise')=='true'){
+    identity = "认证企业";
+  }else if (req.currentUser.get('isDoctor')=='true') {
+    identity = "认证博士";
+  }
+   uid = req.query.uid;
+   res.render('users/home',{
+     title:"用户中心",
+     user: req.currentUser.get('nickname'),
+     avatar: avatar,
+     identity:identity
+   });
+});
+
+router.get('/message',function(req, res, next){
+  res.render('users/message');
+});
+
 
 
 module.exports = router;

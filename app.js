@@ -10,6 +10,7 @@ var AV = require('leanengine');
 var index = require('./routes/index');
 var users = require('./routes/app/users');
 var topic = require('./routes/app/topic');
+var wisdom = require('./routes/app/wisdom');
 
 var app = express();
 
@@ -61,6 +62,7 @@ app.use(function (req, res, next) {
 app.use('/', index);
 app.use('/users', users);
 app.use('/topic', topic);
+app.use('/wisdom', wisdom);
 
 // 如果任何路由都没匹配到，则认为 404
 // 生成一个异常让后面的 err handler 捕获
@@ -73,23 +75,32 @@ app.use(function(req, res, next) {
 // error handlers
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  var avatar = req.currentUser.get('avatar');
-  var identity = "";
-  if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
-    avatar = "../res/images/avatar/default.png";
+  if(!req.currentUser){
+    res.render('error', {
+      message: err.message || err,
+      error: err,
+      user: '',
+    });
+  }else{
+    var avatar = req.currentUser.get('avatar');
+    var identity = "";
+    if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
+      avatar = "../res/images/avatar/default.png";
+    }
+    if(req.currentUser.get('isEnterprise')=='true'){
+      identity = "认证企业";
+    }else if (req.currentUser.get('isDoctor')=='true') {
+      identity = "认证博士";
+    }
+    res.render('error', {
+      message: err.message || err,
+      error: err,
+      user: req.currentUser.get('nickname'),
+      avatar: avatar,
+      identity:identity,
+    });
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
-    identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
-    identity = "认证博士";
-  }
-  res.render('error', {
-    message: err.message || err,
-    error: err,
-    user: req.currentUser,
-    avatar: avatar,
-    identity:identity,
-  });
+
 });
 // 如果是开发环境，则将异常堆栈输出到页面，方便开发调试
 // if (app.get('env') === 'development') {

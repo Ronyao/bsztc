@@ -25,9 +25,9 @@
       <div class="fly-tab user-tab">
         <span id="LAY-mine">
           <a href="javascript:;" class="tab-this" type="mine-jie">我的求解（<cite>0</cite>）</a>
-          <a href="/user/message/">我的消息</a>
-          <a href="/user/message/">我的智库</a>
-          <a href="/users/home/{{168*user.id}}/">我的主页</a>
+          <a href="/users/message">我的消息</a>
+          <a href="/wisdom/mywishdom">我的智库</a>
+          <a href="/users/home?uid=<%= uid %>">我的主页</a>
         </span>
       </div>
       <div class="user-mine">
@@ -39,7 +39,7 @@
 
   <div class="edge">
     <div class="user-about">
-      <a href="http://fly.layui.com/user/set/#avatar" title="修改头像">
+      <a href="/users/set/#avatar" title="修改头像">
         <img class="user-avatar" src=<%= avatar %>>
       </a>
       <p>
@@ -72,22 +72,22 @@
         <h3>最近访客</h3>
         <span>
           <a href="/u/168">
-            <img src="http://fly.layui.com/avatar/168.jpg">
+            <img src="#">
             <cite>贤心</cite>
             <i>刚刚</i>
           </a>
           <a href="/u/336">
-            <img src="http://res.layui.com/images/fly/avatar/00.jpg">
+            <img src="#">
             <cite>Fly官方</cite>
             <i>5分钟前</i>
           </a>
           <a href="/u/26880">
-            <img src="http://res.layui.com/images/fly/avatar/5.jpg">
+            <img src="#">
             <cite>小付</cite>
             <i>1小时前</i>
           </a>
           <a href="/u/11928">
-            <img src="http://fly.layui.com/avatar/11928.jpg">
+            <img src="#">
             <cite>第一把菜刀</cite>
             <i>3天前</i>
           </a>

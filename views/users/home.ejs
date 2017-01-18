@@ -1,18 +1,15 @@
-{{#
-var info = d.info || {}, jie = d.jie, da = d.da;
-}}
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>{{info.username}} - {{lay.base.name}}</title>
-{{ include ../link }}
+<title><%= title %></title>
+<%- include("../link.ejs") %>
 </head>
 <body style="margin-top: 65px;">
 
-{{ include ../header }}
+<%- include("../header.ejs") %>
 
 <div class="fly-home" style="background-image: url();">
   <img src="{{info.avatar}}" alt="{{info.username}}">
@@ -105,7 +102,7 @@ var info = d.info || {}, jie = d.jie, da = d.da;
   </div>
 </div>
 
-{{ include ../footer }}
+<%- include("../footer.ejs") %>
 
 </body>
 </html>
