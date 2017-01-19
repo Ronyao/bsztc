@@ -102,6 +102,8 @@
         "/users/reg",
         {
           phone: $("#L_phone").val(),
+          pass: $("#L_pass").val(),
+          repass: $("L_repass").val(),
           vercode: $("#L_vercode").val()
         },
         function(data, status){

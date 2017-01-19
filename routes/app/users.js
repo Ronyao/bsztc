@@ -124,17 +124,24 @@ router.post('/reg',function(req, res, next){
   if(!(pass.length>=6)){
     result = "建议密码长度大于6";
     res.json(result);
-  }else if (!( pass== repass)) {
+  }else if (!( pass === repass)) {
     result = "两者密码不一致，请重新输入";
     res.json(result);
   }else{
     AV.User.signUpOrlogInWithMobilePhone(mobile, vercode).then(function (success) {
 
-      // 新建 AVUser 对象实例
+      // 随机生成一个nickname
+      // var nickname = "博士直通车用户";
+      // var jschar = ['0','1','2','3','4','5','6','7','8','9'];
+      // for(var i=0; i<4; i++){
+      //   var id = Math.floor(Math.random()*10);
+      //   nickname += jschar[id];
+      // }
+
       var user = new AV.User();
       user.setUsername(mobile);
       user.setPassword(pass);
-
+      //user.set('nickname',nickname);
       user.signUp().then(function (loginedUser) {
           console.log(loginedUser);
           result = "success";
