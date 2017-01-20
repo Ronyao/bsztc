@@ -85,27 +85,37 @@ router.get('/reg',function(req, res, next) {
 router.post('/get_vercode',function(req, res, next){
   var result = "";
   var mobile = req.body.phone;
+  var pass = req.body.pass;
+  var repass = req.body.repass;
+  var avatar = "http://ac-6Yy7y0rY.clouddn.com/w50cbAZiVMbeu7wvQU4m1kKpRQTzoe0F9ujCS3eZ.jpeg";
+  var sex = 1;
+  var nickname = "博士直通车用户";
+  var jschar = ['0','1','2','3','4','5','6','7','8','9'];
+  for(var i=0; i<4; i++){
+    var id = Math.floor(Math.random()*10);
+    nickname += jschar[id];
+  }
+
   if(!(/^1[34578]\d{9}$/.test(mobile))){
       result = "手机号码格式不正确！";
       res.json(result);
-  } else {
-    //查询数据库是否已经注册过
-    var query = new AV.Query('_User');
-    query.equalTo('mobilePhoneNumber', mobile);
-    query.find().then(function(result){
-      if(result.length===0){
-        AV.Cloud.requestSmsCode(mobile).then(function (success) {
-          result = "success";
-          res.json(result);
-        }, function (error) {
-          //暂时不知道会有什么错误
-          result = "错误码："+ error.code;
-          res.json(result);
-        });
-      }else{
-        result = "已存在此手机用户";
-        res.json(result);
-      }
+  }else if (pass.length<6) {
+    result = "密码长度至少为6位";
+    res.json(result);
+  }else if (!( pass === repass)) {
+    result = "两者密码不一致，请重新输入";
+    res.json(result);
+  }else {
+    var user = new AV.User();
+    user.set("username", mobile);
+    user.set("nickname", nickname);
+    user.set("password", pass);
+    user.set("avatar",avatar);
+    user.set("sex",sex);
+    user.setMobilePhoneNumber(mobile);
+    user.signUp().then(function(loginedUser){
+      result = "success";
+      res.json(result);
     },function(error){
       result = "错误码："+ error.code;
       res.json(result);
@@ -116,48 +126,21 @@ router.post('/get_vercode',function(req, res, next){
 
 router.post('/reg',function(req, res, next){
   var result = '';
-  var mobile = req.body.phone;
-  var pass = req.body.pass;
-  var repass = req.body.repass;
   var vercode = req.body.vercode;
-  //验证密码的长度，密码是否一致
-  if(!(pass.length>=6)){
-    result = "建议密码长度大于6";
+  //验证码必须为6位纯数字
+  if(!(/^\d{6}$/.test(vercode))){
+    result = "验证码必须为长度为6的数字";
     res.json(result);
-  }else if (!( pass === repass)) {
-    result = "两者密码不一致，请重新输入";
-    res.json(result);
-  }else{
-    AV.User.signUpOrlogInWithMobilePhone(mobile, vercode).then(function (success) {
-
-      // 随机生成一个nickname
-      // var nickname = "博士直通车用户";
-      // var jschar = ['0','1','2','3','4','5','6','7','8','9'];
-      // for(var i=0; i<4; i++){
-      //   var id = Math.floor(Math.random()*10);
-      //   nickname += jschar[id];
-      // }
-
-      var user = new AV.User();
-      user.setUsername(mobile);
-      user.setPassword(pass);
-      //user.set('nickname',nickname);
-      user.signUp().then(function (loginedUser) {
-          console.log(loginedUser);
-          result = "success";
-          res.json(result);
-      }, function (error) {
-        result = "错误码："+ error.code;
-        res.json(result);
-      });
-    }, function (error) {
-      // 失败
-      result = "错误码："+ error.code;
-      if(error.code =='603'){
-        result = "无效的短信验证码，验证码不匹配或者过期";
-      }
-      res.json(result);
-    });
+  } else{
+   AV.User.verifyMobilePhone(vercode).then( function(){
+   //验证成功
+   result = "success";
+   res.json(result);
+  }, function(error){
+   //验证失败
+   result = "错误码："+ error.code;
+   res.json(result);
+   });
   }
 
 });

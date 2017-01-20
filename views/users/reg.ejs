@@ -69,7 +69,9 @@
       $.post(
         "/users/get_vercode",
         {
-          phone: $("#L_phone").val()
+          phone: $("#L_phone").val(),
+          pass: $("#L_pass").val(),
+          repass: $("#L_repass").val()
         },
         function(data, status){
           if(data=='success'){
@@ -100,10 +102,7 @@
     $("#reg").click(function(){
       $.post(
         "/users/reg",
-        {
-          phone: $("#L_phone").val(),
-          pass: $("#L_pass").val(),
-          repass: $("L_repass").val(),
+        {    
           vercode: $("#L_vercode").val()
         },
         function(data, status){
