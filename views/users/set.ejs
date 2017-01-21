@@ -34,31 +34,32 @@
           <div class="layui-form-mid layui-word-aux">如果您在邮箱已激活的情况下，变更了邮箱，需<a href="/user/activate/" style="font-size: 12px; color: #4f99cf;">重新验证邮箱</a>。</div>
         </div> -->
         <div class="layui-form-item">
-          <label for="L_username" class="layui-form-label">昵称</label>
+          <label for="L_nickname" class="layui-form-label">昵称</label>
           <div class="layui-input-inline">
-            <input type="text" id="L_username" name="username" required lay-verify="required" autocomplete="off" value="<%= currentUser['nickname'] %>" class="layui-input">
+            <input type="text" id="L_nickname" name="nickname" required lay-verify="required" autocomplete="off" value="<%= currentUser.get('nickname') %>" class="layui-input">
           </div>
           <div class="layui-inline">
             <div class="layui-input-inline">
-              <input type="radio" name="sex" value="0" <% sex == '0' ? 'checked' : '' %> title="男">
-              <input type="radio" name="sex" value="1" <% sex == '1' ? 'checked' : ''%> title="女">
+              <input type="radio" name="sex" value="1" <% if(currentUser.get('sex')==1) { %> checked <% } %> title="男">
+              <input type="radio" name="sex" value="0" <% if(currentUser.get('sex')==0) { %> checked <% } %> title="女">
             </div>
           </div>
         </div>
         <div class="layui-form-item">
           <label for="L_city" class="layui-form-label">城市</label>
           <div class="layui-input-inline">
-            <input type="text" id="L_city" name="city" autocomplete="off" value="{{user.city}}" class="layui-input">
+            <input type="text" id="L_city" name="city" autocomplete="off" value="<%= currentUser.get('city') %>" class="layui-input">
           </div>
         </div>
+
         <div class="layui-form-item layui-form-text">
           <label for="L_sign" class="layui-form-label">签名</label>
           <div class="layui-input-block">
-            <textarea placeholder="随便写些什么刷下存在感" id="L_sign"  name="sign" autocomplete="off" class="layui-textarea" style="height: 80px;">{{user.sign||''}}</textarea>
+            <textarea placeholder="随便写些什么刷下存在感" id="L_sign"  name="sign" autocomplete="off" class="layui-textarea" style="height: 80px;"><%= currentUser.get('signature') %></textarea>
           </div>
         </div>
         <div class="layui-form-item">
-          <button class="layui-btn" key="set-mine" lay-filter="*" lay-submit>确认修改</button>
+          <a id="myinfo" class="layui-btn" key="set-mine" lay-filter="*">确认修改</a>
         </div>
       </div>
 
@@ -67,7 +68,7 @@
           <div class="avatar-add">
             <p>建议尺寸168*168，支持jpg、png、gif，最大不能超过30KB</p>
             <div class="upload-img">
-              <input type="file" name="file" id="LAY-file" lay-title="上传头像">
+              <input type="file"  name="avatar" id="avatar" lay-title="上传头像">
             </div>
             <img src=<%= avatar %>>
             <span class="loading"></span>
@@ -86,14 +87,14 @@
               <form class="layui-form layui-form-pane" action="">
 
                 <div class="layui-form-item">
-                  <label class="layui-form-label">真实姓名</label>
+                  <label class="layui-form-label">真实姓名*</label>
                   <div class="layui-input-inline">
                     <input type="text" name="username" lay-verify="required" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
                   </div>
                 </div>
 
                 <div class="layui-form-item">
-                  <label class="layui-form-label">身份证号</label>
+                  <label class="layui-form-label">身份证号*</label>
                   <div class="layui-input-block">
                     <input type="text" name="title" autocomplete="off" placeholder="请输入身份证号" class="layui-input">
                   </div>
@@ -103,10 +104,20 @@
                   <label class="layui-form-label">所属学科</label>
                   <div class="layui-input-inline">
                     <select name="quiz1">
-                      <option value="">一级学科</option>
+                      <option value="">学科门类</option>
                       <option value="浙江">浙江省</option>
                       <option value="你的工号">江西省</option>
                       <option value="你最喜欢的老师">福建省</option>
+                    </select>
+                  </div>
+                  <div class="layui-input-inline">
+                    <select name="quiz2">
+                      <option value="">一级学科</option>
+                      <option value="杭州">杭州</option>
+                      <option value="宁波" disabled="">宁波</option>
+                      <option value="温州">温州</option>
+                      <option value="温州">台州</option>
+                      <option value="温州">绍兴</option>
                     </select>
                   </div>
                   <div class="layui-input-inline">
@@ -145,16 +156,17 @@
 
 
                 <div class="layui-form-item">
-                <input type="file" name="file" class="layui-upload-file" lay-title="手持身份证照片（保密）">
+                <input type="file" name="file" id="idCardInHand" lay-title="手持身份证照片（保密）">
                 </div>
 
                 <div class="layui-form-item">
-                <input type="file" name="file" class="layui-upload-file" lay-title="身份证正面照（保密）">
+                <input type="file" name="file" id="idCardFront" lay-title="身份证正面照（保密）">
                 </div>
 
                 <div class="layui-form-item">
-                <input type="file" name="file" class="layui-upload-file" lay-title="所在学校毕业证（保密）">
+                <input type="file" name="file" id="graduationCard" lay-title="所在学校毕业证（保密）">
                 </div>
+
                 <div class="layui-form-item layui-form-text">
                   <label class="layui-form-label">个人简介(必填)</label>
                   <div class="layui-input-block">
@@ -374,84 +386,70 @@
 </div>
 
 <%- include("../footer.ejs") %>
-<script>
-layui.use('element', function(){
-  var $ = layui.jquery
-  ,element = layui.element(); //Tab的切换功能，切换事件监听等，需要依赖element模块
 
-  //触发事件
-  var active = {
-    tabAdd: function(){
-      //新增一个Tab项
-      element.tabAdd('demo', {
-        title: '新选项'+ (Math.random()*1000|0) //用于演示
-        ,content: '内容'+ (Math.random()*1000|0)
-      })
-    }
-    ,tabDelete: function(){
-      //删除指定Tab项
-      element.tabDelete('demo', 2); //删除第3项（注意序号是从0开始计算）
-    }
-    ,tabChange: function(){
-      //切换到指定Tab项
-      element.tabChange('demo', 1); //切换到第2项（注意序号是从0开始计算）
-    }
-  };
-
-  $('.site-demo-active').on('click', function(){
-    var type = $(this).data('type');
-    active[type] ? active[type].call(this) : '';
-  });
-});
-</script>
 <script>
-layui.use(['form', 'layedit', 'laydate'], function(){
+layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
   var form = layui.form()
   ,layer = layui.layer
   ,layedit = layui.layedit
-  ,laydate = layui.laydate;
+  ,laydate = layui.laydate
+  ,element = layui.element();
 
-  //创建一个编辑器
-  var editIndex = layedit.build('LAY_demo_editor');
-
-  //自定义验证规则
-  form.verify({
-    title: function(value){
-      if(value.length < 5){
-        return '标题至少得5个字符啊';
+  var $ = layui.jquery;
+  $("#myinfo").click(function () {
+    $.post(
+      "/users/myinfo",
+      {
+        nickname: $("#L_nickname").val(),
+        sex: $("input[name='sex']:checked").val(),
+        city: $("#L_city").val(),
+        signature: $("#L_sign").val()
+      },
+      function (data, status) {
+        if(data=='success'){
+          layer.msg("修改成功");
+        }else{
+          layer.msg(data);
+        }
       }
-    }
-    ,pass: [/(.+){6,12}$/, '密码必须6到12位']
-    ,content: function(value){
-      layedit.sync(editIndex);
-    }
+    )
   });
-
-
-
-  //监听提交
-  form.on('submit(demo1)', function(data){
-    layer.alert(JSON.stringify(data.field), {
-      title: '最终的提交信息'
-    })
-    return false;
-  });
-
 
 });
 </script>
 <script>
 layui.use('upload', function(){
+
   layui.upload({
-    url: '' //上传接口
-    ,success: function(res){ //上传成功后的回调
-      console.log(res)
+    url: '/users/upload_avatar'
+    ,elem: '#avatar' //指定原始元素，默认直接查找class="layui-upload-file"
+    ,method: 'get' //上传接口的http类型
+    ,success: function(res){
+      LAY_demo_upload.src = res.url;
     }
   });
 
   layui.upload({
-    url: '/test/upload.json'
-    ,elem: '#test' //指定原始元素，默认直接查找class="layui-upload-file"
+    url: '/users/upload_avatar'
+    ,elem: '#idCardInHand' //指定原始元素，默认直接查找class="layui-upload-file"
+    ,method: 'get' //上传接口的http类型
+    ,success: function(res){
+      LAY_demo_upload.src = res.url;
+    }
+  });
+
+  layui.upload({
+    url: '/users/upload_avatar'
+    ,elem: '#idCardFront' //指定原始元素，默认直接查找class="layui-upload-file"
+    ,method: 'get' //上传接口的http类型
+    ,success: function(res){
+      LAY_demo_upload.src = res.url;
+    }
+  });
+
+  layui.upload({
+    url: '/users/upload_avatar'
+    ,elem: '#graduationCard' //指定原始元素，默认直接查找class="layui-upload-file"
     ,method: 'get' //上传接口的http类型
     ,success: function(res){
       LAY_demo_upload.src = res.url;

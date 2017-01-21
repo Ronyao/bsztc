@@ -102,11 +102,12 @@
     $("#reg").click(function(){
       $.post(
         "/users/reg",
-        {    
+        {
           vercode: $("#L_vercode").val()
         },
         function(data, status){
           if(data=='success'){
+            alert("注册成功");
             window.location.href="/topic";
           }else{
             layer.msg(data);

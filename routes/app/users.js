@@ -205,17 +205,6 @@ router.post('/get_vercode_forget',function(req, res, next){
 });
 
 router.get('/set',function(req, res, next) {
-  // var query = new AV.Query('_User');
-  // query.equalTo('isDoctor', true);
-  // query.find().then(function (results) {
-  //   console.log(results);
-  //   // res.render('users/set',{
-  //   //   title: "设置-博士直通车",
-  //   //   user: results
-  //   // });
-  // }, function (error) {
-  //   res.redirect('error');
-  // });
   var avatar = req.currentUser.get('avatar');
   var identity = "";
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
@@ -231,9 +220,6 @@ router.get('/set',function(req, res, next) {
     user: req.currentUser.get('nickname'),
     avatar: avatar,
     identity:identity,
-    jointime:req.currentUser.get('createdAt'),
-    city:req.currentUser.get('city'),
-    sex:req.currentUser.get('sex'),
     currentUser:req.currentUser
   });
 })
@@ -262,6 +248,33 @@ router.get('/message',function(req, res, next){
   res.render('users/message');
 });
 
+router.post('/myinfo',function(req, res, next) {
+  var result = "";
+  var id = req.currentUser.id;
+  var nickname = req.body.nickname;
+  var sex = parseInt(req.body.sex);;
+  var city = req.body.city;
+  var signature = req.body.signature;
 
+  // 第一个参数是 className，第二个参数是 objectId
+  var user = AV.Object.createWithoutData('_User', id);
+  // 修改属性
+  user.set('nickname', nickname);
+  user.set('city', city);
+  user.set('sex', sex);
+  user.set('signature', signature);
+  // 保存到云端
+  user.save().then(function() {
+    result = "success";
+    res.json(result);
+  },function(error){
+    result = "修改失败";
+    res.json(result);
+  });
+});
+
+router.post('/upload_avatar',function(req, res, next){
+  console.log(req.body);
+});
 
 module.exports = router;
