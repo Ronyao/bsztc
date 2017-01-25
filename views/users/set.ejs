@@ -84,125 +84,114 @@
           </ul>
           <div class="layui-tab-content" style="height: 100%;">
             <div class="layui-tab-item layui-show">
-              <form class="layui-form layui-form-pane" action="">
+              <form class="layui-form layui-form-pane" action="javascript:;">
 
                 <div class="layui-form-item">
                   <label class="layui-form-label">真实姓名*</label>
                   <div class="layui-input-inline">
-                    <input type="text" name="username" lay-verify="required" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
+                    <input type="text" id='realName' name="realName" lay-verify="required" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
                   </div>
                 </div>
 
                 <div class="layui-form-item">
                   <label class="layui-form-label">身份证号*</label>
                   <div class="layui-input-block">
-                    <input type="text" name="title" autocomplete="off" placeholder="请输入身份证号" class="layui-input">
+                    <input type="number" id="reaild" name="reaild" autocomplete="off" placeholder="请输入身份证号" class="layui-input">
                   </div>
                 </div>
+
 
                 <div class="layui-form-item">
                   <label class="layui-form-label">所属学科</label>
                   <div class="layui-input-inline">
-                    <select name="quiz1">
+                    <select name="disciplinsFiles" id="disciplinsFiles" lay-filter="disciplinsFiles">
                       <option value="">学科门类</option>
-                      <option value="浙江">浙江省</option>
-                      <option value="你的工号">江西省</option>
-                      <option value="你最喜欢的老师">福建省</option>
                     </select>
                   </div>
                   <div class="layui-input-inline">
-                    <select name="quiz2">
+                    <select name="firstDisciplines" id="firstDisciplines" lay-filter="firstDisciplines">
                       <option value="">一级学科</option>
-                      <option value="杭州">杭州</option>
-                      <option value="宁波" disabled="">宁波</option>
-                      <option value="温州">温州</option>
-                      <option value="温州">台州</option>
-                      <option value="温州">绍兴</option>
                     </select>
                   </div>
                   <div class="layui-input-inline">
-                    <select name="quiz2">
+                    <select name="secondDisciplines" id="secondDisciplines" lay-filter="secondDisciplines">
                       <option value="">二级学科</option>
-                      <option value="杭州">杭州</option>
-                      <option value="宁波" disabled="">宁波</option>
-                      <option value="温州">温州</option>
-                      <option value="温州">台州</option>
-                      <option value="温州">绍兴</option>
                     </select>
                   </div>
                 </div>
+
 
                 <div class="layui-form-item">
                   <label class="layui-form-label">所在省市</label>
                   <div class="layui-input-inline">
-                    <select name="quiz1">
-                      <option value="">所在省</option>
-                      <option value="浙江">浙江省</option>
-                      <option value="你的工号">江西省</option>
-                      <option value="你最喜欢的老师">福建省</option>
-                    </select>
-                  </div>
-                  <div class="layui-input-inline">
-                    <select name="quiz2">
-                      <option value="">所在城市</option>
-                      <option value="杭州">杭州</option>
-                      <option value="宁波" disabled="">宁波</option>
-                      <option value="温州">温州</option>
-                      <option value="温州">台州</option>
-                      <option value="温州">绍兴</option>
-                    </select>
-                  </div>
-                </div>
-
-
-                <div class="layui-form-item">
-                <input type="file" name="file" id="idCardInHand" lay-title="手持身份证照片（保密）">
+      			    		<select name="province" lay-filter="province">
+      			    			<option></option>
+      			    		</select>
+      			    	</div>
+      			    	<div class="layui-input-inline">
+      			    		<select name="city" lay-filter="city">
+      			    			<option></option>
+      			    		</select>
+      			    	</div>
                 </div>
 
                 <div class="layui-form-item">
-                <input type="file" name="file" id="idCardFront" lay-title="身份证正面照（保密）">
+                <input type="file" name="idCardInHand" id="idCardInHand" lay-title="手持身份证照片（保密）">
+                </div>
+                <div class="layui-form-item">
+                <img src="/res/images/litu.png" id="idCardInHand_pic" alt="手持身份证照片" width="380px" height="240px">
                 </div>
 
                 <div class="layui-form-item">
-                <input type="file" name="file" id="graduationCard" lay-title="所在学校毕业证（保密）">
+                <input type="file" name="idCardFront" id="idCardFront" lay-title="身份证正面照片（保密）">
+                </div>
+                <div class="layui-form-item">
+                <img src="/res/images/litu.png" id="idCardFront_pic" alt="身份证正面照"  width="380px" height="240px">
+                </div>
+
+                <div class="layui-form-item">
+                <input type="file" name="graduationCard" id="graduationCard" lay-title="所在学校毕业证（保密）">
+                </div>
+                <div class="layui-form-item">
+                <img src="/res/images/litu.png" id="graduationCard_pic" alt="所在学校毕业证"  width="380px" height="240px">
                 </div>
 
                 <div class="layui-form-item layui-form-text">
                   <label class="layui-form-label">个人简介(必填)</label>
                   <div class="layui-input-block">
-                    <textarea placeholder="请输入个人简介" class="layui-textarea"></textarea>
+                    <textarea placeholder="请输入个人简介" class="layui-textarea" id="introduction"></textarea>
                   </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
                   <label class="layui-form-label">研究方向</label>
                   <div class="layui-input-block">
-                    <textarea placeholder="请输入研究方向" class="layui-textarea"></textarea>
+                    <textarea placeholder="请输入研究方向" class="layui-textarea" id="researchDirection"></textarea>
                   </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
                   <label class="layui-form-label">待转换的技术成果</label>
                   <div class="layui-input-block">
-                    <textarea placeholder="请输入待转换的技术成果" class="layui-textarea"></textarea>
+                    <textarea placeholder="请输入待转换的技术成果" class="layui-textarea" id="historyProjects"></textarea>
                   </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
                   <label class="layui-form-label">待资助的科研项目</label>
                   <div class="layui-input-block">
-                    <textarea placeholder="请输入待资助的科研项目" class="layui-textarea"></textarea>
+                    <textarea placeholder="请输入待资助的科研项目" class="layui-textarea" id="nowProjects"></textarea>
                   </div>
                 </div>
 
                 <div class="layui-form-item layui-form-text">
                   <label class="layui-form-label">所获奖励</label>
                   <div class="layui-input-block">
-                    <textarea placeholder="请输入所获奖励" class="layui-textarea"></textarea>
+                    <textarea placeholder="请输入所获奖励" class="layui-textarea" id="historyAwards"></textarea>
                   </div>
                 </div>
 
                 <div class="layui-form-item layui-form-text">
                   <label class="layui-form-label">发表论著</label>
                   <div class="layui-input-block">
-                    <textarea placeholder="请输入发表论著" class="layui-textarea"></textarea>
+                    <textarea placeholder="请输入发表论著" class="layui-textarea" id="historyPapers"></textarea>
                   </div>
                 </div>
 
@@ -211,13 +200,13 @@
                   <div class="layui-inline">
                   <label class="layui-form-label">图文咨询价</label>
                     <div class="layui-input-inline">
-                      <input type="text" name="username" lay-verify="required" placeholder="元/每次" autocomplete="off" class="layui-input">
+                      <input type="text" name="username" lay-verify="required" placeholder="元/每次" autocomplete="off" class="layui-input" id="chatPrice">
                     </div>
                   </div>
                   <div class="layui-inline">
                   <label class="layui-form-label">电话咨询价</label>
                     <div class="layui-input-inline">
-                      <input type="text" name="username" lay-verify="required" placeholder="元/分钟" autocomplete="off" class="layui-input">
+                      <input type="text" name="username" lay-verify="required" placeholder="元/分钟" autocomplete="off" class="layui-input" id="callPrice">
                     </div>
                   </div>
                 </div>
@@ -225,47 +214,47 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">预约时间</label>
                     <div class="layui-input-block">
-                      <input type="checkbox" name="like[write]" title="06:00">
-                      <input type="checkbox" name="like[read]" title="06:30" checked="">
-                      <input type="checkbox" name="like[game]" title="07:00">
-                      <input type="checkbox" name="like[game]" title="07:30">
-                      <input type="checkbox" name="like[game]" title="08:00">
-                      <input type="checkbox" name="like[game]" title="08:30">
-                      <input type="checkbox" name="like[game]" title="09:00">
-                      <input type="checkbox" name="like[game]" title="09:30">
-                      <input type="checkbox" name="like[game]" title="10:00">
-                      <input type="checkbox" name="like[game]" title="10:30">
-                      <input type="checkbox" name="like[game]" title="11:00">
-                      <input type="checkbox" name="like[game]" title="11:30">
-                      <input type="checkbox" name="like[game]" title="12:00">
-                      <input type="checkbox" name="like[game]" title="12:30">
-                      <input type="checkbox" name="like[game]" title="13:00">
-                      <input type="checkbox" name="like[game]" title="13:30">
-                      <input type="checkbox" name="like[game]" title="14:00">
-                      <input type="checkbox" name="like[game]" title="14:30">
-                      <input type="checkbox" name="like[game]" title="15:00">
-                      <input type="checkbox" name="like[game]" title="15:30">
-                      <input type="checkbox" name="like[game]" title="16:00">
-                      <input type="checkbox" name="like[game]" title="16:30">
-                      <input type="checkbox" name="like[game]" title="17:00">
-                      <input type="checkbox" name="like[game]" title="17:30">
-                      <input type="checkbox" name="like[game]" title="18:00">
-                      <input type="checkbox" name="like[game]" title="18:30">
-                      <input type="checkbox" name="like[game]" title="19:00">
-                      <input type="checkbox" name="like[game]" title="19:30">
-                      <input type="checkbox" name="like[game]" title="20:00">
-                      <input type="checkbox" name="like[game]" title="20:30">
-                      <input type="checkbox" name="like[game]" title="21:00">
-                      <input type="checkbox" name="like[game]" title="21:30">
-                      <input type="checkbox" name="like[game]" title="22:00">
-                      <input type="checkbox" name="like[game]" title="22:30">
-                      <input type="checkbox" name="like[game]" title="23:00">
-                      <input type="checkbox" name="like[game]" title="23:30">
+                      <input type="checkbox" name="emptyTime" title="06:00" value="0">
+                      <input type="checkbox" name="emptyTime" title="06:30" value="1">
+                      <input type="checkbox" name="emptyTime" title="07:00" value="2">
+                      <input type="checkbox" name="emptyTime" title="07:30" value="3">
+                      <input type="checkbox" name="emptyTime" title="08:00" value="4">
+                      <input type="checkbox" name="emptyTime" title="08:30" value="5">
+                      <input type="checkbox" name="emptyTime" title="09:00" value="6">
+                      <input type="checkbox" name="emptyTime" title="09:30" value="7">
+                      <input type="checkbox" name="emptyTime" title="10:00" value="8">
+                      <input type="checkbox" name="emptyTime" title="10:30" value="9">
+                      <input type="checkbox" name="emptyTime" title="11:00" value="10">
+                      <input type="checkbox" name="emptyTime" title="11:30" value="11">
+                      <input type="checkbox" name="emptyTime" title="12:00" value="12">
+                      <input type="checkbox" name="emptyTime" title="12:30" value="13">
+                      <input type="checkbox" name="emptyTime" title="13:00" value="14">
+                      <input type="checkbox" name="emptyTime" title="13:30" value="15">
+                      <input type="checkbox" name="emptyTime" title="14:00" value="16">
+                      <input type="checkbox" name="emptyTime" title="14:30" value="17">
+                      <input type="checkbox" name="emptyTime" title="15:00" value="18">
+                      <input type="checkbox" name="emptyTime" title="15:30" value="19">
+                      <input type="checkbox" name="emptyTime" title="16:00" value="20">
+                      <input type="checkbox" name="emptyTime" title="16:30" value="21">
+                      <input type="checkbox" name="emptyTime" title="17:00" value="22">
+                      <input type="checkbox" name="emptyTime" title="17:30" value="23">
+                      <input type="checkbox" name="emptyTime" title="18:00" value="24">
+                      <input type="checkbox" name="emptyTime" title="18:30" value="25">
+                      <input type="checkbox" name="emptyTime" title="19:00" value="26">
+                      <input type="checkbox" name="emptyTime" title="19:30" value="27">
+                      <input type="checkbox" name="emptyTime" title="20:00" value="28">
+                      <input type="checkbox" name="emptyTime" title="20:30" value="29">
+                      <input type="checkbox" name="emptyTime" title="21:00" value="30">
+                      <input type="checkbox" name="emptyTime" title="21:30" value="31">
+                      <input type="checkbox" name="emptyTime" title="22:00" value="32">
+                      <input type="checkbox" name="emptyTime" title="22:30" value="33">
+                      <input type="checkbox" name="emptyTime" title="23:00" value="34">
+                      <input type="checkbox" name="emptyTime" title="23:30" value="35">
                     </div>
                   </div>
 
                 <div class="layui-form-item">
-                  <button class="layui-btn" lay-submit="" lay-filter="demo2">跳转式提交</button>
+                  <a id="d_verify" class="layui-btn">提交申请</a>
                 </div>
               </form>
             </div>
@@ -386,9 +375,12 @@
 </div>
 
 <%- include("../footer.ejs") %>
-
+<script src="/javascripts/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+<script src="/javascripts/citys.js" type="text/javascript" charset="utf-8"></script>
+<script src="/javascripts/disciplines.js" type="text/javascript" charset="utf-8"></script>
 <script>
 layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
+
   var form = layui.form()
   ,layer = layui.layer
   ,layedit = layui.layedit
@@ -396,6 +388,8 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
   ,element = layui.element();
 
   var $ = layui.jquery;
+  pca.init('select[name=province]', 'select[name=city]', '');
+  dfs.init('select[name=disciplinsFiles]', 'select[name=firstDisciplines]', 'select[name=secondDisciplines]');
   $("#myinfo").click(function () {
     $.post(
       "/users/myinfo",
@@ -414,6 +408,57 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
       }
     )
   });
+
+  $("#d_verify").click(function () {
+    $.post(
+      "/users/d_verify",
+      {
+        realName: $("#realName").val(),
+        reaild: $("#reaild").val(),
+        // disciplinsFiles: $("#disciplinsFiles").val(),
+        // firstDisciplines: $("#firstDisciplines").val(),
+        // secondDisciplines: $("#secondDisciplines").val(),
+        // province: $("#province").val(),
+        // city: $("#city").val(),
+        // idCardInHand: $("#idCardInHand_pic").src,
+        // idCardFront: $("#idCardFront_pic").src,
+        // graduationCard: $("#graduationCard_pic").src,
+        // introduction: $("#introduction").val(),
+        // researchDirection: $("#researchDirection").val(),
+        // historyProjects: $(#"historyProjects").val(),
+        // nowProjects: $("#nowProjects").val(),
+        // historyAwards: $("#historyAwards").val(),
+        // historyPapers: $("#historyPapers").val(),
+        // callPrice: $("#callPrice").val(),
+        // chatPrice: $("#chatPrice").val(),
+        // emptyTime:
+      },
+      function(data,status){
+        if(data=='success'){
+          layer.msg("申请提交成功");
+        }else{
+          layer.msg(data);
+        }
+      }
+    )
+  });
+
+  // $("#e_Verify").click(function(){
+  //   $.post(
+  //     "users/e_verify",
+  //     {
+  //       contactName:
+  //       contactNumber:
+  //       lincenseNumber:
+  //       industriesClass:
+  //       bussinessLetter:
+  //       scale:
+  //       qualification:
+  //       interesTopic:
+  //       bussinessLicenes:
+  //     }
+  //   )
+  // })
 
 });
 </script>

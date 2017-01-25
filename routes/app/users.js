@@ -95,7 +95,7 @@ router.post('/get_vercode',function(req, res, next){
     var id = Math.floor(Math.random()*10);
     nickname += jschar[id];
   }
-
+  console.log(pass.length);
   if(!(/^1[34578]\d{9}$/.test(mobile))){
       result = "手机号码格式不正确！";
       res.json(result);
@@ -118,6 +118,9 @@ router.post('/get_vercode',function(req, res, next){
       res.json(result);
     },function(error){
       result = "错误码："+ error.code;
+      if(error.code == "214"){
+        result = "该手机已经注册过了";
+      }
       res.json(result);
     });
   }
@@ -276,5 +279,11 @@ router.post('/myinfo',function(req, res, next) {
 router.post('/upload_avatar',function(req, res, next){
   console.log(req.body);
 });
+
+
+router.post('/d_verify',function(req, res, next) {
+  console.log(req.body);
+  res.json("success");
+})
 
 module.exports = router;
