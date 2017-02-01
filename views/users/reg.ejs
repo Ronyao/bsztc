@@ -69,9 +69,7 @@
       $.post(
         "/users/get_vercode",
         {
-          phone: $("#L_phone").val(),
-          pass: $("#L_pass").val(),
-          repass: $("#L_repass").val()
+          phone: $("#L_phone").val()
         },
         function(data, status){
           if(data=='success'){
@@ -103,11 +101,13 @@
       $.post(
         "/users/reg",
         {
+          phone: $("#L_phone").val(),
+          pass: $("#L_pass").val(),
+          repass: $("L_repass").val(),
           vercode: $("#L_vercode").val()
         },
         function(data, status){
           if(data=='success'){
-            alert("注册成功");
             window.location.href="/topic";
           }else{
             layer.msg(data);

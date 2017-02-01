@@ -9,8 +9,10 @@ router.get('/', function(req, res, next) {
       title:"首页-博士直通车",
       user: '',
     });
+  }else{
+    return res.redirect('/topic');
   }
-  res.redirect('/topic');
+
 });
 
 module.exports = router;

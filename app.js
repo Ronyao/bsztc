@@ -1,4 +1,6 @@
 var express = require('express');
+var fs = require('fs');
+//var busboy = require('connect-busboy');
 var path = require('path');
 var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
@@ -11,6 +13,7 @@ var index = require('./routes/index');
 var users = require('./routes/app/users');
 var topic = require('./routes/app/topic');
 var wisdom = require('./routes/app/wisdom');
+var search = require('./routes/app/search');
 
 var app = express();
 
@@ -36,6 +39,7 @@ app.use(AV.Cloud.HttpsRedirect());
 app.use(methodOverride('_method'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+//app.use(busboy());
 
 app.use(function (req, res, next) {
   if (req.currentUser) {  // 判断用户是否登录
@@ -53,7 +57,7 @@ app.use(function (req, res, next) {
     } else if (arr.length > 2 && arr[1] == 'users' && (arr[2] == 'reg' || arr[2] == 'login' || arr[2] == 'logout' || arr[2] == 'get_vercode' || arr[2] == 'forget' || arr[2] == 'get_vercode_forget')) {
       next();
     } else {  // 登录拦截
-      res.redirect('/users/login');  // 将用户重定向到登录页面
+      return res.redirect('/users/login');  // 将用户重定向到登录页面
     }
   }
 });
@@ -63,6 +67,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/topic', topic);
 app.use('/wisdom', wisdom);
+app.use('/search', search);
 
 // 如果任何路由都没匹配到，则认为 404
 // 生成一个异常让后面的 err handler 捕获

@@ -102,7 +102,7 @@
 
 
                 <div class="layui-form-item">
-                  <label class="layui-form-label">所属学科</label>
+                  <label class="layui-form-label">所属学科*</label>
                   <div class="layui-input-inline">
                     <select name="disciplinsFiles" id="disciplinsFiles" lay-filter="disciplinsFiles">
                       <option value="">学科门类</option>
@@ -122,42 +122,42 @@
 
 
                 <div class="layui-form-item">
-                  <label class="layui-form-label">所在省市</label>
+                  <label class="layui-form-label">所在省市*</label>
                   <div class="layui-input-inline">
-      			    		<select name="province" lay-filter="province">
+      			    		<select name="province" lay-filter="province" id="province">
       			    			<option></option>
       			    		</select>
       			    	</div>
       			    	<div class="layui-input-inline">
-      			    		<select name="city" lay-filter="city">
+      			    		<select name="city" lay-filter="city" id="city">
       			    			<option></option>
       			    		</select>
       			    	</div>
                 </div>
 
                 <div class="layui-form-item">
-                <input type="file" name="idCardInHand" id="idCardInHand" lay-title="手持身份证照片（保密）">
+                <input type="file" lay-type="file" name="idCardInHand" id="idCardInHand" lay-title="手持身份证照片*">
                 </div>
                 <div class="layui-form-item">
                 <img src="/res/images/litu.png" id="idCardInHand_pic" alt="手持身份证照片" width="380px" height="240px">
                 </div>
 
                 <div class="layui-form-item">
-                <input type="file" name="idCardFront" id="idCardFront" lay-title="身份证正面照片（保密）">
+                <input type="file" name="idCardFront" id="idCardFront" lay-title="身份证正面照片*">
                 </div>
                 <div class="layui-form-item">
                 <img src="/res/images/litu.png" id="idCardFront_pic" alt="身份证正面照"  width="380px" height="240px">
                 </div>
 
                 <div class="layui-form-item">
-                <input type="file" name="graduationCard" id="graduationCard" lay-title="所在学校毕业证（保密）">
+                <input type="file" name="graduationCard" id="graduationCard" lay-title="所在学校毕业证*">
                 </div>
                 <div class="layui-form-item">
                 <img src="/res/images/litu.png" id="graduationCard_pic" alt="所在学校毕业证"  width="380px" height="240px">
                 </div>
 
                 <div class="layui-form-item layui-form-text">
-                  <label class="layui-form-label">个人简介(必填)</label>
+                  <label class="layui-form-label">个人简介*</label>
                   <div class="layui-input-block">
                     <textarea placeholder="请输入个人简介" class="layui-textarea" id="introduction"></textarea>
                   </div>
@@ -198,13 +198,13 @@
 
                 <div class="layui-form-item">
                   <div class="layui-inline">
-                  <label class="layui-form-label">图文咨询价</label>
+                  <label class="layui-form-label">图文咨询价*</label>
                     <div class="layui-input-inline">
                       <input type="text" name="username" lay-verify="required" placeholder="元/每次" autocomplete="off" class="layui-input" id="chatPrice">
                     </div>
                   </div>
                   <div class="layui-inline">
-                  <label class="layui-form-label">电话咨询价</label>
+                  <label class="layui-form-label">电话咨询价*</label>
                     <div class="layui-input-inline">
                       <input type="text" name="username" lay-verify="required" placeholder="元/分钟" autocomplete="off" class="layui-input" id="callPrice">
                     </div>
@@ -212,7 +212,7 @@
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label">预约时间</label>
+                    <label class="layui-form-label">预约时间*</label>
                     <div class="layui-input-block">
                       <input type="checkbox" name="emptyTime" title="06:00" value="0">
                       <input type="checkbox" name="emptyTime" title="06:30" value="1">
@@ -388,6 +388,8 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
   ,element = layui.element();
 
   var $ = layui.jquery;
+
+  $("#idCardInHand_pic").src = "http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png";
   pca.init('select[name=province]', 'select[name=city]', '');
   dfs.init('select[name=disciplinsFiles]', 'select[name=firstDisciplines]', 'select[name=secondDisciplines]');
   $("#myinfo").click(function () {
@@ -415,12 +417,12 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
       {
         realName: $("#realName").val(),
         reaild: $("#reaild").val(),
-        // disciplinsFiles: $("#disciplinsFiles").val(),
-        // firstDisciplines: $("#firstDisciplines").val(),
-        // secondDisciplines: $("#secondDisciplines").val(),
-        // province: $("#province").val(),
-        // city: $("#city").val(),
-        // idCardInHand: $("#idCardInHand_pic").src,
+        disciplinsFiles: $("#disciplinsFiles").val(),
+        firstDisciplines: $("#firstDisciplines").val(),
+        secondDisciplines: $("#secondDisciplines").val(),
+        province: $("#province").val(),
+        city: $("#city").val(),
+        idCardInHand: $("#idCardInHand_pic").src,
         // idCardFront: $("#idCardFront_pic").src,
         // graduationCard: $("#graduationCard_pic").src,
         // introduction: $("#introduction").val(),
@@ -463,32 +465,42 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
 });
 </script>
 <script>
-layui.use('upload', function(){
-
+layui.use(['jquery','upload'], function(){
+  var inputObject = new Object();
+  var inputString = '';
+  var $ = layui.jquery;
   layui.upload({
     url: '/users/upload_avatar'
     ,elem: '#avatar' //指定原始元素，默认直接查找class="layui-upload-file"
-    ,method: 'get' //上传接口的http类型
+    ,method: 'post' //上传接口的http类型
     ,success: function(res){
       LAY_demo_upload.src = res.url;
     }
   });
 
   layui.upload({
-    url: '/users/upload_avatar'
-    ,elem: '#idCardInHand' //指定原始元素，默认直接查找class="layui-upload-file"
-    ,method: 'get' //上传接口的http类型
+
+    elem: '#idCardInHand' //指定原始元素，默认直接查找class="layui-upload-file"
+    ,method: 'post' //上传接口的http类型
+    ,before: function(input){
+      inputObject = input.files[0];
+      inputString = JSON.stringify(inputObject);
+      console.log(inputObject);
+    }
+    ,url: '/users/upload_avata?inputObject='+inputString
     ,success: function(res){
-      LAY_demo_upload.src = res.url;
+      //alert(res);
+      //console.log($("#idCardInHand")[0].files[0]);
+      idCardInHand_pic.src = res;
     }
   });
 
   layui.upload({
     url: '/users/upload_avatar'
     ,elem: '#idCardFront' //指定原始元素，默认直接查找class="layui-upload-file"
-    ,method: 'get' //上传接口的http类型
+    ,method: 'post' //上传接口的http类型
     ,success: function(res){
-      LAY_demo_upload.src = res.url;
+      idCardFront_pic.src = res;
     }
   });
 

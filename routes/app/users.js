@@ -1,11 +1,12 @@
 var express = require('express');
+var fs = require('fs');
 var router = express.Router();
 
 var AV = require('leanengine');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.redirect('/users/index');
+  return res.redirect('/users/index');
 });
 
 router.get('/index', function(req, res, next) {
@@ -35,7 +36,7 @@ router.get('/login',function(req, res, next) {
 
   if(req.currentUser){
     //跳到首页
-    res.redirect('/topic');
+    return res.redirect('/topic');
   }else{
     //登录页面
     res.render('users/login',
@@ -183,7 +184,7 @@ router.post('/forget',function(req, res, next) {
 router.get('/logout',function(req, res, next) {
   req.currentUser.logOut();
   res.clearCurrentUser();
-  res.redirect('/');
+  return res.redirect('/');
 });
 
 router.post('/get_vercode_forget',function(req, res, next){
@@ -269,6 +270,7 @@ router.post('/myinfo',function(req, res, next) {
   // 保存到云端
   user.save().then(function() {
     result = "success";
+
     res.json(result);
   },function(error){
     result = "修改失败";
@@ -277,13 +279,59 @@ router.post('/myinfo',function(req, res, next) {
 });
 
 router.post('/upload_avatar',function(req, res, next){
+  // var fstream;
+  //   req.pipe(req.busboy);
+  //   req.busboy.on('file', function (fieldname, file, filename) {
+  //       console.log("Uploading: " + filename);
+  //       fstream = fs.createWriteStream(__dirname + '/files/' + filename);
+  //       file.pipe(fstream);
+  //       fstream.on('close', function () {
+  //           res.redirect('back');
+  //       });
+  //   });
+  console.log(req);
   console.log(req.body);
+  var url = "http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png";
+  res.json(url);
 });
 
 
 router.post('/d_verify',function(req, res, next) {
-  console.log(req.body);
-  res.json("success");
+  //必填的选项有：个人简介，学科门类，省市，真实姓名，身份证，三张图，价格，预约时间
+  var result = "";
+  var realName = req.body.realName;
+  var reaild = req.body.reaild;
+  var disciplinsFiles = req.body.disciplinsFiles;
+  var firstDisciplines = req.body.firstDisciplines;
+  var secondDisciplines = req.body.secondDisciplines;
+  var province = req.body.province;
+  var city = req.body.city;
+  var idCardInHand = req.body.idCardInHand;
+  // var idCardFront = req.body.idCardFront;
+  // var graduationCard = req.body.graduationCard;
+  // var introduction = req.body.introduction;
+  // var researchDirection = req.body.researchDirection;
+  // var historyProjects = req.body.historyProjects;
+  // var nowProjects = req.body.nowProjects;
+  // var historyAwards = req.body.historyAwards;
+  // var historyPapers = req.body.historyPapers;
+  // var callPrice = req.body.callPrice;
+  // var chatPrice = req.body.chatPrice;
+  // var emptyTime = req.body.emptyTime;
+
+  if (realName.replace(/(^\s*)|(\s*$)/g, "").length ==0)
+  {
+    result = "真实姓名不能为空";
+  }else if (!(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(reaild))) {
+    result = "身份证填写有误";
+  }else if (disciplinsFiles =="学科门类"||firstDisciplines=="一级学科"||secondDisciplines=="二级学科") {
+    result = "学科门类选择有误";
+  }else if (province=="省"||city=="市"){
+    result = "省市选择有误";
+  }
+
+  console.log(disciplinsFiles);
+  res.json(result);
 })
 
 module.exports = router;
