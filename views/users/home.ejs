@@ -11,33 +11,18 @@
 
 <%- include("../header.ejs") %>
 
-<div class="fly-home" style="background-image: url();">
-  <img src="{{info.avatar}}" alt="{{info.username}}">
-  <h1>{{info.username}}
-  <i class="iconfont
-  {{# if(info.sex == 0){ }}
-  icon-nan
-  {{# } else if(info.sex == 1){ }}
-  icon-nv
-  {{# } }}
-  "></i>
-  {{# if(info.rmb) { }}
-  <span style="color: #FF7200;">VIP{{ lay.util.vip(info.rmb) }}</span>
-  {{# } }}
-  {{# if(info.auth == 1){ }}
-  <span style="color:#c00;">（超级码农）</span>
-  {{# } else if(info.auth == 2) { }}
-  <span style="color:#5FB878;">（活雷锋）</span>
-  {{# } else if(info.auth == -1) { }}
-  <span>（该号已被封）</span>
-  {{# } }}
+<div class="fly-home" style="background-image: url();padding-bottom: 34px;">
+  <img src=<%= thisUser[0].get('avatar') %> alt=<%= thisUser[0].get('nickname') %>>
+  <h1><%= thisUser[0].get('nickname') %>
+    <button class="layui-btn layui-btn-primary layui-btn-mini">关注</button>
   </h1>
   <div class="layui-main">
-    <p style="display: inline-block; max-width: 800px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #999; margin-top: 10px;">（{{= info.sign||'这个人懒得留下签名' }}）</p>
+    <p style="display: inline-block; max-width: 800px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #999; margin-top: 10px;">（<%= thisUser[0].get('signature')||'这个人懒得留下签名' %>）</p>
   </div>
-  <!--<div class="fly-sns">
-    <span lay-event="">添加好友</span>
-  </div>-->
+  <div class="fly-sns">
+    <span lay-event=""><button class="layui-btn">图文咨询 ￥10/次</button>
+    <button class="layui-btn layui-btn-normal">电话咨询 ￥10/分钟</button></span>
+  </div>
 </div>
 
 <div class="main layui-clear">
@@ -91,6 +76,14 @@
     <li><i class="iconfont icon-zuichun"></i>拥有飞吻：<span style="color: #FF7200;">{{info.experience}}</span></li>
     <li><i class="iconfont icon-shijian"></i>加入时间：<span>{{lay.time(info.joinTime)}}</span></li>
     <li><i class="iconfont icon-chengshi"></i>城市：<span>{{= info.city||'中国 某城'}}</span></li>
+    <li><i class="iconfont icon-chengshi"></i>一级学科：<span>{{= info.city||'中国 某城'}}</span></li>
+    <li><i class="iconfont icon-chengshi"></i>二级学科：<span>{{= info.city||'中国 某城'}}</span></li>
+    <li><i class="iconfont icon-chengshi"></i>研究方向：<span>{{= info.city||'中国 某城'}}</span></li>
+    <li><i class="iconfont icon-chengshi"></i>所获奖励：<span>{{= info.city||'中国 某城'}}</span></li>
+    <li><i class="iconfont icon-chengshi"></i>既往研究项目：<span>{{= info.city||'中国 某城'}}</span></li>
+    <li><i class="iconfont icon-chengshi"></i>发表论著：<span>{{= info.city||'中国 某城'}}</span></li>
+    <li><i class="iconfont icon-chengshi"></i>在研项目：<span>{{= info.city||'中国 某城'}}</span></li>
+    <li><i class="iconfont icon-chengshi"></i>简介：<span>{{= info.city||'中国 某城'}}</span></li>
     </ul>
     <!-- layer-300*250 -->
     <ins class="adsbygoogle"

@@ -70,46 +70,29 @@
 
       <ul class="fly-list" id="userlist">
 
-        <li class="fly-list-li">
-          <a href="user/home.html" class="fly-list-avatar">
-            <img src="http://tp4.sinaimg.cn/1345566427/180/5730976522/0" alt="">
-          </a>
-          <h2 class="fly-tip">
-            <a href="jie/detail.html">童车</a>
-            <!-- <span class="fly-tip-stick">置顶</span>
-            <span class="fly-tip-jing">精帖</span> -->
-          </h2>
-          <p>
-            <span>教育学 ></span>
-            <span>教育学 ></span>
-            <span>比较教育学</span>
-            <span class="fly-list-hint">
-              <i class="iconfont" title="回答">&#xe60c;</i> 317 咨询
-              <i class="iconfont" title="人气">&#xe60b;</i> 6830 关注
-            </span>
-          </p>
-        </li>
-
-        <li class="fly-list-li">
-          <a href="user/home.html" class="fly-list-avatar">
-            <img src="../res/images/avatar/00.jpg" alt="">
-          </a>
-          <h2 class="fly-tip">
-            <a href="jie/detail.html"> Layui 首个版本千呼万唤，终于滚出来了 </a>
-            <span class="fly-tip-stick">置顶</span>
-          </h2>
-          <p>
-            <span><a href="user/home.html">纸飞机</a></span>
-            <span>30分钟前</span>
-            <span>技术闲谈</span>
-            <span class="fly-list-hint">
-              <i class="iconfont" title="回答">&#xe60c;</i> 502
-              <i class="iconfont" title="人气">&#xe60b;</i> 81689
-            </span>
-          </p>
-        </li>
+        <% users.forEach(function(user){%>
+                <li class="fly-list-li">
+                  <a href="user/home.html" class="fly-list-avatar">
+                    <img src=<%= user.get('avatar') %> alt="">
+                  </a>
+                  <h2 class="fly-tip">
+                    <a href="jie/detail.html"><%= user.get('nickname') %></a>
+                  </h2>
+                  <p>
+                    <span><%= user.get('d_disciplinesFields') %> ></span>
+                    <span><%= user.get('d_firstDisciplines') %> ></span>
+                    <span><%= user.get('d_secondDisciplines') %></span>
+                    <span class="fly-list-hint">
+                      <i class="iconfont" title="回答">&#xe60c;</i> <% if(user.get('d_consultCount')== undefined ){ %> 0 <% }else{ %><%= user.get('d_consultCount') %> <% } %> 咨询
+                      <i class="iconfont" title="人气">&#xe60b;</i> <% if(user.get('d_follower')== undefined ){ %> 0 <% }else{ %><%= user.get('d_follower') %> <% } %> 关注
+                    </span>
+                  </p>
+                </li>
+        <% }) %>
 
       </ul>
+
+
 
       <div style="text-align: center">
         <div class="laypage-main">
@@ -140,30 +123,37 @@ layui.use(['jquery','form','layer'], function(){
         discipline: data.value,
       },
       function (data, status){
-        if(data=='success'){
+        if(data == 'success'){
           layer.msg("成功搜索");
         }else{
           //alert(data);
           //layer.msg(data);
           console.log(data);
+
           $("#userlist").empty();
-          var string = '<li class="fly-list-li">';
-          string += '<a href="user/home.html" class="fly-list-avatar"><img src="../res/images/avatar/00.jpg" alt=""></a>';
-          string += '<h2 class="fly-tip">';
-          string += '<a href="jie/detail.html"> Layui 首个版本千呼万唤，终于滚出来了 </a>';
-          string += '<span class="fly-tip-stick">置顶</span>';
-          string += '</h2>';
-          string += '<p>';
-          string += '<span><a href="user/home.html">纸飞机</a></span>';
-          string += '<span>30分钟前</span>';
-          string += '<span>技术闲谈</span>';
-          string += '<span class="fly-list-hint">';
-          string += '<i class="iconfont" title="回答">&#xe60c;</i> 502 咨询';
-          string += '<i class="iconfont" title="人气">&#xe60b;</i> 81689 关注';
-          string += '</span>';
-          string += '</p>';
-          string += '</li>';
-          $("#userlist").append(string);
+          var i = data.length;
+          while (i--) {
+            var string = '';
+            string += '<li class="fly-list-li">';
+            string += '<a href="user/home.html" class="fly-list-avatar"><img src="'+ data[i].avatar +'" alt=""></a>';
+            string += '<h2 class="fly-tip">';
+            string += '<a href="users/home?uid='+data[i].objectId+'"> '+ data[i].nickname +' </a>';
+            string += '</h2>';
+            string += '<p>';
+            string += '<span>'+ data[i].d_disciplinesFields +' ></span>';
+            string += '<span>'+ data[i].d_firstDisciplines +' ></span>';
+            string += '<span>'+ data[i].d_secondDisciplines +'</span>';
+            string += '<span class="fly-list-hint">';
+            if(data[i].d_consultCount===undefined) data[i].d_consultCount=0;
+            string += '<i class="iconfont" title="回答">&#xe60c;</i> '+ data[i].d_consultCount +' 咨询';
+            if(data[i].d_follower===undefined) data[i].d_follower=0;
+            string += '<i class="iconfont" title="人气">&#xe60b;</i> '+ data[i].d_follower +' 关注';
+            string += '</span>';
+            string += '</p>';
+            string += '</li>';
+            $("#userlist").append(string);
+          }
+
         }
       }
     )

@@ -9,16 +9,13 @@ router.post('/usersOfSelect', function(req, res, next) {
   var discipline = req.body.discipline;
   var query = new AV.Query('_User');
   query.equalTo('d_disciplinesFields', discipline);
-  query.limit(2);
+  query.limit(10);
   query.find().then(function (results) {
-    result = results;
-    console.log(results);
-    res.send({result: result});
+    res.json(results);
   }, function (error) {
     result = error.code;
     res.json(result);
   });
- //res.json(discipline);
 });
 
 module.exports = router;

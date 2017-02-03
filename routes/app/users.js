@@ -240,12 +240,26 @@ router.get('/home',function(req, res, next){
     identity = "认证博士";
   }
    uid = req.query.uid;
-   res.render('users/home',{
-     title:"用户中心",
-     user: req.currentUser.get('nickname'),
-     avatar: avatar,
-     identity:identity
-   });
+   var query = new AV.Query('_User');
+   query.equalTo('objectId', uid);
+   query.find().then(function (results) {
+     console.log(results);
+     res.render('users/home',{
+       title:"用户中心",
+       user: req.currentUser.get('nickname'),
+       avatar: avatar,
+       identity: identity,
+       thisUser: results
+     });
+  }, function (error) {
+    res.render('users/home',{
+      title:"用户中心",
+      user: req.currentUser.get('nickname'),
+      avatar: avatar,
+      identity:identity
+    });
+  });
+
 });
 
 router.get('/message',function(req, res, next){

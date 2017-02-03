@@ -57,7 +57,7 @@ app.use(function (req, res, next) {
     } else if (arr.length > 2 && arr[1] == 'users' && (arr[2] == 'reg' || arr[2] == 'login' || arr[2] == 'logout' || arr[2] == 'get_vercode' || arr[2] == 'forget' || arr[2] == 'get_vercode_forget')) {
       next();
     } else {  // 登录拦截
-      return res.redirect('/users/login');  // 将用户重定向到登录页面
+      res.redirect('/users/login');  // 将用户重定向到登录页面
     }
   }
 });
