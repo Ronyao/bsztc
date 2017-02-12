@@ -96,7 +96,6 @@ router.post('/get_vercode',function(req, res, next){
     var id = Math.floor(Math.random()*10);
     nickname += jschar[id];
   }
-  console.log(pass.length);
   if(!(/^1[34578]\d{9}$/.test(mobile))){
       result = "手机号码格式不正确！";
       res.json(result);
@@ -243,7 +242,6 @@ router.get('/home',function(req, res, next){
    var query = new AV.Query('_User');
    query.equalTo('objectId', uid);
    query.find().then(function (results) {
-     console.log(results);
      res.render('users/home',{
        title:"用户中心",
        user: req.currentUser.get('nickname'),
@@ -303,8 +301,6 @@ router.post('/upload_avatar',function(req, res, next){
   //           res.redirect('back');
   //       });
   //   });
-  console.log(req);
-  console.log(req.body);
   var url = "http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png";
   res.json(url);
 });
@@ -312,7 +308,8 @@ router.post('/upload_avatar',function(req, res, next){
 
 router.post('/d_verify',function(req, res, next) {
   //必填的选项有：个人简介，学科门类，省市，真实姓名，身份证，三张图，价格，预约时间
-  var result = "";
+  console.log(req.body);
+  var result = "提交成功";
   var realName = req.body.realName;
   var reaild = req.body.reaild;
   var disciplinsFiles = req.body.disciplinsFiles;
@@ -321,17 +318,23 @@ router.post('/d_verify',function(req, res, next) {
   var province = req.body.province;
   var city = req.body.city;
   var idCardInHand = req.body.idCardInHand;
-  // var idCardFront = req.body.idCardFront;
-  // var graduationCard = req.body.graduationCard;
-  // var introduction = req.body.introduction;
-  // var researchDirection = req.body.researchDirection;
-  // var historyProjects = req.body.historyProjects;
-  // var nowProjects = req.body.nowProjects;
-  // var historyAwards = req.body.historyAwards;
-  // var historyPapers = req.body.historyPapers;
-  // var callPrice = req.body.callPrice;
-  // var chatPrice = req.body.chatPrice;
-  // var emptyTime = req.body.emptyTime;
+  var idCardFront = req.body.idCardFront;
+  var graduationCard = req.body.graduationCard;
+  var introduction = req.body.introduction;
+  var researchDirection = req.body.researchDirection;
+  var historyProjects = req.body.historyProjects;
+  var nowProjects = req.body.nowProjects;
+  var historyAwards = req.body.historyAwards;
+  var historyPapers = req.body.historyPapers;
+  var callPrice = parseInt(req.body.callPrice);
+  var chatPrice = parseInt(req.body.chatPrice);
+  var emptyTime = req.body.emptyTime;
+
+  var dataStrArr=emptyTime.split(",");//分割成字符串数组
+  var dataIntArr=[];//保存转换后的整型字符串
+  dataStrArr.forEach(function(data,index,arr){
+      dataIntArr.push(+data);
+  });
 
   if (realName.replace(/(^\s*)|(\s*$)/g, "").length ==0)
   {
@@ -340,12 +343,58 @@ router.post('/d_verify',function(req, res, next) {
     result = "身份证填写有误";
   }else if (disciplinsFiles =="学科门类"||firstDisciplines=="一级学科"||secondDisciplines=="二级学科") {
     result = "学科门类选择有误";
-  }else if (province=="省"||city=="市"){
+  }else if (province=="省" || city=="市"){
     result = "省市选择有误";
+  }else if(idCardInHand.split("/")[idCardInHand.split("/").length-1] =='litu.png'){
+    result = "手持身份证照片必须上传";
+  }else if(idCardFront.split("/")[idCardFront.split("/").length-1]=='litu.png'){
+    result = "身份证正面照片必须上传";
+  }else if(graduationCard.split("/")[graduationCard.split("/").length-1]=='litu.png'){
+    result = "所在学校毕业证必须上传";
+  }else if(introduction ==''){
+    result = "个人简介不能为空";
+  }else if(callPrice==''||chatPrice==''){
+    result = "价格不能为空";
+  }else if (emptyTime=='') {
+    result = "预约时间必须选择一个以上";
+  }
+  else {
+    var user = AV.Object.createWithoutData('_User', req.currentUser.id);
+    user.set('d_realName',realName);
+    user.set('d_realld',reaild);
+    user.set('d_disciplinesFields',disciplinsFiles);
+    user.set('d_firstDisciplines',firstDisciplines);
+    user.set('d_secondDisciplines',secondDisciplines);
+    user.set('province',province);
+    user.set('city',city);
+    user.set('d_idCardInHand',idCardInHand);
+    user.set('d_idCardFront',idCardFront);
+    user.set('d_graduationCard',graduationCard);
+    user.set('d_introduction',introduction);
+    user.set('d_researchDirection',researchDirection);
+    user.set('d_historyProjects',historyProjects);
+    user.set('d_nowProjects',nowProjects);
+    user.set('d_historyAwards',historyAwards);
+    user.set('d_historyPapers',historyPapers);
+    user.set('d_callPrice',callPrice);
+    user.set('d_chatPrice',chatPrice);
+    user.set('d_emptyTime',dataIntArr);
+    user.set('applyState', 1);
+
+    user.save().then(function (user) {
+      console.log(user);
+      result = 'success';
+    }, function (error) {
+      console.log(error);
+      result = error;
+    });
   }
 
-  console.log(disciplinsFiles);
   res.json(result);
-})
+});
+
+router.post('/upload_pic',function(req, res, next) {
+  res.json('');
+});
 
 module.exports = router;

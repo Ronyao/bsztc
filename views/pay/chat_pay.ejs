@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>下单支付页面</title>
+<link rel="stylesheet" href="/res/layui/css/layui.css">
+</head>
+<body>
+  <fieldset class="layui-elem-field">
+    <legend>博士点下单支付</legend>
+    <div class="layui-field-box">
+      <form class="layui-form" action="">
+        <div class="layui-form-item">
+          <label class="layui-form-label">应付博士点</label>
+          <div class="layui-input-inline">
+            <input type="tel" name="phone" lay-verify="phone" autocomplete="off" class="layui-input" readonly="" placeholder="123">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">你的博士点</label>
+          <div class="layui-input-inline">
+            <input type="text" name="email" lay-verify="email" autocomplete="off" class="layui-input" readonly="" placeholder="123">
+          </div>
+        </div>
+
+        <blockquote class="layui-elem-quote">这个貌似不用多介绍，因为你已经在太多的地方都看到</blockquote>
+
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1">提交订单</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </fieldset>
+
+<script>
+
+layui.use(['jquery','layer'], function(){
+  var layer = layui.layer
+  var $ = layui.jquery;
+  //监听提交
+  $("#submit").click(function(){
+    $.post(
+      "/users/login",
+      {
+        phone: $("#L_phone").val(),
+        pass: $("#L_pass").val()
+      },
+      function(data,status){
+        if(data=='success'){
+          window.location.href="/topic";
+        }else{
+          layer.msg(data);
+        }
+      }
+    )
+  });
+});
+</script>
+</body>
+</html>

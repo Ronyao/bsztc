@@ -20,8 +20,8 @@
     <p style="display: inline-block; max-width: 800px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #999; margin-top: 10px;">（<%= thisUser[0].get('signature')||'这个人懒得留下签名' %>）</p>
   </div>
   <div class="fly-sns">
-    <span lay-event=""><button class="layui-btn">图文咨询 ￥10/次</button>
-    <button class="layui-btn layui-btn-normal">电话咨询 ￥10/分钟</button></span>
+    <span lay-event=""><button id="chat" class="layui-btn">图文咨询 ￥<%= thisUser[0].get('d_chatPrice') %>/次</button>
+    <button id="call" class="layui-btn layui-btn-normal">电话咨询 ￥<%= thisUser[0].get('d_callPrice') %>/分钟</button></span>
   </div>
 </div>
 
@@ -96,6 +96,27 @@
 </div>
 
 <%- include("../footer.ejs") %>
+<script>
+layui.use('layer',function(){
+  var $ = layui.jquery, layer = layui.layer;
+  $('#chat').click(function() {
+    layer.open({
+      type: 2,
+      area: ['700px','330px'],
+      content: ['/pay/chat_pay',] //这里content是一个普通的String
+    });
+  });
+
+  $('#call').click(function() {
+    layer.open({
+      type: 2,
+      area: ['700px','330px'],
+      content: '/pay/call_pay'
+    });
+  })
+
+});
+</script>
 
 </body>
 </html>

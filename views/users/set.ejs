@@ -96,7 +96,7 @@
                 <div class="layui-form-item">
                   <label class="layui-form-label">身份证号*</label>
                   <div class="layui-input-block">
-                    <input type="number" id="reaild" name="reaild" autocomplete="off" placeholder="请输入身份证号" class="layui-input">
+                    <input type="text" id="reaild" name="reaild" autocomplete="off" placeholder="请输入身份证号" class="layui-input">
                   </div>
                 </div>
 
@@ -355,11 +355,17 @@
                 </div>
 
                 <div class="layui-form-item">
-                <input type="file" name="file" class="layui-upload-file" lay-title="营业执照">
+                <input type="file" lay-type="file" name="bussinessLicenes" id="bussinessLicenes" lay-title="上传营业执照*">
+                </div>
+                <div class="layui-form-item">
+                <img src="/res/images/litu.png" id="bussinessLicenes_pic" alt="营业执照" width="380px" height="240px">
                 </div>
 
                 <div class="layui-form-item">
-                <input type="file" name="file" class="layui-upload-file" lay-title="企业公函">
+                <input type="file" lay-type="file" name="bussinessLetter" id="bussinessLetter" lay-title="上传企业公函*">
+                </div>
+                <div class="layui-form-item">
+                <img src="/res/images/litu.png" id="bussinessLetter_pic" alt="企业公函" width="380px" height="240px">
                 </div>
 
                 <div class="layui-form-item">
@@ -375,6 +381,8 @@
 </div>
 
 <%- include("../footer.ejs") %>
+<script src="http://cdn1.lncld.net/static/js/2.1.1/av-min.js"></script>
+<script src="/javascripts/initLeanCloud.js"></script>
 <script src="/javascripts/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
 <script src="/javascripts/citys.js" type="text/javascript" charset="utf-8"></script>
 <script src="/javascripts/disciplines.js" type="text/javascript" charset="utf-8"></script>
@@ -412,6 +420,14 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
   });
 
   $("#d_verify").click(function () {
+    //var idCardInHand = $("#idCardInHand_pic").src;
+    var emptyTime = new Array();
+    $('input[name="emptyTime"]:checked').each(function(){
+      emptyTime.push($(this).val());//向数组中添加元素
+    });
+
+    var emptyTime_str=emptyTime.join(',');//将数组元素连接起来以构建一个字符串
+
     $.post(
       "/users/d_verify",
       {
@@ -422,24 +438,26 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
         secondDisciplines: $("#secondDisciplines").val(),
         province: $("#province").val(),
         city: $("#city").val(),
-        idCardInHand: $("#idCardInHand_pic").src,
-        // idCardFront: $("#idCardFront_pic").src,
-        // graduationCard: $("#graduationCard_pic").src,
-        // introduction: $("#introduction").val(),
-        // researchDirection: $("#researchDirection").val(),
-        // historyProjects: $(#"historyProjects").val(),
-        // nowProjects: $("#nowProjects").val(),
-        // historyAwards: $("#historyAwards").val(),
-        // historyPapers: $("#historyPapers").val(),
-        // callPrice: $("#callPrice").val(),
-        // chatPrice: $("#chatPrice").val(),
-        // emptyTime:
+        idCardInHand: $("#idCardInHand_pic")[0].currentSrc,
+        idCardFront: $("#idCardFront_pic")[0].currentSrc,
+        graduationCard: $("#graduationCard_pic")[0].currentSrc,
+        introduction: $("#introduction").val(),
+        researchDirection: $("#researchDirection").val(),
+        historyProjects: $("#historyProjects").val(),
+        nowProjects: $("#nowProjects").val(),
+        historyAwards: $("#historyAwards").val(),
+        historyPapers: $("#historyPapers").val(),
+        callPrice: $("#callPrice").val(),
+        chatPrice: $("#chatPrice").val(),
+        emptyTime: emptyTime_str
       },
       function(data,status){
-        if(data=='success'){
+        if(data == 'success' && status == 'success'){
           layer.msg("申请提交成功");
+        }else if(data.length>100){
+          location.reload();
         }else{
-          layer.msg(data);
+          layer.msg(data)
         }
       }
     )
@@ -465,10 +483,9 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
 });
 </script>
 <script>
-layui.use(['jquery','upload'], function(){
-  var inputObject = new Object();
-  var inputString = '';
-  var $ = layui.jquery;
+layui.use(['jquery','upload','layer'], function(){
+  var $ = layui.jquery
+  ,layer = layui.layer;
   layui.upload({
     url: '/users/upload_avatar'
     ,elem: '#avatar' //指定原始元素，默认直接查找class="layui-upload-file"
@@ -479,37 +496,122 @@ layui.use(['jquery','upload'], function(){
   });
 
   layui.upload({
-
     elem: '#idCardInHand' //指定原始元素，默认直接查找class="layui-upload-file"
     ,method: 'post' //上传接口的http类型
     ,before: function(input){
-      inputObject = input.files[0];
-      inputString = JSON.stringify(inputObject);
-      console.log(inputObject);
+      var fileUploadControl = input;
+      if (fileUploadControl.files.length > 0) {
+        var localFile = fileUploadControl.files[0];
+        var name = 'idCardInHand.jpg';
+        var file = new AV.File(name, localFile);
+        file.save().then(function(file) {
+          // 文件保存成功
+          idCardInHand_pic.src = file.url();
+        }, function(error) {
+          // 异常处理
+          layer.msg("上传图片失败");
+        });
+      }
     }
-    ,url: '/users/upload_avata?inputObject='+inputString
-    ,success: function(res){
-      //alert(res);
-      //console.log($("#idCardInHand")[0].files[0]);
-      idCardInHand_pic.src = res;
+    ,url: 'upload_pic'
+    ,success: function(data){
+
     }
   });
 
   layui.upload({
-    url: '/users/upload_avatar'
+    url: 'upload_pic'
     ,elem: '#idCardFront' //指定原始元素，默认直接查找class="layui-upload-file"
     ,method: 'post' //上传接口的http类型
+    ,before: function(input){
+      var fileUploadControl = input;
+      if (fileUploadControl.files.length > 0) {
+        var localFile = fileUploadControl.files[0];
+        var name = 'idCardFront.jpg';
+        var file = new AV.File(name, localFile);
+        file.save().then(function(file) {
+          // 文件保存成功
+          idCardFront_pic.src = file.url();
+        }, function(error) {
+          // 异常处理
+          layer.msg("上传图片失败");
+        });
+      }
+    }
     ,success: function(res){
-      idCardFront_pic.src = res;
+
     }
   });
 
   layui.upload({
-    url: '/users/upload_avatar'
+    url: 'upload_pic'
     ,elem: '#graduationCard' //指定原始元素，默认直接查找class="layui-upload-file"
-    ,method: 'get' //上传接口的http类型
+    ,method: 'post' //上传接口的http类型
+    ,before: function(input){
+      var fileUploadControl = input;
+      if (fileUploadControl.files.length > 0) {
+        var localFile = fileUploadControl.files[0];
+        var name = 'graduationCard.jpg';
+        var file = new AV.File(name, localFile);
+        file.save().then(function(file) {
+          // 文件保存成功
+          graduationCard_pic.src = file.url();
+        }, function(error) {
+          // 异常处理
+          layer.msg("上传图片失败");
+        });
+      }
+    }
     ,success: function(res){
-      LAY_demo_upload.src = res.url;
+
+    }
+  });
+
+  layui.upload({
+    url: 'upload_pic'
+    ,elem: '#bussinessLicenes' //指定原始元素，默认直接查找class="layui-upload-file"
+    ,method: 'post' //上传接口的http类型
+    ,before: function(input){
+      var fileUploadControl = input;
+      if (fileUploadControl.files.length > 0) {
+        var localFile = fileUploadControl.files[0];
+        var name = 'bussinessLicenes.jpg';
+        var file = new AV.File(name, localFile);
+        file.save().then(function(file) {
+          // 文件保存成功
+          bussinessLicenes_pic.src = file.url();
+        }, function(error) {
+          // 异常处理
+          layer.msg("上传图片失败");
+        });
+      }
+    }
+    ,success: function(res){
+
+    }
+  });
+
+  layui.upload({
+    url: 'upload_pic'
+    ,elem: '#bussinessLetter' //指定原始元素，默认直接查找class="layui-upload-file"
+    ,method: 'post' //上传接口的http类型
+    ,before: function(input){
+      var fileUploadControl = input;
+      if (fileUploadControl.files.length > 0) {
+        var localFile = fileUploadControl.files[0];
+        var name = 'bussinessLetter.jpg';
+        var file = new AV.File(name, localFile);
+        file.save().then(function(file) {
+          // 文件保存成功
+          bussinessLetter_pic.src = file.url();
+        }, function(error) {
+          // 异常处理
+          layer.msg("上传图片失败");
+        });
+      }
+    }
+    ,success: function(res){
+
     }
   });
 });

@@ -72,11 +72,11 @@
 
         <% users.forEach(function(user){%>
                 <li class="fly-list-li">
-                  <a href="user/home.html" class="fly-list-avatar">
+                  <a href="users/home?uid=<%= user.get('objectId') %>" class="fly-list-avatar">
                     <img src=<%= user.get('avatar') %> alt="">
                   </a>
                   <h2 class="fly-tip">
-                    <a href="jie/detail.html"><%= user.get('nickname') %></a>
+                    <a href="users/home?uid=<%= user.get('objectId') %>"><%= user.get('nickname') %></a>
                   </h2>
                   <p>
                     <span><%= user.get('d_disciplinesFields') %> ></span>
@@ -135,7 +135,7 @@ layui.use(['jquery','form','layer'], function(){
           while (i--) {
             var string = '';
             string += '<li class="fly-list-li">';
-            string += '<a href="user/home.html" class="fly-list-avatar"><img src="'+ data[i].avatar +'" alt=""></a>';
+            string += '<a href="users/home?uid='+ data[i].objectId +'" class="fly-list-avatar"><img src="'+ data[i].avatar +'" alt=""></a>';
             string += '<h2 class="fly-tip">';
             string += '<a href="users/home?uid='+data[i].objectId+'"> '+ data[i].nickname +' </a>';
             string += '</h2>';
