@@ -309,7 +309,7 @@ router.post('/upload_avatar',function(req, res, next){
 router.post('/d_verify',function(req, res, next) {
   //必填的选项有：个人简介，学科门类，省市，真实姓名，身份证，三张图，价格，预约时间
   console.log(req.body);
-  var result = "提交成功";
+  var result = '';
   var realName = req.body.realName;
   var reaild = req.body.reaild;
   var disciplinsFiles = req.body.disciplinsFiles;
@@ -382,10 +382,67 @@ router.post('/d_verify',function(req, res, next) {
     user.set('applyState', 1);
 
     user.save().then(function (user) {
-      console.log(user);
       result = 'success';
     }, function (error) {
-      console.log(error);
+      result = error;
+    });
+  }
+  res.json(result);
+});
+
+router.post('/e_verify', function(req, res, next){
+  console.log(req.body);
+  var result = '';
+  var industriesClass = req.body.industriesClass;
+  var name = req.body.name;
+  var province = req.body.province;
+  var city = req.body.city;
+  var contactName = req.body.contactName;
+  var contactNumber = req.body.contactNumber;
+  var interesTopic = req.body.interesTopic;
+  var lincenseNumber = req.body.lincenseNumber;
+  var scale = req.body.scale;
+  var qualification = req.body.qualification;
+  var bussinessLicenes = req.body.bussinessLicenes;
+  var bussinessLetter = req.body.bussinessLetter;
+
+  if(industriesClass==''){
+    result = '需选择行业门类';
+  }else if(name==''){
+    result = '企业名称不能为空';
+  }else if (province=="省" || city=="市"){
+    result = "省市选择有误";
+  }else if(contactName==''){
+    result = "联系人姓名不能为空";
+  }else if(contactNumber==''){
+    result = "联系人号码不能为空";
+  }else if(interesTopic==''){
+    result = "感兴趣话题不能为空";
+  }else if(lincenseNumber==''){
+    result = "执照注册号不能为空";
+  }else if(bussinessLicenes.split("/")[bussinessLicenes.split("/").length-1]=='litu.png'){
+    result = "需上传营业执照";
+  }else if(bussinessLetter.split("/")[bussinessLetter.split("/").length-1]=='litu.png'){
+    result = "需上传企业公函";
+  }else{
+    var user = AV.Object.createWithoutData('_User', req.currentUser.id);
+    user.set('e_industriesClass',industriesClass);
+    user.set('e_name',name);
+    user.set('province',province);
+    user.set('city',city);
+    user.set('e_contactName',contactName);
+    user.set('e_contactNumber',contactNumber);
+    user.set('e_interesTopic',interesTopic);
+    user.set('e_lincenseNumber',lincenseNumber);
+    user.set('e_bussinessLicenes',bussinessLicenes);
+    user.set('e_bussinessLetter',bussinessLetter);
+    user.set('e_scale',scale);
+    user.set('e_qualification',qualification);
+    user.set('applyState', 1);
+
+    user.save().then(function (user) {
+      result = 'success';
+    }, function (error) {
       result = error;
     });
   }

@@ -36,7 +36,7 @@
         <div class="layui-form-item">
           <label for="L_nickname" class="layui-form-label">昵称</label>
           <div class="layui-input-inline">
-            <input type="text" id="L_nickname" name="nickname" required lay-verify="required" autocomplete="off" value="<%= currentUser.get('nickname') %>" class="layui-input">
+            <input type="text" id="L_nickname" name="nickname" autocomplete="off" value="<%= currentUser.get('nickname') %>" class="layui-input">
           </div>
           <div class="layui-inline">
             <div class="layui-input-inline">
@@ -89,7 +89,7 @@
                 <div class="layui-form-item">
                   <label class="layui-form-label">真实姓名*</label>
                   <div class="layui-input-inline">
-                    <input type="text" id='realName' name="realName" lay-verify="required" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
+                    <input type="text" id='realName' name="realName" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
                   </div>
                 </div>
 
@@ -200,13 +200,13 @@
                   <div class="layui-inline">
                   <label class="layui-form-label">图文咨询价*</label>
                     <div class="layui-input-inline">
-                      <input type="text" name="username" lay-verify="required" placeholder="元/每次" autocomplete="off" class="layui-input" id="chatPrice">
+                      <input type="text" name="username" placeholder="元/每次" autocomplete="off" class="layui-input" id="chatPrice">
                     </div>
                   </div>
                   <div class="layui-inline">
                   <label class="layui-form-label">电话咨询价*</label>
                     <div class="layui-input-inline">
-                      <input type="text" name="username" lay-verify="required" placeholder="元/分钟" autocomplete="off" class="layui-input" id="callPrice">
+                      <input type="text" name="username" placeholder="元/分钟" autocomplete="off" class="layui-input" id="callPrice">
                     </div>
                   </div>
                 </div>
@@ -254,7 +254,7 @@
                   </div>
 
                 <div class="layui-form-item">
-                  <a id="d_verify" class="layui-btn">提交申请</a>
+                  <a id="d_verify" class="layui-btn">提交博士认证申请</a>
                 </div>
               </form>
             </div>
@@ -263,86 +263,92 @@
               <form class="layui-form layui-form-pane" action="">
 
                 <div class="layui-form-item">
-                  <label class="layui-form-label">一级行业门类</label>
+                  <label class="layui-form-label">行业门类*</label>
                   <div class="layui-input-block">
-                    <select name="interest" lay-filter="aihao">
+                    <select id="industriesClass" name="industriesClass" lay-filter="industriesClass">
                       <option value="">请选择门类</option>
-                      <option value="0">写作</option>
-                      <option value="1">阅读</option>
-                      <option value="2">游戏</option>
-                      <option value="3">音乐</option>
-                      <option value="4">旅行</option>
+                      <option value="食品饮食">食品饮食</option>
+                      <option value="服装行业">服装行业</option>
+                      <option value="建筑开发">建筑开发</option>
+                      <option value="化工行业">化工行业</option>
+                      <option value="纺织行业">纺织行业</option>
+                      <option value="造车行业">造车行业</option>
+                      <option value="电脑行业">电脑行业</option>
+                      <option value="包装行">包装行业</option>
+                      <option value="运输行业">运输行业</option>
+                      <option value="家电行业">家电行业</option>
+                      <option value="电子行业">电子行业</option>
+                      <option value="旅游行业">旅游行业</option>
+                      <option value="机械行业">机械行业</option>
+                      <option value="化妆品行业">化妆品行业</option>
+                      <option value="烟草行业">烟草行业</option>
+                      <option value="酿酒行业">酿酒行业</option>
+                      <option value="互联网行业">互联网行业</option>
+                      <option value="中介行业">中介行业</option>
+                      <option value="亲属行业">亲属行业</option>
+                      <option value="广告行业">广告行业</option>
+                      <option value="农业行业">农业行业</option>
                     </select>
                   </div>
                 </div>
 
                 <div class="layui-form-item">
-                  <label class="layui-form-label">企业名称</label>
+                  <label class="layui-form-label">企业名称*</label>
                   <div class="layui-input-block">
-                    <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                    <input type="text" name="name" id="name" autocomplete="off" placeholder="请输入企业名称" class="layui-input">
                   </div>
                 </div>
 
                 <div class="layui-form-item">
-                  <label class="layui-form-label">所在省市</label>
+                  <label class="layui-form-label">所在省市*</label>
                   <div class="layui-input-inline">
-                    <select name="quiz1">
-                      <option value="">请选择省</option>
-                      <option value="浙江" selected="">浙江省</option>
-                      <option value="你的工号">江西省</option>
-                      <option value="你最喜欢的老师">福建省</option>
-                    </select>
-                  </div>
+      			    		<select name="province" lay-filter="province" id="e_province">
+      			    			<option></option>
+      			    		</select>
+      			    	</div>
+      			    	<div class="layui-input-inline">
+      			    		<select name="city" lay-filter="city" id="e_city">
+      			    			<option></option>
+      			    		</select>
+      			    	</div>
+                </div>
+
+                <div class="layui-form-item">
+                  <label class="layui-form-label">联系人姓名*</label>
                   <div class="layui-input-inline">
-                    <select name="quiz2">
-                      <option value="">请选择市</option>
-                      <option value="杭州">杭州</option>
-                      <option value="宁波" disabled="">宁波</option>
-                      <option value="温州">温州</option>
-                      <option value="温州">台州</option>
-                      <option value="温州">绍兴</option>
-                    </select>
+                    <input type="text" name="contactName" id="contactName" placeholder="请输入联系人姓名" autocomplete="off" class="layui-input">
                   </div>
                 </div>
 
                 <div class="layui-form-item">
-                  <label class="layui-form-label">联系人姓名</label>
+                  <label class="layui-form-label">联系人手机*</label>
                   <div class="layui-input-inline">
-                    <input type="text" name="username" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    <input type="text" name="contactNumber" id="contactNumber" placeholder="请输入联系人手机号" autocomplete="off" class="layui-input">
                   </div>
                 </div>
 
                 <div class="layui-form-item">
-                  <label class="layui-form-label">联系人手机</label>
-                  <div class="layui-input-inline">
-                    <input type="text" name="username" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
-                  </div>
-                </div>
-
-                <div class="layui-form-item layui-form-text">
-                  <label class="layui-form-label">感兴趣的话题</label>
+                  <label class="layui-form-label">感兴趣的话题*</label>
                   <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+                    <input type="text" name="interesTopic" id="interesTopic" autocomplete="off" placeholder="请输入感兴趣的话题" class="layui-input">
                   </div>
                 </div>
 
                 <div class="layui-form-item">
-                  <label class="layui-form-label">执照注册号</label>
+                  <label class="layui-form-label">执照注册号*</label>
                   <div class="layui-input-block">
-                    <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                    <input type="text" name="lincenseNumber" id="lincenseNumber" autocomplete="off" placeholder="请输入执照注册号" class="layui-input">
                   </div>
                 </div>
 
                 <div class="layui-form-item">
                   <label class="layui-form-label">企业规模</label>
                   <div class="layui-input-block">
-                    <select name="interest" lay-filter="aihao">
-                      <option value="">请选择门类</option>
-                      <option value="0">写作</option>
-                      <option value="1">阅读</option>
-                      <option value="2">游戏</option>
-                      <option value="3">音乐</option>
-                      <option value="4">旅行</option>
+                    <select name="scale" id="scale" lay-filter="aihao">
+                      <option value="">请选择规模</option>
+                      <option value="大型">大型</option>
+                      <option value="中型">中型</option>
+                      <option value="小型">小型</option>
                     </select>
                   </div>
                 </div>
@@ -350,7 +356,7 @@
                 <div class="layui-form-item layui-form-text">
                   <label class="layui-form-label">企业所获资历</label>
                   <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+                    <textarea name="qualification" id="qualification" placeholder="请输入内容" class="layui-textarea"></textarea>
                   </div>
                 </div>
 
@@ -369,7 +375,7 @@
                 </div>
 
                 <div class="layui-form-item">
-                  <button class="layui-btn" lay-submit="" lay-filter="demo2">提交申请</button>
+                  <a id="e_Verify" class="layui-btn" >提交企业认证申请</a>
                 </div>
               </form>
             </div>
@@ -452,33 +458,45 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
         emptyTime: emptyTime_str
       },
       function(data,status){
-        if(data == 'success' && status == 'success'){
+        if(data == 'success'){
           layer.msg("申请提交成功");
         }else if(data.length>100){
           location.reload();
         }else{
-          layer.msg(data)
+          layer.msg(data);
         }
       }
     )
   });
 
-  // $("#e_Verify").click(function(){
-  //   $.post(
-  //     "users/e_verify",
-  //     {
-  //       contactName:
-  //       contactNumber:
-  //       lincenseNumber:
-  //       industriesClass:
-  //       bussinessLetter:
-  //       scale:
-  //       qualification:
-  //       interesTopic:
-  //       bussinessLicenes:
-  //     }
-  //   )
-  // })
+  $("#e_Verify").click(function(){
+    $.post(
+      "e_verify",
+      {
+        industriesClass: $("#industriesClass").val(),
+        name : $("#name").val(),
+        province: $("#e_province").val(),
+        city: $("#e_city").val(),
+        contactName: $("#contactName").val(),
+        contactNumber: $("#contactNumber").val(),
+        interesTopic: $("#interesTopic").val(),
+        lincenseNumber: $("#lincenseNumber").val(),
+        scale: $("#scale").val(),
+        qualification: $("#qualification").val(),
+        bussinessLicenes: $("#bussinessLicenes_pic")[0].currentSrc,
+        bussinessLetter: $("#bussinessLetter_pic")[0].currentSrc
+      },
+      function(data,status){
+        if(data == 'success'){
+          layer.msg("申请提交成功");
+        }else if(data.length>100){
+          location.reload();
+        }else{
+          layer.msg(data);
+        }
+      }
+    )
+  });
 
 });
 </script>
