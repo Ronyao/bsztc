@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>{{d.edit ? '编辑问题' : '发表问题'}} - {{lay.base.name}}</title>
+<title><%= title %></title>
 <%- include("../link.ejs") %>
 </head>
 <body>
@@ -25,13 +25,13 @@
           <input type="text" id="L_title" name="title" required lay-verify="required" autocomplete="off" value="{{d.edit.title}}" {{ user.auth >= 1 ? 'required' : 'readonly' }} title="标题不可修改" class="layui-input">
           <input type="hidden" name="id" value="{{d.edit.id}}">
           {{# } else { }} -->
-          <input type="text" id="L_title" name="title" required lay-verify="required" autocomplete="off" class="layui-input">
+          <input type="text" id="title" name="title" autocomplete="off" class="layui-input"  onkeyup="this.value=this.value.replace(/^ +| +$/g,'')">
           <!-- {{# } }} -->
         </div>
       </div>
       <div class="layui-form-item layui-form-text">
         <div class="layui-input-block">
-          <textarea id="L_content" name="content" required lay-verify="required" placeholder="请输入内容" class="layui-textarea fly-editor" style="height: 260px;"></textarea>
+          <textarea id="content" name="content" placeholder="请输入内容" class="layui-textarea fly-editor" style="height: 260px;"></textarea>
         </div>
         <label for="L_content" class="layui-form-label" style="top: -2px;">描述</label>
       </div>
@@ -39,23 +39,20 @@
         <div class="layui-inline">
           <label class="layui-form-label">所在类别</label>
           <div class="layui-input-block">
-            <select lay-verify="required" name="class">
+            <select lay-verify="required" id="topicClass" name="class">
               <option></option>
-            {{# for(var key in lay.base.classes){ }}
+              <option value="博士问题">博士问题</option>
+              <option value="企业问题">企业问题</option>
+            <!-- {{# for(var key in lay.base.classes){ }}
               <option value="{{ key }}" {{(d.edit && d.edit['class'] == key) ? 'selected' : ''}}>{{ lay.base.classes[key] }}</option>
-            {{# } }}
+            {{# } }} -->
             </select>
           </div>
         </div>
         <div class="layui-inline">
           <label class="layui-form-label">悬赏博士点</label>
-          <div class="layui-input-block">
-            <select name="experience">
-              <option value="5" {{(d.edit && d.edit.experience == 5) ? 'selected' : ''}}>5</option>
-              <option value="20" {{(d.edit && d.edit.experience == 20) ? 'selected' : ''}}>20</option>
-              <option value="50" {{(d.edit && d.edit.experience == 50) ? 'selected' : ''}}>50</option>
-              <option value="100" {{(d.edit && d.edit.experience == 100) ? 'selected' : ''}}>100</option>
-            </select>
+          <div class="layui-input-inline">
+            <input type="number" name="reward" id="reward" autocomplete="off" class="layui-input">
           </div>
         </div>
       </div>
@@ -69,7 +66,7 @@
         </div>
       </div> -->
       <div class="layui-form-item">
-        <button class="layui-btn" lay-filter="*" lay-submit>立即发布</button>
+        <a class="layui-btn" id="post_question">立即发布</a>
       </div>
     </form>
   </div>
@@ -77,6 +74,31 @@
 </div>
 
 <%- include("../footer.ejs") %>
+<script>
+layui.use(['jquery','layer'], function(){
+  var layer = layui.layer
+  var $ = layui.jquery;
+  //监听提交
+  $("#post_question").click(function(){
+    $.post(
+      "/topic/add",
+      {
+        title: $("#title").val(),
+        content: $("#content").val(),
+        topicClass: $("#topicClass").val(),
+        reward: $("#reward").val()
+      },
+      function(data,status){
+        if(data == 'success'){
+          window.location.href="/topic";
+        }else{
+          layer.msg(data);
+        }
+      }
+    )
+  });
+});
+</script>
 
 </body>
 </html>
