@@ -85,7 +85,8 @@ router.post('/add', function(req, res, next){
     Post.set('questionerNickName', questionerNickName);
     Post.set('consultations', 0);
     Post.set('visits', 0);
-    // Post.set('status', '0');
+    Post.set('status', 0);
+    Post.set('recommend', 0);
 
     Post.save().then(function(Post) {
       result = 'success';
@@ -119,6 +120,18 @@ router.get('/edit', function(req, res, next){
 
 router.get('/detail', function(req, res, next){
   var questionId = req.query.qId;
+  //查看数加1
+  var post = AV.Object.createWithoutData('Post', questionId);
+  post.save().then(function (post) {
+    post.increment('visits', 1);
+    post.save(true);
+    return post.save();
+  }).then(function (post) {
+
+  }, function (error) {
+
+  });
+
   var avatar = req.currentUser.get('avatar');
   var identity = "";
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
@@ -133,15 +146,16 @@ router.get('/detail', function(req, res, next){
   query.equalTo('objectId', questionId);
   query.find().then(function (results) {
     res.render('topic/detail',{
-      title:"用户中心",
+      title: "问题详情",
       user: req.currentUser.get('nickname'),
       avatar: avatar,
       identity: identity,
+      currentUser: req.currentUser,
       post: results
     });
  }, function (error) {
    res.render('topic/detail',{
-     title: "博士直通车-话题",
+     title: "问题详情",
      user: req.currentUser.get('nickname'),
      avatar: avatar,
      identity:identity

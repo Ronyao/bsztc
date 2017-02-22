@@ -3,31 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title><% title %></title>
+<title><%= title %></title>
 <meta name="description" content="{{= d.description }}">
 
 <%- include("../link.ejs") %>
+<script  src="/javascripts/time_conversion.js"></script>
 </head>
 <body>
 
 <%- include("../header.ejs") %>
-
+<% if(post.length!=0){ %>
 <div class="main layui-clear">
   <div class="wrap">
     <div class="content detail">
       <h1><%= post[0].get('title') %></h1>
       <div class="fly-tip fly-detail-hint" data-id="{{rows.id}}">
-
-
+        <% if( post[0].get('recommend')==1 ){ %>
+          <span class="fly-tip-jie">已采纳</span>
+        <% }else { %>
         <span>未结贴</span>
+        <% } %>
 
-        <!-- <span class="fly-tip-jie">已采纳</span> -->
-
-
-
-        <!-- <span class="jie-admin" type="del" style="margin-left: 20px;">删除</span> -->
-
-
+        <% if( post[0].get('questionerId')==currentUser.get('id') ){ %>
+        <span class="jie-admin" type="del" style="margin-left: 20px;">删除</span>
+        <% } %>
 
             <!-- <span class="jie-admin" type="set" field="stick" rank="0" style="background-color:#ccc;">取消置顶</span>
 
@@ -40,19 +39,22 @@
 
 
         <div class="fly-list-hint">
-          <i class="iconfont" title="回答">&#xe60c;</i> 1
-          <i class="iconfont" title="人气">&#xe60b;</i> 2
+          <i class="iconfont" title="回答">&#xe60c;</i> <%= post[0].get('consultations') %>
+          <i class="iconfont" title="人气">&#xe60b;</i> <%= post[0].get('visits') %>
         </div>
       </div>
       <div class="detail-about">
-        <a class="jie-user" href="/u/{{168*rows.uid}}/">
+        <a class="jie-user" href="/users/home?uid=<%= post[0].get('questionerId') %>">
           <img src=<%= post[0].get('questionerAvatar') %> alt="<%= post[0].get('questionerNickName') %>">
           <cite>
             <%= post[0].get('questionerNickName') %>
 
             <em style="padding:0 5px; color: #FF7200;">VIP</em>
 
-            <em>发布于</em>
+            <script>
+              var time = getDateDiff(<%= post[0].get('createdAt').getTime() %>);
+              document.write("<em>" + time + "</em>");  // 输出语句
+            </script>
 
           </cite>
         </a>
@@ -60,24 +62,16 @@
 
           <span style="color:#FF7200">悬赏：<%= post[0].get('reward') %>博士点</span>
 
-
-          <!-- <span class="jie-admin" type="edit"><a href="/jie/edit/{{rows.id}}">编辑此贴</a></span> -->
-
-
+          <% if( post[0].get('questionerId')==currentUser.get('id') ){ %>
+          <span class="jie-admin" type="edit"><a href="/topic/edit?pId=<%= post[0].get('id') %>">编辑此贴</a></span>
+          <% }else{ %>
+            <span class="jie-admin" type="collect"><a href="/topic/collect?pId=<%= post[0].get('id') %>">收藏</a></span>
+            <% } %>
         </div>
       </div>
 
       <div class="detail-body photos" style="margin-bottom: 20px;">
         <%= post[0].get('content') %>
-
-        <!-- layer-728*90 -->
-        <div  class="fly-ad" style="margin-top: 30px; height:90px; overflow: hidden;">
-          <script type="text/javascript">
-            /*728*90*/
-            var cpro_id = "u2482674";
-          </script>
-          <script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
-        </div>
       </div>
 
 
@@ -87,7 +81,7 @@
 
       <ul class="jieda photos" id="jieda">
 
-        <li data-id="{{item.id}}" class="jieda-daan">
+        <!-- <li data-id="{{item.id}}" class="jieda-daan">
           <a name="item-{{item.time}}"></a>
           <div class="detail-about detail-about-reply">
             <a class="jie-user" href="/u/">
@@ -97,7 +91,7 @@
 
                 <em style="padding:0 ; color: #FF7200;">VIP</em>
 
-                <!-- {{# if(item.user.username === rows.username){ }}
+                {{# if(item.user.username === rows.username){ }}
                 <em>(楼主)</em>
                 {{# } else if(item.user.auth == 1) { }}
                 <em style="color:#5FB878">(管理员)</em>
@@ -105,7 +99,7 @@
                 <em style="color:#FF9E3F">（活雷锋）</em>
                 {{# } else if(item.user.auth == -1) { }}
                 <em style="color:#999">（该号已被封）</em>
-                {{# } }} -->
+                {{# } }}
               </cite>
             </a>
             <div class="detail-hits">
@@ -149,19 +143,17 @@
             </div>
           {{# } }}
           </div>
-        </li>
+        </li> -->
       <!-- {{# }); if(jieda.length === 0){ }}
         <li class="fly-none">没有任何回答</li>
       {{# } }} -->
       </ul>
 
-      {{ d.laypage }}
-
       <div class="layui-form layui-form-pane">
-        <form action="/jie/reply/" method="post">
+        <form action="/topic/reply/" method="post">
           <div class="layui-form-item layui-form-text">
             <div class="layui-input-block">
-              <textarea id="L_content" name="content" required lay-verify="required" placeholder="我要{{myself ? '自问自答' : '回答'}}"  class="layui-textarea fly-editor" style="height: 150px;">{{d.edit ? d.edit.content : ''}}</textarea>
+              <textarea id="content" name="content" required lay-verify="required" placeholder="我要<% if(post[0].get('questionerId')==currentUser.get('id')){ %>自问自答<% }else{ %>回答<% } %>"  class="layui-textarea fly-editor" style="height: 150px;"></textarea>
             </div>
           </div>
           <div class="layui-form-item">
@@ -199,10 +191,10 @@
 
   </div>
 </div>
-{{# } else { }}
+<% } else { %>
 <h2 class="page-title">404</h2>
 <div class="fly-none">该问题并不存在，肯能已被删除</div>
-{{# } }}
+<% } %>
 
 <%- include("../footer.ejs") %>
 
