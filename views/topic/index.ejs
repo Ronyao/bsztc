@@ -84,23 +84,32 @@
           <cite>纸飞机</cite>
           <i>159次回答</i>
         </a>
+        <a href="user/home.html">
+          <img src="../res/images/avatar/default.png">
+          <cite>纸飞机</cite>
+          <i>159次回答</i>
+        </a>
       </span>
     </div>
 
     <h3 class="page-title">最近热帖</h3>
     <ol class="fly-list-one">
+      <% visits.forEach(function(visit){ %>
       <li>
-        <a href="jie/detail.html">Layui 官网 在线演示页面 全面增加 查看代码 功能</a>
-        <span><i class="iconfont">&#xe60b;</i> 6087</span>
+        <a href="jie/detail.html"><%= visit.get('title') %></a>
+        <span><i class="iconfont">&#xe60b;</i> <%= visit.get('visits') %></span>
       </li>
+      <% }); %>
     </ol>
 
     <h3 class="page-title">近期热议</h3>
     <ol class="fly-list-one">
+      <% recommend.forEach(function(recom){ %>
       <li>
-        <a href="jie/detail.html">盛赞！大赞狂赞！Layui完美兼容Vue.js</a>
-        <span><i class="iconfont">&#xe60c;</i> 96</span>
+        <a href="jie/detail.html"><%= recom.get('title') %></a>
+        <span><i class="iconfont">&#xe60c;</i> <%= recom.get('recommend') %></span>
       </li>
+      <% }); %>
     </ol>
 
     <!-- <div class="fly-link">
