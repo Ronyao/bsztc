@@ -2,47 +2,6 @@ var express = require('express');
 var router = express.Router();
 var AV = require('leanengine');
 
-var replayUser = [];
-var mostVisits = [];
-var mostRecommend = [];
-
-function getMostReplayUser(){
-  var query = new AV.Query('_User');
-  query.descending('replayTimes');
-  query.limit(12);
-  query.find().then(function(results){
-    replayUser = results;
-  }, function (error){
-    return error;
-  });
-}
-
-function getMostVisits(){
-  var query = new AV.Query('Post');
-  query.descending('visits');
-  query.limit(12);
-  query.find().then(function(results){
-    mostVisits = results;
-  }, function (error){
-    return error;
-  });
-}
-
-function getMostRecommend(){
-  var query = new AV.Query('Post');
-  query.descending('recommend');
-  query.limit(12);
-  query.find().then(function(results){
-    mostRecommend = results;
-  }, function (error){
-    return error;
-  });
-}
-
-getMostReplayUser();
-getMostVisits();
-getMostRecommend();
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   var avatar = req.currentUser.get('avatar');
@@ -64,13 +23,43 @@ router.get('/', function(req, res, next) {
       user: req.currentUser.get('nickname'),
       avatar: avatar,
       identity: identity,
-      posts: results,
-      replayUser: replayUser,
-      visits : mostVisits,
-      recommend : mostRecommend
+      posts: results
     });
   }, function (error) {
 
+  });
+});
+
+router.get('/replayTimes',function(req, res, next) {
+  var query = new AV.Query('_User');
+  query.descending('replayTimes');
+  query.limit(12);
+  query.find().then(function(results){
+    res.json(results);
+  }, function (error){
+    res.json(error);
+  });
+});
+
+router.get('/mostVisits',function(req, res, next){
+  var query = new AV.Query('Post');
+  query.descending('visits');
+  query.limit(10);
+  query.find().then(function(visits){
+    res.json(visits);
+  }, function (error){
+    res.json(error);
+  });
+});
+
+router.get('/mostRecommend',function(req, res, next) {
+  var query = new AV.Query('Post');
+  query.descending('recommend');
+  query.limit(10);
+  query.find().then(function(recommend){
+    res.json(recommend);
+  }, function (error){
+    res.json(error);
   });
 });
 
@@ -195,10 +184,7 @@ router.get('/detail', function(req, res, next){
       avatar: avatar,
       identity: identity,
       currentUser: req.currentUser,
-      post: results,
-      replayUser: replayUser,
-      visits : mostVisits,
-      recommend : mostRecommend
+      post: results
     });
  }, function (error) {
    res.render('topic/detail',{

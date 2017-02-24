@@ -168,24 +168,12 @@
   <div class="edge">
 
     <h3 class="page-title">最近热帖</h3>
-    <ol class="fly-list-one">
-      <% visits.forEach(function(visit){ %>
-      <li>
-        <a href="jie/detail.html"><%= visit.get('title') %></a>
-        <span><i class="iconfont">&#xe60b;</i> <%= visit.get('visits') %></span>
-      </li>
-      <% }); %>
+    <ol class="fly-list-one" id="mostVisits">
     </ol>
 
 
     <h3 class="page-title">近期热议</h3>
-    <ol class="fly-list-one">
-      <% recommend.forEach(function(recom){ %>
-      <li>
-        <a href="jie/detail.html"><%= recom.get('title') %></a>
-        <span><i class="iconfont">&#xe60c;</i> <%= recom.get('recommend') %></span>
-      </li>
-      <% }); %>
+    <ol class="fly-list-one" id="mostRecommend">
     </ol>
 
   </div>
@@ -196,6 +184,38 @@
 <% } %>
 
 <%- include("../footer.ejs") %>
+
+<script>
+layui.use(['layer','jquery'],function(){
+  var $ = layui.jquery, layer = layui.layer;
+  $.get(
+    "/topic/mostVisits",
+    function(data){
+      var length = data.length;
+      for(var i=0;i<length;i++){
+        var string = '';
+        string += '<li><a href="/topic/detail?qId='+data[i].objectId+'">'+ data[i].title +'</a>';
+        string += '<span><i class="iconfont">&#xe60b;</i> '+ data[i].visits +'</span></li>';
+        $("#mostVisits").append(string);
+      }
+    }
+  )
+
+  $.get(
+    "/topic/mostRecommend",
+    function(data){
+      var length = data.length;
+      for(var i=0;i<length;i++){
+        var string = '';
+        string += '<li><a href="/topic/detail?qId='+data[i].objectId+'">'+ data[i].title +'</a>';
+        string += '<span><i class="iconfont">&#xe60c;</i> '+ data[i].recommend +'</span></li>';
+        $("#mostRecommend").append(string);
+      }
+    }
+  )
+
+});
+</script>
 
 </body>
 </html>

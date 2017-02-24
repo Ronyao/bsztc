@@ -126,10 +126,6 @@ layui.use(['jquery','form','layer'], function(){
         if(data == 'success'){
           layer.msg("成功搜索");
         }else{
-          //alert(data);
-          //layer.msg(data);
-          console.log(data);
-
           $("#userlist").empty();
           var i = data.length;
           while (i--) {

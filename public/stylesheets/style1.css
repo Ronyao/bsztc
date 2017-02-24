@@ -341,7 +341,7 @@ a:focus {
 .about {
 	background: #555;
 	margin-bottom: 4em;
-	background: url(../images/title-bg.jpg) center no-repeat;
+	background: url(../res/images/title-bg.jpg) center no-repeat;
 	background-size: cover;
 	height: 180px;
 }
