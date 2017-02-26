@@ -97,7 +97,7 @@
     </ol>
 
     <h3 class="page-title">近期热议</h3>
-    <ol class="fly-list-one" id="mostRecommend">
+    <ol class="fly-list-one" id="mostConsultations">
     </ol>
 
     <!-- <div class="fly-link">
@@ -106,8 +106,6 @@
       <a href="http://layim.layui.com/" target="_blank">LayIM</a>
       <a href="http://layer.layui.com/" target="_blank">layer</a>
     </div> -->
-
-
   </div>
 </div>
 
@@ -130,14 +128,14 @@ layui.use(['layer','jquery'],function(){
   )
 
   $.get(
-    "/topic/mostRecommend",
+    "/topic/mostConsultations",
     function(data){
       var length = data.length;
       for(var i=0;i<length;i++){
         var string = '';
-        string += '<li><a href="topic/detail?qId='+data[i].objectId+'">'+ data[i].title +'</a>';
-        string += '<span><i class="iconfont">&#xe60c;</i> '+ data[i].recommend +'</span></li>';
-        $("#mostRecommend").append(string);
+        string += '<li><a href="/topic/detail?qId='+data[i].objectId+'">'+ data[i].title +'</a>';
+        string += '<span><i class="iconfont">&#xe60c;</i> '+ data[i].consultations +'</span></li>';
+        $("#mostConsultations").append(string);
       }
     }
   )

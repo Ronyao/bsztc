@@ -431,7 +431,7 @@ h3.m_2 {
 	float: left;
 }
 .highlight-info {
-	background: url(../images/lab.jpg) center fixed;
+	background: url(../res/images/lab.jpg) center fixed;
 	background-size: cover;
 	color: #fff;
 	padding: 6em 0;

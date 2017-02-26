@@ -8,6 +8,44 @@
 
 <%- include("../link.ejs") %>
 <script  src="/javascripts/time_conversion.js"></script>
+<script>
+layui.use(['layer','jquery','fly'],function(){
+  var $ = layui.jquery, layer = layui.layer;
+  $.post(
+    "/topic/getReply",
+    {
+      postId: '<%= post[0].get('objectId') %>'
+    },
+    function(data){
+      var length = data.length;
+      console.log(data);
+      for(var i=0;i<1;i++){
+        var string = '';
+        string += '<li data-id="14">';
+        string += '<a name=""></a>';
+        string += '<div class="detail-about detail-about-reply">';
+        string += '<a class="jie-user" href="">';
+        string += '<img src="../../res/images/avatar/default.png" alt="">';
+        string += '<cite><i>香菇</i><em style="color:#FF9E3F">活雷锋</em></cite></a>';
+        string += '<div class="detail-hits"><span>刚刚</span></div>';
+        string += '</div>';
+        string += '<div class="detail-body jieda-body"><p>蓝瘦</p></div>';
+        string += '<div class="jieda-reply">';
+        string += '<span class="jieda-zan" type="zan"><i class="iconfont icon-zan"></i><em>0</em></span>';
+        string += '<span type="reply"><i class="iconfont icon-svgmoban53"></i>回复</span>';
+        string += '<div class="jieda-admin">';
+        string += '<span type="edit">编辑</span>';
+        string += '<span type="del">删除</span>';
+        string += '<span class="jieda-accept" type="accept">采纳</span>';
+        string += '</div>';
+        string += '</div>';
+        string += '</li>';
+        $("#reply").append(string);
+      }
+    }
+  )
+})
+</script>
 </head>
 <body>
 
@@ -18,7 +56,7 @@
     <div class="content detail">
       <h1><%= post[0].get('title') %></h1>
       <div class="fly-tip fly-detail-hint" data-id="{{rows.id}}">
-        <% if( post[0].get('recommend')==1 ){ %>
+        <% if( post[0].get('status')==1 ){ %>
           <span class="fly-tip-jie">已采纳</span>
         <% }else { %>
         <span>未结贴</span>
@@ -77,10 +115,9 @@
 
 
       <a name="comment"></a>
-      <h2 class="page-title">热忱回答<span><em id="jiedaCount">2</em></span></h2>
+      <h2 class="page-title">热忱回答<span><em id="replyCount"><%= post[0].get('consultations') %></em></span></h2>
 
-      <ul class="jieda photos" id="jieda">
-
+      <ul class="jieda photos" id="reply">
         <!-- <li data-id="{{item.id}}" class="jieda-daan">
           <a name="item-{{item.time}}"></a>
           <div class="detail-about detail-about-reply">
@@ -147,18 +184,54 @@
       <!-- {{# }); if(jieda.length === 0){ }}
         <li class="fly-none">没有任何回答</li>
       {{# } }} -->
+      <li data-id="" class="jieda-daan">
+          <a name="item-121212121212"></a>
+          <div class="detail-about detail-about-reply">
+            <a class="jie-user" href="">
+              <img src="../../res/images/avatar/default.png" alt="">
+              <cite>
+                <i>纸飞机</i>
+                <!-- <em>(楼主)</em>
+                <em style="color:#5FB878">(管理员)</em>
+                <em style="color:#FF9E3F">（活雷锋）</em>
+                <em style="color:#999">（该号已被封）</em> -->
+              </cite>
+            </a>
+            <div class="detail-hits">
+              <span>3分钟前</span>
+            </div>
+            <i class="iconfont icon-caina" title="最佳答案"></i>
+          </div>
+          <div class="detail-body jieda-body">
+            <p>么么哒</p>
+          </div>
+          <div class="jieda-reply">
+            <span class="jieda-zan zanok" type="zan"><i class="iconfont icon-zan"></i><em>12</em></span>
+            <span type="reply"><i class="iconfont icon-svgmoban53"></i>回复</span>
+            <!-- <div class="jieda-admin">
+              <span type="edit">编辑</span>
+              <span type="del">删除</span>
+              <span class="jieda-accept" type="accept">采纳</span>
+            </div> -->
+          </div>
+        </li>
+
       </ul>
 
       <div class="layui-form layui-form-pane">
-        <form action="/topic/reply/" method="post">
+        <form action="" method="post">
           <div class="layui-form-item layui-form-text">
             <div class="layui-input-block">
-              <textarea id="content" name="content" required lay-verify="required" placeholder="我要<% if(post[0].get('questionerId')==currentUser.get('id')){ %>自问自答<% }else{ %>回答<% } %>"  class="layui-textarea fly-editor" style="height: 150px;"></textarea>
+              <textarea id="L_content" name="reply_content" required lay-verify="required" placeholder="我要<% if(post[0].get('questionerId')==currentUser.get('id')){ %>自问自答<% }else{ %>回答<% } %>"  class="layui-textarea fly-editor" style="height: 150px;"></textarea>
             </div>
           </div>
           <div class="layui-form-item">
-            <input type="hidden" name="jid" value="{{rows.id}}">
-            <button class="layui-btn" lay-filter="*" lay-submit>提交回答</button>
+            <input type="hidden" id="replyTo" name="replyTo" value="<%= post[0].get('questionerId') %>">
+            <input type="hidden" id="postId" name="postId" value="<%= post[0].get('objectId') %>">
+            <input type="hidden" id="replyFrom" name="replyFrom" value="<%= currentUser.get('id') %>">
+            <input type="hidden" id="replyFromName" name="replyFromName" value="<%= currentUser.get('nickname') %>">
+            <input type="hidden" id="replyToName" name="replyToName" value="<%= post[0].get('questionerNickName') %>">
+            <a class="layui-btn" id="replyButton">提交回答</a>
           </div>
         </form>
       </div>
@@ -173,7 +246,7 @@
 
 
     <h3 class="page-title">近期热议</h3>
-    <ol class="fly-list-one" id="mostRecommend">
+    <ol class="fly-list-one" id="mostConsultations">
     </ol>
 
   </div>
@@ -186,7 +259,8 @@
 <%- include("../footer.ejs") %>
 
 <script>
-layui.use(['layer','jquery'],function(){
+layui.cache.page = 'jie';
+layui.use(['layer','jquery','fly'],function(){
   var $ = layui.jquery, layer = layui.layer;
   $.get(
     "/topic/mostVisits",
@@ -202,17 +276,50 @@ layui.use(['layer','jquery'],function(){
   )
 
   $.get(
-    "/topic/mostRecommend",
+    "/topic/mostConsultations",
     function(data){
       var length = data.length;
       for(var i=0;i<length;i++){
         var string = '';
         string += '<li><a href="/topic/detail?qId='+data[i].objectId+'">'+ data[i].title +'</a>';
-        string += '<span><i class="iconfont">&#xe60c;</i> '+ data[i].recommend +'</span></li>';
-        $("#mostRecommend").append(string);
+        string += '<span><i class="iconfont">&#xe60c;</i> '+ data[i].consultations +'</span></li>';
+        $("#mostConsultations").append(string);
       }
     }
   )
+
+
+
+
+    // var fly = layui.fly;
+    // $('.detail-body').each(function(){
+    //   var othis = $(this), html = othis.html();
+    //   othis.html(fly.content(html));
+    // });
+
+
+  $('#replyButton').click(function(){
+    $.post(
+      "/topic/reply",
+      {
+        reply: $("#reply_content").val(),
+        replyFrom: $("#replyFrom").val(),
+        replyTo: $("#replyTo").val(),
+        postId: $("#postId").val(),
+        replyFromName: $("#replyFromName").val(),
+        replyToName: $("#replyToName").val()
+      },
+      function(data,status){
+        if(data=='success'){
+          //异步加载回复的内容
+          layer.msg(data);
+        }else{
+          layer.msg(data);
+        }
+      }
+    );
+  });
+
 
 });
 </script>

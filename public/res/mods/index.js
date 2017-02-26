@@ -3,38 +3,38 @@
  @Name: Fly社区主入口
 
  */
- 
+
 
 layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
-  
+
   var $ = layui.jquery
   ,layer = layui.layer
   ,laytpl = layui.laytpl
   ,form = layui.form()
   ,util = layui.util
   ,device = layui.device()
-  
+
   //阻止IE7以下访问
   if(device.ie && device.ie < 8){
     layer.alert('如果您非得使用ie浏览Fly社区，那么请使用ie8+');
   }
-  
+
   layui.focusInsert = function(obj, str){
     var result, val = obj.value;
     obj.focus();
     if(document.selection){ //ie
-      result = document.selection.createRange(); 
-      document.selection.empty(); 
-      result.text = str; 
+      result = document.selection.createRange();
+      document.selection.empty();
+      result.text = str;
     } else {
       result = [val.substring(0, obj.selectionStart), str, val.substr(obj.selectionEnd)];
       obj.focus();
       obj.value = result.join('');
     }
   };
-  
+
   var gather = {
-    
+
     //Ajax
     json: function(url, data, success, options){
       var that = this;
@@ -65,7 +65,7 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
       }
       return len;
     }
-    
+
     ,form: {}
 
     //简易编辑器
@@ -113,7 +113,7 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
                   }
                 }
               });
-              
+
               form.on('submit(uploadImages)', function(data){
                 var field = data.field;
                 if(!field.image) return image.focus();
@@ -168,8 +168,8 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
         }
         ,yulan: function(editor){ //预览
           var content = editor.val();
-          
-          content = /^\{html\}/.test(content) 
+
+          content = /^\{html\}/.test(content)
             ? content.replace(/^\{html\}/, '')
           : gather.content(content);
 
@@ -182,7 +182,7 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
           });
         }
       };
-      
+
       layui.use('face', function(face){
         options = options || {};
         gather.faces = face;
@@ -198,7 +198,7 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
           });
         });
       });
-      
+
     }
 
     ,escape: function(html){
@@ -226,10 +226,10 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
         var rel =  /^(http(s)*:\/\/)\b(?!(\w+\.)*(sentsin.com|layui.com))\b/.test(href.replace(/\s/g, ''));
         return '<a href="'+ href +'" target="_blank"'+ (rel ? ' rel="nofollow"' : '') +'>'+ (text||href) +'</a>';
       }).replace(html(), '\<$1\>').replace(html('/'), '\</$1\>') //转移代码
-      .replace(/\n/g, '<br>') //转义换行   
+      .replace(/\n/g, '<br>') //转义换行
       return content;
     }
-    
+
     //新消息通知
     ,newmsg: function(){
       if(layui.cache.user.uid !== -1){
@@ -333,7 +333,7 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
     var extend = {};
     layui.use(layui.cache.page);
   }
-  
+
   //加载IM
   if(!device.android && !device.ios){
     // layui.use('im');
@@ -343,7 +343,7 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
   gather.layEditor({
     elem: '.fly-editor'
   });
-  
+
 
   //右下角固定Bar
   util.fixbar({
@@ -358,4 +358,3 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
   exports('fly', gather);
 
 });
-

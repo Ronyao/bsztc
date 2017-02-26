@@ -52,16 +52,28 @@ router.get('/mostVisits',function(req, res, next){
   });
 });
 
-router.get('/mostRecommend',function(req, res, next) {
+router.get('/mostConsultations',function(req, res, next) {
   var query = new AV.Query('Post');
-  query.descending('recommend');
+  query.descending('consultations');
   query.limit(10);
-  query.find().then(function(recommend){
-    res.json(recommend);
+  query.find().then(function(consultations){
+    res.json(consultations);
   }, function (error){
     res.json(error);
   });
 });
+
+router.post('/getReply',function(req, res, next) {
+  var postId = req.body.postId;
+  var query = new AV.Query('Reply');
+  query.equalTo('postId', postId)
+  query.descending('createdAt');
+  query.find().then(function(reply){
+    res.json(reply);
+  }, function (error){
+    res.json(error);
+  });
+})
 
 router.get('/add', function(req, res, next){
   var avatar = req.currentUser.get('avatar');
@@ -83,11 +95,9 @@ router.get('/add', function(req, res, next){
 });
 
 router.post('/add', function(req, res, next){
-  console.log(req.body);
   var result = '';
   var questionerId = req.currentUser.id;
   var questionerAvatar = req.currentUser.get('avatar');
-  console.log(questionerAvatar);
   var questionerNickName = req.currentUser.get('nickname');
   var title = req.body.title;
   var content = req.body.content;
@@ -197,6 +207,49 @@ router.get('/detail', function(req, res, next){
 
 });
 
+router.post('/reply',function(req, res, next){
+  console.log(req.body);
+  var result = '';
+  var replyContent = req.body.reply;
+  var replyFrom = req.body.replyFrom;
+  var replyTo = req.body.replyTo;
+  var replyFromName = req.body.replyFromName;
+  var replyToName = req.body.replyToName;
+  var postId = req.body.postId;
 
+  if(replyContent==''){
+    result = "回复内容不能为空";
+    res.json(result);
+  }else {
+    var Reply = AV.Object.extend('Reply');
+    var Reply = new Reply();
+    Reply.set('replyContent', replyContent);
+    Reply.set('replyFrom', replyFrom);
+    Reply.set('replyTo', replyTo);
+    Reply.set('postId', postId);
+    Reply.set('replyToName', replyToName);
+    Reply.set('replyFromName', replyFromName);
+
+    Reply.save().then(function(Reply) {
+      //回答数加1
+      var post = AV.Object.createWithoutData('Post', postId);
+      post.save().then(function (post) {
+        post.increment('consultations', 1);
+        post.save(true);
+        return post.save();
+      }).then(function (post) {
+        result = 'success';
+        res.json(result);
+      }, function (error) {
+        res.json(error);
+      });
+
+    }, function(error) {
+      res.json(error);
+    });
+  }
+
+
+});
 
 module.exports = router;
