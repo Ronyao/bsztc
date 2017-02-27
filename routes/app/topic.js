@@ -16,6 +16,7 @@ router.get('/', function(req, res, next) {
   }
   var query = new AV.Query('Post');
   query.limit(20);
+  query.greaterThanOrEqualTo('status',0);
   query.descending('createdAt');
   query.find().then(function (results) {
     res.render('topic/index',{
@@ -30,16 +31,6 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.get('/replayTimes',function(req, res, next) {
-  var query = new AV.Query('_User');
-  query.descending('replayTimes');
-  query.limit(12);
-  query.find().then(function(results){
-    res.json(results);
-  }, function (error){
-    res.json(error);
-  });
-});
 
 router.get('/mostVisits',function(req, res, next){
   var query = new AV.Query('Post');
@@ -70,6 +61,16 @@ router.post('/getReply',function(req, res, next) {
   query.descending('createdAt');
   query.find().then(function(reply){
     res.json(reply);
+  }, function (error){
+    res.json(error);
+  });
+});
+
+router.get('/getIsTop',function(req, res, next) {
+  var query = new AV.Query('Post');
+  query.equalTo('isTop', 1);
+  query.find().then(function(Post){
+    res.json(Post);
   }, function (error){
     res.json(error);
   });

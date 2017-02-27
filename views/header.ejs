@@ -2,10 +2,11 @@
   <div class="main">
     <a class="logo" href="/" title="博士直通车">博士直通车</a>
     <div class="nav">
-      <a class="nav-this" href="/topic">
+
+      <a  <% if(title =='博士直通车-话题'){ %>class="nav-this"<% } %> href="/topic">
         <i class="iconfont icon-wenda"></i>问答
       </a>
-      <a href="/wisdom">
+      <a <% if(title =='智库-博士直通车'){ %> class="nav-this" <% } %> href="/wisdom">
         <i class="iconfont icon-ui"></i>智库
       </a>
     </div>
@@ -17,7 +18,7 @@
       <% if(!user) { %>
         <a class="unlogin" href="user/login.html"><i class="iconfont icon-touxiang"></i></a>
         <span><a href="/users/login">登入</a><a href="/users/reg">注册</a></span>
-        
+
       <% } else { %>
         <a class="avatar" href="/users/index">
           <img src= <%= avatar %> >
