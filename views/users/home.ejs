@@ -73,23 +73,18 @@
   </div>
   <div class="home-right">
     <ul class="home-info">
-    <li><i class="iconfont icon-zuichun"></i>拥有飞吻：<span style="color: #FF7200;">{{info.experience}}</span></li>
+    <li><i class="iconfont icon-zuichun"></i>拥有博士点：<span style="color: #FF7200;"><%= thisUser[0].get('doctorPoint') %></span></li>
     <li><i class="iconfont icon-shijian"></i>加入时间：<span>{{lay.time(info.joinTime)}}</span></li>
-    <li><i class="iconfont icon-chengshi"></i>城市：<span>{{= info.city||'中国 某城'}}</span></li>
-    <li><i class="iconfont icon-chengshi"></i>一级学科：<span>{{= info.city||'中国 某城'}}</span></li>
-    <li><i class="iconfont icon-chengshi"></i>二级学科：<span>{{= info.city||'中国 某城'}}</span></li>
-    <li><i class="iconfont icon-chengshi"></i>研究方向：<span>{{= info.city||'中国 某城'}}</span></li>
-    <li><i class="iconfont icon-chengshi"></i>所获奖励：<span>{{= info.city||'中国 某城'}}</span></li>
-    <li><i class="iconfont icon-chengshi"></i>既往研究项目：<span>{{= info.city||'中国 某城'}}</span></li>
-    <li><i class="iconfont icon-chengshi"></i>发表论著：<span>{{= info.city||'中国 某城'}}</span></li>
-    <li><i class="iconfont icon-chengshi"></i>在研项目：<span>{{= info.city||'中国 某城'}}</span></li>
-    <li><i class="iconfont icon-chengshi"></i>简介：<span>{{= info.city||'中国 某城'}}</span></li>
+    <li><i class="iconfont icon-chengshi"></i>城市：<span><% if(thisUser[0].get('city')==''){} %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>一级学科：<span><%= thisUser[0].get('d_firstDisciplines') %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>二级学科：<span><%= thisUser[0].get('d_secondDisciplines') %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>研究方向：<span><%= thisUser[0].get('d_disciplinesFields') %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>所获奖励：<span><%= thisUser[0].get('historyAwards') %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>既往研究项目：<span><%= thisUser[0].get('historyProjects') %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>发表论著：<span><%= thisUser[0].get('historyPapers') %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>在研项目：<span><%= thisUser[0].get('nowProjects') %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>简介：<span><%= thisUser[0].get('introduction') %></span></li>
     </ul>
-    <!-- layer-300*250 -->
-    <ins class="adsbygoogle"
-     style="display:inline-block;width:300px;height:250px"
-     data-ad-client="ca-pub-6111334333458862"
-     data-ad-slot="2182025432"></ins>
 
   </div>
   </div>

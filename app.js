@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var http = require('http');
 var url = require('url');
+var alipayf2f = require("./lib/alipay_f2f.js");
+var config = require("./config.js");
 var AV = require('leanengine');
 
 var index = require('./routes/index');
@@ -15,6 +17,7 @@ var topic = require('./routes/app/topic');
 var wisdom = require('./routes/app/wisdom');
 var search = require('./routes/app/search');
 var pay = require('./routes/app/pay');
+var chat = require('./routes/app/chat');
 
 var app = express();
 
@@ -63,6 +66,64 @@ app.use(function (req, res, next) {
   }
 });
 
+app.use((req, res, next) => {
+	req.config    = config;
+	req.alipayf2f = new alipayf2f(config);
+
+	req.database  = {
+		get(id) {
+			return new Promise((resolve, reject) => {
+				if(!fs.existsSync(`./fs-database/${id}.json`)) {
+					return resolve(null);
+				}
+				fs.readFile(`./fs-database/${id}.json`, function (err, data) {
+					if (err) return (reject);
+					resolve(JSON.parse(data.toString()));
+				});
+			});
+		},
+
+		delete(id) {
+			return new Promise((resolve, reject) => {
+				if(!fs.existsSync(`./fs-database/${id}.json`)) {
+					return resolve();
+				}
+				fs.unlink((`./fs-database/${id}.json`, function (err) {
+					resolve(data);
+				}));
+			});
+		},
+
+		insert(id, obj) {
+			return new Promise((resolve, reject) => {
+				if(fs.existsSync(`./fs-database/${id}.json`)) {
+					return resolve(false);
+				}
+				fs.writeFile(`./fs-database/${id}.json`, JSON.stringify(obj), function(err){
+					if(err) return reject(err);
+					resolve(true);
+				});
+			});
+		},
+
+		update(id, obj) {
+			return new Promise((resolve, reject) => {
+				fs.writeFile(`./fs-database/${id}.json`, JSON.stringify(obj), function(err){
+					if(err) return reject(err);
+					resolve(true);
+				});
+			});
+		},
+	};
+	res.error     = (result) => res.json({ "status": false, message: result });
+	res.success   = (result) => res.json({ "status": true, message: result });
+	res.catch     = (error) => {
+		console.error(error);
+		res.json({ "status": false, "message": "服务器错误, 请稍后重试。" }).end();
+	};
+	next();
+});
+
 // 可以将一类的路由单独保存在一个文件中
 app.use('/', index);
 app.use('/users', users);
@@ -70,6 +131,7 @@ app.use('/topic', topic);
 app.use('/wisdom', wisdom);
 app.use('/search', search);
 app.use('/pay', pay);
+app.use('/chat', chat);
 
 // 如果任何路由都没匹配到，则认为 404
 // 生成一个异常让后面的 err handler 捕获
@@ -84,6 +146,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   if(!req.currentUser){
     res.render('error', {
+      title: "错误页面",
       message: err.message || err,
       error: err,
       user: '',
@@ -100,6 +163,7 @@ app.use(function(err, req, res, next) {
       identity = "认证博士";
     }
     res.render('error', {
+      title: "错误页面",
       message: err.message || err,
       error: err,
       user: req.currentUser.get('nickname'),
