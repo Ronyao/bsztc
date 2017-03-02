@@ -83,13 +83,18 @@
             <li>企业认证</li>
           </ul>
           <div class="layui-tab-content" style="height: 100%;">
+
+            <% if(currentUser.get('applyState')=='1' ){ %>
+            <h2>正在申请<% if(currentUser.get('d_realName')!='' ){ %>博士认证<% }else{ %>企业认证<% } %>中，请耐心等待，若有问题，请联系管理人员。(注：博士认证与企业认证不可同时申请)</h2>
+            <% }else { %>
             <div class="layui-tab-item layui-show">
+
               <form class="layui-form layui-form-pane" action="javascript:;">
 
                 <div class="layui-form-item">
                   <label class="layui-form-label">真实姓名*</label>
                   <div class="layui-input-inline">
-                    <input type="text" id='realName' name="realName" placeholder="请输入真实姓名" autocomplete="off" class="layui-input">
+                    <input type="text" id='realName' name="realName" placeholder="请输入真实姓名" autocomplete="off" class="layui-input" >
                   </div>
                 </div>
 
@@ -257,9 +262,11 @@
                   <a id="d_verify" class="layui-btn">提交博士认证申请</a>
                 </div>
               </form>
+
             </div>
 
             <div class="layui-tab-item">
+
               <form class="layui-form layui-form-pane" action="">
 
                 <div class="layui-form-item">
@@ -378,7 +385,9 @@
                   <a id="e_Verify" class="layui-btn" >提交企业认证申请</a>
                 </div>
               </form>
+
             </div>
+            <% } %>
           </div>
         </div>
 
@@ -425,6 +434,7 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
     )
   });
 
+
   $("#d_verify").click(function () {
     //var idCardInHand = $("#idCardInHand_pic").src;
     var emptyTime = new Array();
@@ -468,6 +478,45 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
       }
     )
   });
+
+  $.get(
+    "get_Dverify",
+    function(data) {
+      var province = data.province.replace('省','');
+      var city = data.province.replace('市','');
+      pca.init('select[name=province]', 'select[name=city]','', province, city, '');
+      if(typeof(data.d_realName)!='undefined'){
+
+        $("#realName").val(data.d_realName);
+        $("#reaild").val(data.d_realId);
+        dfs.init('select[name=disciplinsFiles]', 'select[name=firstDisciplines]', 'select[name=secondDisciplines]',data.d_disciplinesFields,data.d_firstDisciplines,data.d_secondDisciplines);
+        $("#idCardInHand_pic")[0].src = data.d_idCardInHand;
+        $("#idCardFront_pic")[0].src = data.d_idCardFront;
+        $("#graduationCard_pic")[0].src = data.d_graduationCard;
+        $("#introduction").val(data.d_introduction);
+        $("#researchDirection").val(data.d_researchDirection);
+        $("#historyProjects").val(data.d_historyProjects);
+        $("#nowProjects").val(data.d_nowProjects);
+        $("#historyAwards").val(data.d_historyAwards);
+        $("#historyPapers").val(data.d_historyPapers);
+        $("#callPrice").val(data.d_callPrice);
+        $("#chatPrice").val(data.d_chatPrice);
+      }else if(typeof(data.e_bussinessLicenes)!="undefined"){
+        $("#industriesClass").val(data.e_industriesClass);
+        $("#name").val(data.e_name);
+        $("#contactName").val(data.e_contactName);
+        $("#contactNumber").val(data.e_contactNumber);
+        $("#interesTopic").val(data.e_interesTopic);
+        $("#lincenseNumber").val(data.e_lincenseNumber);
+        $("#scale").val(data.e_scale);
+        $("#qualification").val(data.e_qualification);
+        $("#bussinessLicenes_pic")[0].src = data.e_bussinessLicenes;
+        $("#bussinessLetter_pic")[0].src = data.e_bussinessLetter;
+      }else{
+        return;
+      }
+    }
+  );
 
   $("#e_Verify").click(function(){
     $.post(

@@ -49,7 +49,7 @@ router.get('/login',function(req, res, next) {
 
 //登录，成功跳转页面，并保持登录状态，header需要改变，失败就返回错误信息
 router.post('/login',function(req, res, next) {
-  var result = "";
+  var result = "网络错误，请重试";
   var username = req.body.phone;
   var password = req.body.pass;
   //判断手机格式是否正确
@@ -389,6 +389,10 @@ router.post('/d_verify',function(req, res, next) {
   }
   res.json(result);
 });
+
+router.get('/get_Dverify', function(req, res, next){
+  res.json(req.currentUser);
+})
 
 router.post('/e_verify', function(req, res, next){
   console.log(req.body);

@@ -15,7 +15,7 @@ layui.use('layim', function(layim){
       ,"id": "100000123" //我的ID
       ,"status": "online" //在线状态 online：在线、hide：隐身
       ,"sign": "在深邃的编码世界，做一枚轻盈的纸飞机" //我的签名
-      ,"avatar": "/rse/images/a2.jpg" //我的头像
+      ,"avatar": "/res/images/a2.jpg" //我的头像
     }
     //获取群员接口
     ,members: {
