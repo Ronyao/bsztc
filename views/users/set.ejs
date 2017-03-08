@@ -84,11 +84,14 @@
           </ul>
           <div class="layui-tab-content" style="height: 100%;">
 
+
             <% if(currentUser.get('applyState')=='1' ){ %>
             <h2>正在申请<% if(currentUser.get('d_realName')!='' ){ %>博士认证<% }else{ %>企业认证<% } %>中，请耐心等待，若有问题，请联系管理人员。(注：博士认证与企业认证不可同时申请)</h2>
             <% }else { %>
             <div class="layui-tab-item layui-show">
-
+              <% if(currentUser.get('isDoctor')==true ){ %>
+              <br><h2 style="color:red">你已经博士认证成员，若要修改信息，请再次提交申请！</h2><br>
+              <% } %>
               <form class="layui-form layui-form-pane" action="javascript:;">
 
                 <div class="layui-form-item">
@@ -266,7 +269,9 @@
             </div>
 
             <div class="layui-tab-item">
-
+              <% if(currentUser.get('isEnterprise')==true ){ %>
+              <br><h2 style="color:red">你已经企业认证成员，若要修改信息，请再次提交申请！</h2><br>
+              <% } %>
               <form class="layui-form layui-form-pane" action="">
 
                 <div class="layui-form-item">
