@@ -70,7 +70,7 @@
             <div class="upload-img">
               <input type="file"  name="avatar" id="avatar" lay-title="上传头像">
             </div>
-            <img src=<%= avatar %>>
+            <img id="avatar_pic" src=<%= avatar %>>
             <span class="loading"></span>
           </div>
         </div>
@@ -470,6 +470,7 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
       function(data,status){
         if(data == 'success'){
           layer.msg("申请提交成功");
+          location.reload();
         }else if(data.length>100){
           location.reload();
         }else{
@@ -485,7 +486,7 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
       var province = data.province.replace('省','');
       var city = data.province.replace('市','');
       pca.init('select[name=province]', 'select[name=city]','', province, city, '');
-      if(typeof(data.d_realName)!='undefined'){
+      if(data.applyState!=1){
 
         $("#realName").val(data.d_realName);
         $("#reaild").val(data.d_realId);
@@ -501,6 +502,12 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
         $("#historyPapers").val(data.d_historyPapers);
         $("#callPrice").val(data.d_callPrice);
         $("#chatPrice").val(data.d_chatPrice);
+        console.log(data.d_emptyTime);
+        $.each(data.d_emptyTime,function(i,item){
+          $("input[name='emptyTime'][value="+item+"]").next().addClass("layui-form-checked");
+          $("input[name='emptyTime'][value="+item+"]").attr('checked','true');
+        });
+
       }else if(typeof(data.e_bussinessLicenes)!="undefined"){
         $("#industriesClass").val(data.e_industriesClass);
         $("#name").val(data.e_name);
@@ -538,6 +545,7 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
       function(data,status){
         if(data == 'success'){
           layer.msg("申请提交成功");
+          location.reload();
         }else if(data.length>100){
           location.reload();
         }else{
@@ -553,14 +561,6 @@ layui.use(['jquery','form', 'layedit', 'laydate','element'], function(){
 layui.use(['jquery','upload','layer'], function(){
   var $ = layui.jquery
   ,layer = layui.layer;
-  layui.upload({
-    url: '/users/upload_avatar'
-    ,elem: '#avatar' //指定原始元素，默认直接查找class="layui-upload-file"
-    ,method: 'post' //上传接口的http类型
-    ,success: function(res){
-      LAY_demo_upload.src = res.url;
-    }
-  });
 
   layui.upload({
     elem: '#idCardInHand' //指定原始元素，默认直接查找class="layui-upload-file"
@@ -588,7 +588,7 @@ layui.use(['jquery','upload','layer'], function(){
 
   layui.upload({
     url: 'upload_pic'
-    ,elem: '#idCardFront' //指定原始元素，默认直接查找class="layui-upload-file"
+    ,elem: '#idCardFront'
     ,method: 'post' //上传接口的http类型
     ,before: function(input){
       var fileUploadControl = input;

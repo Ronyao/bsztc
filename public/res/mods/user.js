@@ -3,7 +3,7 @@
  @Name: 用户模块
 
  */
- 
+
 layui.define(['laypage', 'fly'], function(exports){
 
   var $ = layui.jquery;
@@ -101,7 +101,7 @@ layui.define(['laypage', 'fly'], function(exports){
     if(othis.attr('href') !== 'javascript:;'){
       return;
     }
-    
+
     gather.tabshow(index);
     gather.minelog[type] = true;
     if(hash){
@@ -124,20 +124,39 @@ layui.define(['laypage', 'fly'], function(exports){
       layui.upload({
         elem: '.upload-img input'
         ,method: 'post'
-        ,url: '/user/upload/'
-        ,before: function(){
+        ,url: '/users/upload_pic'
+        ,before: function(input){
+          if(input.files[0].size>30720){
+            layer.msg("上传图片建议小于30K");
+            return ;
+          }
+          var fileUploadControl = input;
           avatarAdd.find('.loading').show();
+          if (fileUploadControl.files.length > 0) {
+            var localFile = fileUploadControl.files[0];
+            var name = 'avatar.jpg';
+            var file = new AV.File(name, localFile);
+            file.save().then(function(file) {
+              avatar_pic.src = file.url();
+              header_avatar.src = file.url();
+              avatarAdd.find('.loading').hide();
+              $.post(
+                '/users/upload_avatar',
+                {
+                  avatar: file.url(),
+                },
+                function(res){
+
+                }
+              );
+            }, function(error) {
+              // 异常处理
+              layer.msg("上传图片失败");
+            });
+          }
+
         }
         ,success: function(res){
-          if(res.status == 0){
-            $.post('/user/set/', {
-              avatar: res.url
-            }, function(res){
-              location.reload();
-            });
-          } else {
-            layer.msg(res.msg, {icon: 5});
-          }
           avatarAdd.find('.loading').hide();
         }
         ,error: function(){
@@ -201,8 +220,8 @@ layui.define(['laypage', 'fly'], function(exports){
         dom.minemsg.html('<div class="fly-none">您暂时没有最新消息</div>');
       }
     }
-    
-    
+
+
     fly.json('/api/msg/', {}, function(res){
       var html = laytpl(tpl).render(res);
       dom.minemsg.html(html);
@@ -210,7 +229,7 @@ layui.define(['laypage', 'fly'], function(exports){
         delAll.removeClass('layui-hide');
       }
     });
-    
+
     //阅读后删除
     dom.minemsg.on('click', '.mine-msg li .fly-delete', function(){
       var othis = $(this).parents('li'), id = othis.data('id');
@@ -243,5 +262,5 @@ layui.define(['laypage', 'fly'], function(exports){
   dom.minemsg[0] && gather.minemsg();
 
   exports('user', null);
-  
+
 });

@@ -291,24 +291,16 @@ router.post('/myinfo',function(req, res, next) {
 });
 
 router.post('/upload_avatar',function(req, res, next){
-  // var fstream;
-  //   req.pipe(req.busboy);
-  //   req.busboy.on('file', function (fieldname, file, filename) {
-  //       console.log("Uploading: " + filename);
-  //       fstream = fs.createWriteStream(__dirname + '/files/' + filename);
-  //       file.pipe(fstream);
-  //       fstream.on('close', function () {
-  //           res.redirect('back');
-  //       });
-  //   });
-  var url = "http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png";
-  res.json(url);
+  console.log(req.body);
+  var user = AV.Object.createWithoutData('_User', req.currentUser.get('id'));
+  user.set('avatar', req.body.avatar);
+  user.save();
+  res.json('url');
 });
 
 
 router.post('/d_verify',function(req, res, next) {
   //必填的选项有：个人简介，学科门类，省市，真实姓名，身份证，三张图，价格，预约时间
-  console.log(req.body);
   var result = '';
   var realName = req.body.realName;
   var reaild = req.body.reaild;
@@ -339,29 +331,39 @@ router.post('/d_verify',function(req, res, next) {
   if (realName.replace(/(^\s*)|(\s*$)/g, "").length ==0)
   {
     result = "真实姓名不能为空";
+    res.json(result);
   }else if (!(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(reaild))) {
     result = "身份证填写有误";
+    res.json(result);
   }else if (disciplinsFiles =="学科门类"||firstDisciplines=="一级学科"||secondDisciplines=="二级学科") {
     result = "学科门类选择有误";
+    res.json(result);
   }else if (province=="省" || city=="市"){
     result = "省市选择有误";
+    res.json(result);
   }else if(idCardInHand.split("/")[idCardInHand.split("/").length-1] =='litu.png'){
     result = "手持身份证照片必须上传";
+    res.json(result);
   }else if(idCardFront.split("/")[idCardFront.split("/").length-1]=='litu.png'){
     result = "身份证正面照片必须上传";
+    res.json(result);
   }else if(graduationCard.split("/")[graduationCard.split("/").length-1]=='litu.png'){
     result = "所在学校毕业证必须上传";
+    res.json(result);
   }else if(introduction ==''){
     result = "个人简介不能为空";
+    res.json(result);
   }else if(callPrice==''||chatPrice==''){
     result = "价格不能为空";
+    res.json(result);
   }else if (emptyTime=='') {
     result = "预约时间必须选择一个以上";
+    res.json(result);
   }
   else {
     var user = AV.Object.createWithoutData('_User', req.currentUser.id);
     user.set('d_realName',realName);
-    user.set('d_realld',reaild);
+    user.set('d_realId',reaild);
     user.set('d_disciplinesFields',disciplinsFiles);
     user.set('d_firstDisciplines',firstDisciplines);
     user.set('d_secondDisciplines',secondDisciplines);
@@ -383,11 +385,13 @@ router.post('/d_verify',function(req, res, next) {
 
     user.save().then(function (user) {
       result = 'success';
+      res.json(result);
     }, function (error) {
       result = error;
+      res.json(result);
     });
   }
-  res.json(result);
+
 });
 
 router.get('/get_Dverify', function(req, res, next){
@@ -455,7 +459,7 @@ router.post('/e_verify', function(req, res, next){
 });
 
 router.post('/upload_pic',function(req, res, next) {
-  res.json('');
+  res.json('success');
 });
 
 module.exports = router;
