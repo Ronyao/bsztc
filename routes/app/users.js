@@ -272,22 +272,23 @@ router.post('/myinfo',function(req, res, next) {
   var city = req.body.city;
   var signature = req.body.signature;
 
-  // 第一个参数是 className，第二个参数是 objectId
-  var user = AV.Object.createWithoutData('_User', id);
-  // 修改属性
-  user.set('nickname', nickname);
-  user.set('city', city);
-  user.set('sex', sex);
-  user.set('signature', signature);
-  // 保存到云端
-  user.save().then(function() {
-    result = "success";
+  if(nickname.length>8){
+    res.json("建议昵称不要大于8个字");
+  }else if(city.length>10){
+    res.json("你确定你的城市名字有这么长？");
+  }else{
+    var user = AV.Object.createWithoutData('_User', id);
+    user.set('nickname', nickname);
+    user.set('city', city);
+    user.set('sex', sex);
+    user.set('signature', signature);
+    user.save().then(function() {
+      res.json("success");
+    },function(error){
 
-    res.json(result);
-  },function(error){
-    result = "修改失败";
-    res.json(result);
-  });
+      res.json("修改失败");
+    });
+  }  
 });
 
 router.post('/upload_avatar',function(req, res, next){
