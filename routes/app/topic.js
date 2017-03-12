@@ -252,8 +252,126 @@ router.post('/reply',function(req, res, next){
       res.json(error);
     });
   }
+});
 
+//全部帖子
 
+router.get('/total', function(req, res, next) {
+  var avatar = req.currentUser.get('avatar');
+  var identity = "";
+  if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
+    avatar = "../res/images/avatar/default.png";
+  }
+  if(req.currentUser.get('isEnterprise')=='true'){
+    identity = "认证企业";
+  }else if (req.currentUser.get('isDoctor')=='true') {
+    identity = "认证博士";
+  }
+  var query = new AV.Query('Post');
+  query.limit(15);
+  query.greaterThanOrEqualTo('status',0);
+  query.descending('createdAt');
+  query.find().then(function (results) {
+    res.render('topic/post',{
+      title: "全部",
+      user: req.currentUser.get('nickname'),
+      avatar: avatar,
+      identity: identity,
+      posts: results
+    });
+  }, function (error) {
+
+  });
+});
+
+//未结贴帖子
+
+router.get('/unsolved', function(req, res, next) {
+  var avatar = req.currentUser.get('avatar');
+  var identity = "";
+  if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
+    avatar = "../res/images/avatar/default.png";
+  }
+  if(req.currentUser.get('isEnterprise')=='true'){
+    identity = "认证企业";
+  }else if (req.currentUser.get('isDoctor')=='true') {
+    identity = "认证博士";
+  }
+  var query = new AV.Query('Post');
+  query.limit(15);
+  query.greaterThanOrEqualTo('status',0);
+  query.descending('createdAt');
+  query.find().then(function (results) {
+    res.render('topic/post',{
+      title: "未结帖",
+      user: req.currentUser.get('nickname'),
+      avatar: avatar,
+      identity: identity,
+      posts: results
+    });
+  }, function (error) {
+
+  });
+});
+
+//已采纳帖子
+
+router.get('/solved', function(req, res, next) {
+  var avatar = req.currentUser.get('avatar');
+  var identity = "";
+  if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
+    avatar = "../res/images/avatar/default.png";
+  }
+  if(req.currentUser.get('isEnterprise')=='true'){
+    identity = "认证企业";
+  }else if (req.currentUser.get('isDoctor')=='true') {
+    identity = "认证博士";
+  }
+  var query = new AV.Query('Post');
+  query.limit(15);
+  query.greaterThanOrEqualTo('status',0);
+  query.descending('createdAt');
+  query.find().then(function (results) {
+    res.render('topic/post',{
+      title: "已采纳",
+      user: req.currentUser.get('nickname'),
+      avatar: avatar,
+      identity: identity,
+      posts: results
+    });
+  }, function (error) {
+
+  });
+});
+
+//精贴
+
+router.get('/excellent', function(req, res, next) {
+  var avatar = req.currentUser.get('avatar');
+  var identity = "";
+  if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
+    avatar = "../res/images/avatar/default.png";
+  }
+  if(req.currentUser.get('isEnterprise')=='true'){
+    identity = "认证企业";
+  }else if (req.currentUser.get('isDoctor')=='true') {
+    identity = "认证博士";
+  }
+  var query = new AV.Query('Post');
+  query.limit(15);
+  query.greaterThanOrEqualTo('status',0);
+  query.descending('createdAt');
+  query.find().then(function (results) {
+    res.render('topic/post',{
+      title: "精帖",
+      user: req.currentUser.get('nickname'),
+      avatar: avatar,
+      identity: identity,
+      posts: results
+    });
+  }, function (error) {
+
+  });
 });
 
 module.exports = router;
