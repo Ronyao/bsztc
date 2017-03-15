@@ -16,10 +16,10 @@
     <div class="content" style="margin-right:0">
       <div class="fly-tab">
         <span>
-          <a href="total" <% if(title=="全部"){ %> class="tab-this" <% } %> >全部</a>
-          <a href="unsolved" <% if(title=="未结帖"){ %> class="tab-this" <% } %> >未结帖</a>
-          <a href="solved" <% if(title=="已采纳"){ %> class="tab-this" <% } %> >已采纳</a>
-          <a href="excellent" <% if(title=="精帖"){ %> class="tab-this" <% } %> >精帖</a>
+          <a href="/topic/total/page/1" <% if(title=="全部"){ %> class="tab-this" <% } %> >全部</a>
+          <a href="/topic/unsolved/page/1" <% if(title=="未结帖"){ %> class="tab-this" <% } %> >未结帖</a>
+          <a href="/topic/solved/page/1" <% if(title=="已采纳"){ %> class="tab-this" <% } %> >已采纳</a>
+          <a href="/topic/excellent/page/1" <% if(title=="精帖"){ %> class="tab-this" <% } %> >精帖</a>
         </span>
         <form action="http://cn.bing.com/search" class="fly-search">
           <i class="iconfont icon-sousuo"></i>
@@ -29,6 +29,7 @@
       </div>
 
       <ul class="fly-list">
+        <% if(posts.length!=0){ %>
         <% posts.forEach(function(post){ %>
         <li class="fly-list-li">
           <a href="users/home?uid=<%= post.get('questionerId') %>" class="fly-list-avatar">
@@ -56,13 +57,15 @@
           </p>
         </li>
         <% }) %>
+        <% }else{ %>
+          <div class="fly-none">并无相关数据</div>
+        <% } %>
 
       </ul>
 
-      <!-- <div class="fly-none">并无相关数据</div> -->
-
       <div style="text-align: center">
-        <div class="laypage-main"><span class="laypage-curr">1</span><a href="/jie/page/2/">2</a><a href="/jie/page/3/">3</a><a href="/jie/page/4/">4</a><a href="/jie/page/5/">5</a><span>…</span><a href="/jie/page/148/" class="laypage-last" title="尾页">尾页</a><a href="/jie/page/2/" class="laypage-next">下一页</a></div>
+        <div class="laypage-main">
+        </div>
       </div>
 
     </div>
@@ -71,6 +74,60 @@
 
 <%- include("../footer.ejs") %>
 <script src="../../res/layui/layui.js"></script>
+<script>
+layui.use(['layer','jquery'],function(){
+  var $ = layui.jquery, layer = layui.layer;
+   var max = <%= maxpage %>;
+   var currentPage = <%= currentPage %>;
+   if(max<=4){
+     for(var i=1; i<=max; i++){
+       var string = '';
+       if(i==currentPage){
+         string += '<span class="laypage-curr">'+i+'</span>';
+       }else{
+         string += '<a href="'+i+'" >'+i+'</a>';
+       }
+       $('.laypage-main').append(string);
+     }
+   }else if(currentPage>=max-3&&currentPage<=max){
+    var string = '';
+    string += '<a href="'+(currentPage-1)+'" class="laypage-next">上一页</a>'
+    string += '<a href="1" class="laypage-first" title="首页">首页</a>'
+    string += '<span>…</span>';
+    $('.laypage-main').append(string);
+    for(var i=max-3;i<=max;i++){
+      string = '';
+      if(i==currentPage){
+        string += '<span class="laypage-curr">'+i+'</span>';
+      }else{
+        string += '<a href="'+i+'" >'+i+'</a>';
+      }
+      $('.laypage-main').append(string);
+    }
+    if(currentPage<max){
+      string = '';
+      string += '<a href="'+(currentPage+1)+'" class="laypage-next">下一页</a>';
+      $('.laypage-main').append(string);
+    }
+  }else {
+    for(var i=1;i<=4;i++){
+      var string = '';
+      if(i==currentPage){
+        string += '<span class="laypage-curr">'+i+'</span>';
+      }else{
+        string += '<a href="'+i+'" >'+i+'</a>';
+      }
+      $('.laypage-main').append(string);
+    }
+    string = '';
+    string += '<span>…</span>';
+    string += '<a href="'+max+'" class="laypage-last" title="尾页">尾页</a>';
+    string += '<a href="'+(currentPage+1)+'" class="laypage-next">下一页</a>';
+    $('.laypage-main').append(string);
+  }
+
+});
+</script>
 <script>
 layui.cache.page = 'jie';
 layui.cache.user = {

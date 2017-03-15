@@ -256,7 +256,11 @@ router.post('/reply',function(req, res, next){
 
 //全部帖子
 
-router.get('/total', function(req, res, next) {
+router.get('/total/:page/:num', function(req, res, next) {
+  var currentPage = req.params.num;
+  if(typeof(currentPage)=='undefined'){
+    currentPage=1;
+  }
   var avatar = req.currentUser.get('avatar');
   var identity = "";
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
@@ -268,25 +272,38 @@ router.get('/total', function(req, res, next) {
     identity = "认证博士";
   }
   var query = new AV.Query('Post');
-  query.limit(15);
   query.greaterThanOrEqualTo('status',0);
-  query.descending('createdAt');
-  query.find().then(function (results) {
-    res.render('topic/post',{
-      title: "全部",
-      user: req.currentUser.get('nickname'),
-      avatar: avatar,
-      identity: identity,
-      posts: results
+  query.count().then(function(count){
+    var pages = Math.ceil(count/15);
+    query.limit(15);
+    query.skip(15*(currentPage-1));
+    query.descending('createdAt');
+    query.find().then(function (results) {
+      res.render('topic/post',{
+        title: "全部",
+        user: req.currentUser.get('nickname'),
+        avatar: avatar,
+        identity: identity,
+        posts: results,
+        maxpage: pages,
+        currentPage: currentPage
+      });
+    }, function (error) {
+
     });
-  }, function (error) {
+  }, function(error){
 
   });
+
 });
 
 //未结贴帖子
 
-router.get('/unsolved', function(req, res, next) {
+router.get('/unsolved/:page/:num', function(req, res, next) {
+  var currentPage = req.params.num;
+  if(typeof(currentPage)=='undefined'){
+    currentPage=1;
+  }
   var avatar = req.currentUser.get('avatar');
   var identity = "";
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
@@ -299,24 +316,37 @@ router.get('/unsolved', function(req, res, next) {
   }
   var query = new AV.Query('Post');
   query.limit(15);
-  query.greaterThanOrEqualTo('status',0);
-  query.descending('createdAt');
-  query.find().then(function (results) {
-    res.render('topic/post',{
-      title: "未结帖",
-      user: req.currentUser.get('nickname'),
-      avatar: avatar,
-      identity: identity,
-      posts: results
+  query.equalTo('status',0);
+  query.count().then(function(count){
+    var pages = Math.ceil(count/15);
+    query.limit(15);
+    query.skip(15*(currentPage-1));
+    query.descending('createdAt');
+    query.find().then(function (results) {
+      res.render('topic/post',{
+        title: "未结帖",
+        user: req.currentUser.get('nickname'),
+        avatar: avatar,
+        identity: identity,
+        posts: results,
+        maxpage: pages,
+        currentPage: currentPage
+      });
+    }, function (error) {
+
     });
-  }, function (error) {
+  }, function(error){
 
   });
 });
 
 //已采纳帖子
 
-router.get('/solved', function(req, res, next) {
+router.get('/solved/:page/:num', function(req, res, next) {
+  var currentPage = req.params.num;
+  if(typeof(currentPage)=='undefined'){
+    currentPage=1;
+  }
   var avatar = req.currentUser.get('avatar');
   var identity = "";
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
@@ -329,24 +359,37 @@ router.get('/solved', function(req, res, next) {
   }
   var query = new AV.Query('Post');
   query.limit(15);
-  query.greaterThanOrEqualTo('status',0);
-  query.descending('createdAt');
-  query.find().then(function (results) {
-    res.render('topic/post',{
-      title: "已采纳",
-      user: req.currentUser.get('nickname'),
-      avatar: avatar,
-      identity: identity,
-      posts: results
+  query.equalTo('status',1);
+  query.count().then(function(count){
+    var pages = Math.ceil(count/15);
+    query.limit(15);
+    query.skip(15*(currentPage-1));
+    query.descending('createdAt');
+    query.find().then(function (results) {
+      res.render('topic/post',{
+        title: "已采纳",
+        user: req.currentUser.get('nickname'),
+        avatar: avatar,
+        identity: identity,
+        posts: results,
+        maxpage: pages,
+        currentPage: currentPage
+      });
+    }, function (error) {
+
     });
-  }, function (error) {
+  }, function(error){
 
   });
 });
 
 //精贴
 
-router.get('/excellent', function(req, res, next) {
+router.get('/excellent/:page/:num', function(req, res, next) {
+  var currentPage = req.params.num;
+  if(typeof(currentPage)=='undefined'){
+    currentPage=1;
+  }
   var avatar = req.currentUser.get('avatar');
   var identity = "";
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
@@ -360,16 +403,26 @@ router.get('/excellent', function(req, res, next) {
   var query = new AV.Query('Post');
   query.limit(15);
   query.greaterThanOrEqualTo('status',0);
-  query.descending('createdAt');
-  query.find().then(function (results) {
-    res.render('topic/post',{
-      title: "精帖",
-      user: req.currentUser.get('nickname'),
-      avatar: avatar,
-      identity: identity,
-      posts: results
+  query.equalTo('recommend',1);
+  query.count().then(function(count){
+    var pages = Math.ceil(count/15);
+    query.limit(15);
+    query.skip(15*(currentPage-1));
+    query.descending('createdAt');
+    query.find().then(function (results) {
+      res.render('topic/post',{
+        title: "精帖",
+        user: req.currentUser.get('nickname'),
+        avatar: avatar,
+        identity: identity,
+        posts: results,
+        maxpage: pages,
+        currentPage: currentPage
+      });
+    }, function (error) {
+
     });
-  }, function (error) {
+  }, function(error){
 
   });
 });
