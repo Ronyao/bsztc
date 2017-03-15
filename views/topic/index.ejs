@@ -26,9 +26,9 @@
           <a href="topic/solved/page/1">已采纳</a>
           <a href="topic/excellent/page/1">精帖</a>
         </span>
-        <form action="http://cn.bing.com/search" class="fly-search">
+        <form action="/search" class="fly-search">
           <i class="iconfont icon-sousuo"></i>
-          <input class="layui-input" autocomplete="off" placeholder="搜索内容，回车跳转" type="text" name="q">
+          <input class="layui-input" autocomplete="off" placeholder="搜索内容，回车跳转" type="text" name="keyword">
         </form>
         <a href="topic/add" class="layui-btn jie-add">发布问题</a>
       </div>
@@ -160,7 +160,6 @@ layui.use(['layer','jquery'],function(){
         string += '</h2>';
         string += '<p><span><a href="users/home?uid='+data[i].questionerId+'">'+data[i].questionerNickName+'</a></span>';
         string += '<span>'+getDateDiff(data[i].createdAt)+'</span>';
-        console.log(data[i].createdAt);
         string += '<span>'+data[i].topicClass+'</span>';
         string += '<span class="fly-list-hint">';
         string += '<i class="iconfont" title="回答">&#xe60c;</i> '+data[i].consultations;

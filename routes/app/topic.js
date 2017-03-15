@@ -2,9 +2,6 @@ var express = require('express');
 var router = express.Router();
 var AV = require('leanengine');
 
-var Post = AV.Object.extend('Post');
-var Reply = AV.Object.extend('Reply');
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
   var avatar = req.currentUser.get('avatar');
@@ -121,7 +118,7 @@ router.post('/add', function(req, res, next){
     result = "请输入悬赏博士点";
     res.json(result);
   }else {
-
+    var Post = AV.Object.extend('Post');
     var Post = new Post();
     Post.set('title', title);
     Post.set('content', content);
@@ -136,6 +133,7 @@ router.post('/add', function(req, res, next){
     Post.set('recommend', 0);
 
     Post.save().then(function(Post) {
+
       result = 'success';
       res.json(result);
     }, function(error) {
@@ -225,7 +223,7 @@ router.post('/reply',function(req, res, next){
     result = "回复内容不能为空";
     res.json(result);
   }else {
-
+    var Reply = AV.Object.extend('Reply');
     var Reply = new Reply();
     Reply.set('replyContent', replyContent);
     Reply.set('replyFrom', replyFrom);
