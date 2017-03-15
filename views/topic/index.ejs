@@ -51,7 +51,7 @@
             <% } %>
           </h2>
           <p>
-            <span><a href="user/home.html"><%= post.get('questionerNickName') %></a></span>
+            <span><a href="users/home?uid=<%= post.get('questionerId') %>"><%= post.get('questionerNickName') %></a></span>
             <script>
               var time = getDateDiff(<%= post.get('createdAt').getTime() %>);
               document.write("<span>" + time + "</span>");  // 输出语句

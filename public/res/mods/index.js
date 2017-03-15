@@ -265,13 +265,13 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
 
 
   //搜索
-  // $('.fly-search').submit(function(){
-  //   var input = $(this).find('input'), val = input.val();
-  //   if(val.replace(/\s/g, '') === ''){
-  //     return false;
-  //   }
-  //   input.val('site:layui.com '+ input.val());
-  // });
+  $('.fly-search').submit(function(){
+    var input = $(this).find('input'), val = input.val();
+    if(val.replace(/\s/g, '') === ''){
+      return false;
+    }
+    input.val();
+  });
   $('.icon-sousuo').on('click', function(){
     $('.fly-search').submit();
   });
