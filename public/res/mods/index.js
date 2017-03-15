@@ -103,14 +103,33 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
               var image =  layero.find('input[name="image"]');
 
               layui.upload({
-                url: '/api/upload/'
+                url: '/users/upload_pic'
                 ,elem: '#fly-jie-upload .layui-upload-file'
-                ,success: function(res){
-                  if(res.status == 0){
-                    image.val(res.url);
-                  } else {
-                    layer.msg(res.msg, {icon: 5});
+                ,before: function(input){
+                  if(input.files[0].size>153600){
+                    layer.msg("上传图片建议小于150K");
+                    return ;
                   }
+                  var fileUploadControl = input;
+                  if (fileUploadControl.files.length > 0) {
+                    var localFile = fileUploadControl.files[0];
+                    var name = 'contentPic.jpg';
+                    var file = new AV.File(name, localFile);
+                    file.save().then(function(file) {
+                      // 文件保存成功
+                      image.val(file.url());
+                    }, function(error) {
+                      // 异常处理
+                      layer.msg("上传图片失败",{icon: 5});
+                    });
+                  }
+                }
+                ,success: function(res){
+                  // if(res.status == 0){
+                  //   image.val(res.url);
+                  // } else {
+                  //   layer.msg(res.msg, {icon: 5});
+                  // }
                 }
               });
 
