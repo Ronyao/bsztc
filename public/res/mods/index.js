@@ -229,7 +229,7 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
     ,content: function(content){
       //支持的html标签
       var html = function(end){
-        return new RegExp('\\['+ (end||'') +'(pre|div|table|thead|th|tbody|tr|td|ul|li|ol|li|dl|dt|dd|h2|h3|h4|h5)\\]\\n*', 'g');
+        return new RegExp('\\['+ (end||'') +'(pre|div|table|thead|th|tbody|tr|td|ul|li|ol|li|dl|dt|dd|h2|h3|h4|h5|p)\\]\\n*', 'g');
       };
       content = gather.escape(content||'') //XSS
       .replace(/img\[([^\s]+?)\]/g, function(img){  //转义图片

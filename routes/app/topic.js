@@ -190,14 +190,21 @@ router.get('/detail', function(req, res, next){
   var query = new AV.Query('Post');
   query.equalTo('objectId', questionId);
   query.find().then(function (results) {
-    res.render('topic/detail',{
-      title: "问题详情",
-      user: req.currentUser.get('nickname'),
-      avatar: avatar,
-      identity: identity,
-      currentUser: req.currentUser,
-      post: results
+    var Reply = new AV.Query('Reply');
+    Reply.equalTo('postId', questionId);
+    Reply.find().then(function (replys) {
+      console.log(replys);
+      res.render('topic/detail',{
+        title: "问题详情",
+        user: req.currentUser.get('nickname'),
+        avatar: avatar,
+        identity: identity,
+        currentUser: req.currentUser,
+        post: results,
+        replys: replys
+      });
     });
+
  }, function (error) {
    res.render('topic/detail',{
      title: "问题详情",
@@ -218,6 +225,7 @@ router.post('/reply',function(req, res, next){
   var replyFromName = req.body.replyFromName;
   var replyToName = req.body.replyToName;
   var postId = req.body.postId;
+  console.log(replyContent);
 
   if(replyContent==''){
     result = "回复内容不能为空";
