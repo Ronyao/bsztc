@@ -237,7 +237,7 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
       }).replace(/@(\S+)(\s+?|$)/g, '@<a href="javascript:;" class="fly-aite">$1</a>$2') //转义@
       .replace(/face\[([^\s\[\]]+?)\]/g, function(face){  //转义表情
         var alt = face.replace(/^face/g, '');
-        return '<img alt="'+ alt +'" title="'+ alt +'" src="' + gather.faces[alt] + '">';
+        return '<img alt="'+ alt +'" title="'+ alt +'" src="' + gather.faces + '">';
       }).replace(/a\([\s\S]+?\)\[[\s\S]*?\]/g, function(str){ //转义链接
         var href = (str.match(/a\(([\s\S]+?)\)\[/)||[])[1];
         var text = (str.match(/\)\[([\s\S]*?)\]/)||[])[1];

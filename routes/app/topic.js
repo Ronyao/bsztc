@@ -217,7 +217,6 @@ router.get('/detail', function(req, res, next){
 });
 
 router.post('/reply',function(req, res, next){
-  console.log(req.body);
   var result = '';
   var replyContent = req.body.reply;
   var replyFrom = req.body.replyFrom;
@@ -225,7 +224,7 @@ router.post('/reply',function(req, res, next){
   var replyFromName = req.body.replyFromName;
   var replyToName = req.body.replyToName;
   var postId = req.body.postId;
-  console.log(replyContent);
+  var avatar = req.body.replyAvatar;
 
   if(replyContent==''){
     result = "回复内容不能为空";
@@ -239,6 +238,8 @@ router.post('/reply',function(req, res, next){
     Reply.set('postId', postId);
     Reply.set('replyToName', replyToName);
     Reply.set('replyFromName', replyFromName);
+    Reply.set('replyAvatar', avatar);
+    Reply.set('zan', 0);
 
     Reply.save().then(function(Reply) {
       //回答数加1

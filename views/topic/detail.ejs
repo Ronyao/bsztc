@@ -82,74 +82,79 @@
       <ul class="jieda photos" id="reply">
         <% if(replys.length>0){ %>
           <% replys.forEach(function(reply){ %>
-            
-          <% } %>
+
+            <li data-id="" class="jieda-daan">
+              <a name=""></a>
+              <div class="detail-about detail-about-reply">
+                <a class="jie-user" href="/u/">
+                  <img src="<%= reply.get('replyAvatar') %>" alt="">
+                  <cite>
+                    <i><%= reply.get('replyFromName') %></i>
+                    <% if(post[0].get('questionerId') === reply.get('replyFrom') ){ %>
+                    <em>(楼主)</em>
+                    <% } %>
+
+                    <!-- <em style="padding:0 ; color: #FF7200;">VIP</em>
+
+                    else if(item.user.auth == 1) { }}
+                    <em style="color:#5FB878">(管理员)</em>
+                    {{# } else if(item.user.auth == 2) { }}
+                    <em style="color:#FF9E3F">（活雷锋）</em>
+                    {{# } else if(item.user.auth == -1) { }}
+                    <em style="color:#999">（该号已被封）</em>
+                    {{# } }} -->
+                  </cite>
+                </a>
+                <div class="detail-hits">
+                  <script>
+                    var time = getDateDiff(<%= reply.get('createdAt').getTime() %>);
+                    document.write("<span>" + time + "</span>");  // 输出语句
+                  </script>
+                </div>
+
+                <i class="iconfont icon-caina" title="最佳答案"></i>
+
+              </div>
+              <div class="detail-body jieda-body">
+                <%= reply.get('replyContent') %>
+              </div>
+              <div class="jieda-reply">
+              <span class="jieda-zan {{d.session['zan'+item.id] ? 'zanok' : ''}}" type="zan">
+                <i class="iconfont icon-zan"></i>
+                <em><%= reply.get('zan') %></em>
+              </span>
+              <span type="reply">
+                <i class="iconfont icon-svgmoban53"></i>
+                回复
+              </span>
+              <% if(currentUser.get('id')==reply.get('replyFrom')){ %>
+                <div class="jieda-admin">
+
+                  <span type="edit">
+                    编辑
+                  </span>
+                  <span type="del">
+                    删除
+                  </span>
+                  <span class="jieda-accept" type="accept">
+                    采纳
+                  </span>
+
+                </div>
+                <% } %>
+                <% if(currentUser.get('id')==post[0].get('questionerId')){ %>
+                  <span class="jieda-accept" type="accept">
+                    采纳
+                  </span>
+                <% } %>
+              </div>
+            </li>
+
+          <% }) %>
         <% }else{ %>
           <li class="fly-none">没有任何回答</li>
         <% } %>
-        <!-- <li data-id="{{item.id}}" class="jieda-daan">
-          <a name="item-{{item.time}}"></a>
-          <div class="detail-about detail-about-reply">
-            <a class="jie-user" href="/u/">
-              <img src="#" alt="">
-              <cite>
-                <i>博士</i>
 
-                <em style="padding:0 ; color: #FF7200;">VIP</em>
-
-                {{# if(item.user.username === rows.username){ }}
-                <em>(楼主)</em>
-                {{# } else if(item.user.auth == 1) { }}
-                <em style="color:#5FB878">(管理员)</em>
-                {{# } else if(item.user.auth == 2) { }}
-                <em style="color:#FF9E3F">（活雷锋）</em>
-                {{# } else if(item.user.auth == -1) { }}
-                <em style="color:#999">（该号已被封）</em>
-                {{# } }}
-              </cite>
-            </a>
-            <div class="detail-hits">
-              <span>一天前</span>
-            </div>
-
-            <i class="iconfont icon-caina" title="最佳答案"></i>
-
-          </div>
-          <div class="detail-body jieda-body">
-            1234
-          </div>
-          <div class="jieda-reply">
-          <span class="jieda-zan {{d.session['zan'+item.id] ? 'zanok' : ''}}" type="zan">
-            <i class="iconfont icon-zan"></i>
-            <em>{{item.praise}}</em>
-          </span>
-          <span type="reply">
-            <i class="iconfont icon-svgmoban53"></i>
-            回复
-          </span>
-          {{# if(user.auth == 1 || user.auth == 2 || (user.username && myself && !myda)){ }}
-            <div class="jieda-admin">
-            {{# if(user.auth == 1 || (user.auth == 2 && item.accept != 1)){ }}
-              <span type="edit">
-                编辑
-              </span>
-              <span type="del">
-                删除
-              </span>
-              {{# if(rows.accept == -1){ }}
-              <span class="jieda-accept" type="accept">
-                采纳
-              </span>
-              {{# } }}
-            {{# } else if(rows.accept == -1 && !myda){ }}
-              <span class="jieda-accept" type="accept">
-                采纳
-              </span>
-            {{# } }}
-            </div>
-          {{# } }}
-          </div>
-        </li> -->
 
       </ul>
 
@@ -226,40 +231,6 @@ layui.use(['layer','jquery','fly'],function(){
     }
   )
 
-  // $.post(
-  //   "/topic/getReply",
-  //   {
-  //     postId: '<%= post[0].get('objectId') %>'
-  //   },
-  //   function(data){
-  //     var length = data.length;
-  //     console.log(data);
-  //     for(var i=0;i<1;i++){
-  //       var string = '';
-  //       string += '<li data-id="14">';
-  //       string += '<a name=""></a>';
-  //       string += '<div class="detail-about detail-about-reply">';
-  //       string += '<a class="jie-user" href="">';
-  //       string += '<img src="../../res/images/avatar/default.png" alt="">';
-  //       string += '<cite><i>香菇</i><em style="color:#FF9E3F">活雷锋</em></cite></a>';
-  //       string += '<div class="detail-hits"><span>刚刚</span></div>';
-  //       string += '</div>';
-  //       string += '<div class="detail-body jieda-body"><p>蓝瘦1</p></div>';
-  //       string += '<div class="jieda-reply">';
-  //       string += '<span class="jieda-zan" type="zan"><i class="iconfont icon-zan"></i><em>0</em></span>';
-  //       string += '<span type="reply"><i class="iconfont icon-svgmoban53"></i>回复</span>';
-  //       string += '<div class="jieda-admin">';
-  //       string += '<span type="edit">编辑</span>';
-  //       string += '<span type="del">删除</span>';
-  //       string += '<span class="jieda-accept" type="accept">采纳</span>';
-  //       string += '</div>';
-  //       string += '</div>';
-  //       string += '</li>';
-  //       $("#reply").append(string);
-  //     }
-  //   }
-  // )
-
 
   $('#replyButton').click(function(){
     $.post(
@@ -270,7 +241,8 @@ layui.use(['layer','jquery','fly'],function(){
         replyTo: $("#replyTo").val(),
         postId: $("#postId").val(),
         replyFromName: $("#replyFromName").val(),
-        replyToName: $("#replyToName").val()
+        replyToName: $("#replyToName").val(),
+        replyAvatar: '<%= avatar %>'
       },
       function(data,status){
         if(data=='success'){
