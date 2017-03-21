@@ -17,7 +17,7 @@
   <div class="wrap">
     <div class="content detail">
       <h1><%= post[0].get('title') %></h1>
-      <div class="fly-tip fly-detail-hint" data-id="{{rows.id}}">
+      <div class="fly-tip fly-detail-hint" data-id="">
         <% if( post[0].get('status')==1 ){ %>
           <span class="fly-tip-jie">已采纳</span>
         <% }else { %>
@@ -49,7 +49,7 @@
           <cite>
             <%= post[0].get('questionerNickName') %>
 
-            <em style="padding:0 5px; color: #FF7200;">VIP</em>
+            <em style="padding:0 5px; color: #FF7200;"><%= post[0].get('identity') %></em>
 
             <script>
               var time = getDateDiff(<%= post[0].get('createdAt').getTime() %>);

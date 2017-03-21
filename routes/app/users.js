@@ -288,11 +288,10 @@ router.post('/myinfo',function(req, res, next) {
 
       res.json("修改失败");
     });
-  }  
+  }
 });
 
 router.post('/upload_avatar',function(req, res, next){
-  console.log(req.body);
   var user = AV.Object.createWithoutData('_User', req.currentUser.get('id'));
   user.set('avatar', req.body.avatar);
   user.save();
@@ -400,7 +399,6 @@ router.get('/get_Dverify', function(req, res, next){
 })
 
 router.post('/e_verify', function(req, res, next){
-  console.log(req.body);
   var result = '';
   var industriesClass = req.body.industriesClass;
   var name = req.body.name;

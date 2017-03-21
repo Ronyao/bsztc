@@ -9,9 +9,9 @@ router.get('/', function(req, res, next) {
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
+  if(req.currentUser.get('isEnterprise')==true){
     identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
+  }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
   var query = new AV.Query('Post');
@@ -82,9 +82,9 @@ router.get('/add', function(req, res, next){
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
+  if(req.currentUser.get('isEnterprise')==true){
     identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
+  }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
   res.render('topic/add',{
@@ -104,6 +104,12 @@ router.post('/add', function(req, res, next){
   var content = req.body.content;
   var topicClass = req.body.topicClass;
   var reward = req.body.reward;
+  var identity = req.body.identity;
+  var isEidt =  req.body.isEidt;
+
+  if(isEidt=='true'){
+    var postId = req.body.postId;
+  }
 
   if(title.length==''){
     result = '题目不能为空';
@@ -118,8 +124,12 @@ router.post('/add', function(req, res, next){
     result = "请输入悬赏博士点";
     res.json(result);
   }else {
-    var Post = AV.Object.extend('Post');
-    var Post = new Post();
+    if(isEidt=='true'){
+      var Post = AV.Object.createWithoutData('Post',postId);
+    }else {
+      var Post = AV.Object.extend('Post');
+      var Post = new Post();
+    }
     Post.set('title', title);
     Post.set('content', content);
     Post.set('topicClass', topicClass);
@@ -127,10 +137,8 @@ router.post('/add', function(req, res, next){
     Post.set('questionerId', questionerId);
     Post.set('questionerAvatar', questionerAvatar);
     Post.set('questionerNickName', questionerNickName);
-    Post.set('consultations', 0);
-    Post.set('visits', 0);
-    Post.set('status', 0);
-    Post.set('recommend', 0);
+    Post.set('identity', identity);
+
 
     Post.save().then(function(Post) {
 
@@ -145,22 +153,32 @@ router.post('/add', function(req, res, next){
 });
 
 router.get('/edit', function(req, res, next){
+  var postId = req.query.pId;
   var avatar = req.currentUser.get('avatar');
   var identity = "";
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
+  if(req.currentUser.get('isEnterprise')==true){
     identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
+  }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
-  res.render('topic/add',{
-    title: "博士直通车-话题",
-    user: req.currentUser.get('nickname'),
-    avatar: avatar,
-    identity:identity
+  var query = new AV.Query('Post');
+  query.equalTo('objectId', postId);
+  query.find().then(function(post){
+    res.render('topic/add',{
+      title: "编辑问题",
+      user: req.currentUser.get('nickname'),
+      avatar: avatar,
+      currentUser: req.currentUser,
+      identity:identity,
+      post: post
+    });
+  }, function(error){
+
   });
+
 });
 
 router.get('/detail', function(req, res, next){
@@ -182,9 +200,9 @@ router.get('/detail', function(req, res, next){
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
+  if(req.currentUser.get('isEnterprise')==true){
     identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
+  }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
   var query = new AV.Query('Post');
@@ -193,7 +211,6 @@ router.get('/detail', function(req, res, next){
     var Reply = new AV.Query('Reply');
     Reply.equalTo('postId', questionId);
     Reply.find().then(function (replys) {
-      console.log(replys);
       res.render('topic/detail',{
         title: "问题详情",
         user: req.currentUser.get('nickname'),
@@ -273,9 +290,9 @@ router.get('/total/:page/:num', function(req, res, next) {
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
+  if(req.currentUser.get('isEnterprise')==true){
     identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
+  }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
   var query = new AV.Query('Post');
@@ -316,9 +333,9 @@ router.get('/unsolved/:page/:num', function(req, res, next) {
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
+  if(req.currentUser.get('isEnterprise')==true){
     identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
+  }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
   var query = new AV.Query('Post');
@@ -359,9 +376,9 @@ router.get('/solved/:page/:num', function(req, res, next) {
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
+  if(req.currentUser.get('isEnterprise')==true){
     identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
+  }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
   var query = new AV.Query('Post');
@@ -402,9 +419,9 @@ router.get('/excellent/:page/:num', function(req, res, next) {
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
+  if(req.currentUser.get('isEnterprise')==true){
     identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
+  }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
   var query = new AV.Query('Post');
