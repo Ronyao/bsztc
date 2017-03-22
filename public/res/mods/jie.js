@@ -3,7 +3,7 @@
  @Name: 求解板块
 
  */
- 
+
 layui.define(['laypage', 'fly'], function(exports){
 
   var $ = layui.jquery;
@@ -13,10 +13,10 @@ layui.define(['laypage', 'fly'], function(exports){
   var form = layui.form;
   var laypage = layui.laypage;
   var fly = layui.fly;
-  
+
   var gather = {}, dom = {
     jieda: $('#jieda')
-    ,content: $('#L_content')
+    ,content: $('#reply_content')
     ,jiedaCount: $('#jiedaCount')
   };
 
@@ -43,7 +43,7 @@ layui.define(['laypage', 'fly'], function(exports){
       required[0].value = '';
       dom.jieda.find('.fly-none').remove();
       dom.jieda.append(html);
-      
+
       var count = dom.jiedaCount.text()|0;
       dom.jiedaCount.html(++count);
     });
@@ -53,20 +53,21 @@ layui.define(['laypage', 'fly'], function(exports){
   gather.jieAdmin = {
     //删求解
     del: function(div){
-      layer.confirm('确认删除该求解么？', function(index){
+      layer.confirm('确认删除该提问么？', function(index){
         layer.close(index);
-        fly.json('/api/jie-delete/', {
+        fly.json('/topic/delete_post/', {
           id: div.data('id')
         }, function(res){
+          console.log(res);
           if(res.status === 0){
-            location.href = '/jie/';
+            location.href = '/topic/';
           } else {
             layer.msg(res.msg);
           }
         });
       });
     }
-    
+
     //设置置顶、状态
     ,set: function(div){
       var othis = $(this);
@@ -114,15 +115,16 @@ layui.define(['laypage', 'fly'], function(exports){
       var othis = $(this);
       layer.confirm('是否采纳该回答为最佳答案？', function(index){
         layer.close(index);
-        fly.json('/api/jieda-accept/', {
+        fly.json('/topic/reply-accept/', {
           id: li.data('id')
         }, function(res){
-          if(res.status === 0){
+          console.log(res);
+          if(res == 'success'){
             $('.jieda-accept').remove();
             li.addClass('jieda-daan');
             li.find('.detail-about').append('<i class="iconfont icon-caina" title="最佳答案"></i>');
           } else {
-            layer.msg(res.msg);
+            layer.msg(res);
           }
         });
       });
@@ -150,7 +152,7 @@ layui.define(['laypage', 'fly'], function(exports){
     ,del: function(li){ //删除
       layer.confirm('确认删除该回答么？', function(index){
         layer.close(index);
-        fly.json('/api/jieda-delete/', {
+        fly.json('/topic/reply-delete/', {
           id: li.data('id')
         }, function(res){
           if(res.status === 0){
@@ -165,7 +167,7 @@ layui.define(['laypage', 'fly'], function(exports){
             layer.msg(res.msg);
           }
         });
-      });    
+      });
     }
   };
   $('.jieda-reply span').on('click', function(){

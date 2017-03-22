@@ -207,6 +207,7 @@ router.get('/detail', function(req, res, next){
   }
   var query = new AV.Query('Post');
   query.equalTo('objectId', questionId);
+  query.greaterThanOrEqualTo('status', 0);
   query.find().then(function (results) {
     var Reply = new AV.Query('Reply');
     Reply.equalTo('postId', questionId);
@@ -446,6 +447,41 @@ router.get('/excellent/:page/:num', function(req, res, next) {
     }, function (error) {
 
     });
+  }, function(error){
+
+  });
+});
+
+router.post('/delete_post', function(req, res, next){
+  var postId = req.body.id;
+  //权限问题
+  var post = AV.Object.createWithoutData('Post',postId);
+  post.set('status', -1);
+  post.save().then(function(result){
+    res.json("success");
+  }, function(error){
+
+  });
+});
+
+router.post('/reply_post', function(){
+  var replyId = req.body.id;
+
+  var reply = AV.Object.createWithoutData('Reply', replyId);
+  reply.set('status', -1);
+  reply.save().then(function(results){
+    res.json('success');
+  }, function(error){
+
+  });
+});
+//采纳
+router.post('/reply-accept', function(req, res, next){
+  var replyId = req.body.id;
+  var reply = AV.Object.createWithoutData('Reply', replyId);
+  reply.set('accept', 1);
+  reply.save().then(function(results){
+    res.json('success');
   }, function(error){
 
   });

@@ -17,7 +17,7 @@
   <div class="wrap">
     <div class="content detail">
       <h1><%= post[0].get('title') %></h1>
-      <div class="fly-tip fly-detail-hint" data-id="">
+      <div class="fly-tip fly-detail-hint" data-id="<%= post[0].get('id') %>">
         <% if( post[0].get('status')==1 ){ %>
           <span class="fly-tip-jie">已采纳</span>
         <% }else { %>
@@ -58,7 +58,7 @@
 
           </cite>
         </a>
-        <div class="detail-hits" data-id="{{rows.id}}">
+        <div class="detail-hits" data-id="<%= post[0].get('id') %>">
 
           <span style="color:#FF7200">悬赏：<%= post[0].get('reward') %>博士点</span>
 
@@ -83,7 +83,7 @@
         <% if(replys.length>0){ %>
           <% replys.forEach(function(reply){ %>
 
-            <li data-id="" class="jieda-daan">
+            <li data-id="<%= reply.get('id') %>" class="jieda-daan">
               <a name=""></a>
               <div class="detail-about detail-about-reply">
                 <a class="jie-user" href="/u/">
@@ -111,9 +111,9 @@
                     document.write("<span>" + time + "</span>");  // 输出语句
                   </script>
                 </div>
-
+                <% if(reply.get('accept')==1){ %>
                 <i class="iconfont icon-caina" title="最佳答案"></i>
-
+                <% } %>
               </div>
               <div class="detail-body jieda-body">
                 <%= reply.get('replyContent') %>
@@ -127,7 +127,7 @@
                 <i class="iconfont icon-svgmoban53"></i>
                 回复
               </span>
-              <% if(currentUser.get('id')==reply.get('replyFrom')){ %>
+              <% if(currentUser.get('id')>reply.get('replyFrom')){ %>
                 <div class="jieda-admin">
 
                   <span type="edit">
@@ -193,11 +193,12 @@
 </div>
 <% } else { %>
 <h2 class="page-title">404</h2>
-<div class="fly-none">该问题并不存在，肯能已被删除</div>
+<div class="fly-none">该问题并不存在，可能已被删除</div>
 <% } %>
 
 <%- include("../footer.ejs") %>
-
+<script src="http://cdn1.lncld.net/static/js/2.1.1/av-min.js"></script>
+<script src="/javascripts/initLeanCloud.js"></script>
 <script>
 layui.cache.page = 'jie';
 layui.use(['layer','jquery','fly'],function(){
@@ -248,6 +249,8 @@ layui.use(['layer','jquery','fly'],function(){
         if(data=='success'){
           //异步加载回复的内容
           layer.msg(data);
+          //刷新页面
+          location.reload();
         }else{
           layer.msg(data);
         }
