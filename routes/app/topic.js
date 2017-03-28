@@ -487,4 +487,31 @@ router.post('/reply-accept', function(req, res, next){
   });
 });
 
+//获取查看用户的问题
+router.post('/getMyPost', function(req, res, next) {
+  var userId = req.body.user;
+  var query = new AV.Query('Post');
+  query.equalTo('questionerId');
+  query.limit(5);
+  query.find().then( function(result){
+    res.json(result);
+  }, function(error){
+
+  });
+
+});
+
+router.post('/getMyReply', function(req, res, next) {
+  var userId = req.body.user;
+  var query = new AV.Query('Reply');
+  query.equalTo('replyFrom');
+  query.limit(3);
+  query.find().then( function(result){
+    res.json(result);
+  }, function(error){
+
+  });
+
+});
+
 module.exports = router;

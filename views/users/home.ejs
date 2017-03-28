@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title><%= title %></title>
 <%- include("../link.ejs") %>
+<script  src="/javascripts/time_conversion.js"></script>
 </head>
 <body style="margin-top: 65px;">
 
@@ -35,57 +36,37 @@
   <div class="home-left">
     <h2>最近发表的求解</h2>
     <ul class="jie-row">
-    {{# jie.forEach(function(item, index){ }}
-      <li>
-      {{ item.status == 1 ? '<span class="fly-jing">精</span>' : ''}}
-      {{# if(item.accept >= 0){ }}
-      <span class="jie-status jie-status-ok">已解决</span>
-      {{# } else if(item.comment === 0 ){ }}
-      <span class="jie-status">求解中</span>
-      {{# } }}
-      <a href="/jie/{{item.id}}.html">{{= item.title}}</a>
-      <i>{{lay.time(item.time)}}</i>
-      <em>{{item.hits}}阅/{{item.comment}}答</em>
-      </li>
-    {{# }); }}
 
-    {{# if(jie.length === 0){ }}
-    <li class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><i style="font-size:14px;">没有发表任何求解</i></li>
-    {{# } }}
     </ul>
 
     <h2 style="margin-top:30px;">最近的回答</h2>
     <ul class="home-jieda">
-    {{# da.forEach(function(item, index){ }}
-    <li>
-      <p>
-      <span>{{lay.time(item.time)}}</span>
-      在<a href="/jie/{{item.jid}}.html#item-{{item.time}}" target="_blank">{{= item.title||'求解'}}</a>中回答：
-      </p>
-      <div class="home-dacontent">{{d.content(item.content)}}</div>
-    </li>
-    {{# }); }}
 
-    {{# if(da.length === 0){ }}
-    <li class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><span>没有回答任何问题</span></li>
-    {{# }; }}
     </ul>
   </div>
   <div class="home-right">
     <ul class="home-info">
+    <% if(currentUser.get('id')==thisUser[0].get('id')){ %>
     <li><i class="iconfont icon-zuichun"></i>拥有博士点：<span style="color: #FF7200;"><%= thisUser[0].get('doctorPoint') %></span></li>
-    <li><i class="iconfont icon-shijian"></i>加入时间：<span>{{lay.time(info.joinTime)}}</span></li>
-    <li><i class="iconfont icon-chengshi"></i>城市：<span><% if(thisUser[0].get('city')==''){} %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>一级学科：<span><%= thisUser[0].get('d_firstDisciplines') %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>二级学科：<span><%= thisUser[0].get('d_secondDisciplines') %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>研究方向：<span><%= thisUser[0].get('d_disciplinesFields') %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>所获奖励：<span><%= thisUser[0].get('historyAwards') %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>既往研究项目：<span><%= thisUser[0].get('historyProjects') %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>发表论著：<span><%= thisUser[0].get('historyPapers') %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>在研项目：<span><%= thisUser[0].get('nowProjects') %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>简介：<span><%= thisUser[0].get('introduction') %></span></li>
+    <% } %>
+    <li><i class="iconfont icon-shijian"></i>加入时间：
+      <script>
+        var time = getDateDiff(<%= thisUser[0].get('createdAt').getTime() %>);
+        document.write("<span>" + time + "</span>");  // 输出语句
+      </script>
+    </li>
+    <% if(identity == "认证博士"){ %>
+    <li><i class="iconfont icon-chengshi"></i>城市：<span><% if(typeof(thisUser[0].get('city'))==undefined||thisUser[0].get('city')==''){ %>未填写<% }else{ %><%= thisUser[0].get('city') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>一级学科：<span><% if(typeof(thisUser[0].get('d_firstDisciplines'))==undefined||thisUser[0].get('d_firstDisciplines')==''){ %> 未填写 <% }else{ %> <%= thisUser[0].get('d_firstDisciplines') %> <% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>二级学科：<span><% if(typeof(thisUser[0].get('d_secondDisciplines'))==undefined||thisUser[0].get('d_secondDisciplines')==''){ %>未填写<% }else{ %> <%= thisUser[0].get('d_secondDisciplines') %> <% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>研究方向：<span><% if(typeof(thisUser[0].get('d_disciplinesFields'))==undefined||thisUser[0].get('d_disciplinesFields')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_disciplinesFields') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>所获奖励：<span><% if(typeof(thisUser[0].get('d_historyAwards'))==undefined||thisUser[0].get('d_historyAwards')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_historyAwards') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>既往研究项目：<span><% if(typeof(thisUser[0].get('d_historyProjects'))==undefined||thisUser[0].get('d_historyProjects')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_historyProjects') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>发表论著：<span><% if(typeof(thisUser[0].get('d_historyPapers'))==undefined||thisUser[0].get('d_historyPapers')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_historyPapers') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>在研项目：<span><% if(typeof(thisUser[0].get('d_nowProjects'))==undefined||thisUser[0].get('d_nowProjects')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_nowProjects') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>简介：<span><% if(typeof(thisUser[0].get('d_introduction'))==undefined||thisUser[0].get('d_introduction')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_introduction') %><% } %></span></li>
     </ul>
-
+    <% } %>
   </div>
   </div>
 </div>
@@ -108,7 +89,67 @@ layui.use('layer',function(){
       area: ['700px','330px'],
       content: '/pay/call_pay'
     });
-  })
+  });
+
+  $.post(
+    "/topic/getMyPost",
+    {
+      user: '<%= thisUser[0].get('id') %>'
+    },
+    function(data, status){
+      length = data.length;
+      for(var i=0;i<length;i++){
+        var string = '';
+        string += '<li>';
+        if(data[i].recommend==1){
+          string += '<span class="fly-jing">精</span>';
+        }
+        if(data[i].solved==1){
+          string += '<span class="jie-status jie-status-ok">已解决</span>';
+        }else{
+          string += '<span class="jie-status">求解中</span>';
+        }
+        string += '<a href="/jie/{{item.id}}.html">'+data[i].title+'</a>';
+        console.log(typeof(data[i].createdAt));
+        var time = getDateDiff(data[i].createdAt);
+        string += '<i>'+time+'</i>';
+        string += '<em>'+data[i].visits+'阅/'+data[i].consultations+'答</em>';
+        string += '</li>';
+        $(".jie-row").append(string);
+      }
+
+      if(length==0){
+        var string = "";
+        string += '<li class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><i style="font-size:14px;">没有发表任何求解</i></li>';
+        $(".jie-row").append(string);
+      }
+    }
+  )
+
+  $.post(
+    "/topic/getMyReply",
+    {
+      user: '<%= thisUser[0].get('id') %>'
+    },
+    function(data, status){
+      length = data.length;
+      for(var i=0;i<length;i++){
+
+        var string = '';
+        string += '<li>';
+        string += '<p><span>{{lay.time(item.time)}}</span>在<a href="/jie/{{item.jid}}.html#item-{{item.time}}" target="_blank">{{= item.title}}</a>中回答：</p>';
+        string += '<div class="home-dacontent">'+data[i].replyContent+'</div>';
+        string += '</li>';
+        $(".home-jieda").append(string);
+      }
+
+      if(length==0){
+        var string = "";
+        string += '<li class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><span>没有回答任何问题</span></li>';
+        $(".home-jieda").append(string);
+      }
+    }
+  )
 
 });
 </script>

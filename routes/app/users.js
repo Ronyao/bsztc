@@ -15,9 +15,9 @@ router.get('/index', function(req, res, next) {
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
+  if(req.currentUser.get('isEnterprise')==true){
     identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
+  }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
   res.render('users/index',{
@@ -213,16 +213,16 @@ router.get('/set',function(req, res, next) {
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
+  if(req.currentUser.get('isEnterprise')==true){
     identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
+  }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
   res.render('users/set',{
     title: "设置-博士直通车",
     user: req.currentUser.get('nickname'),
     avatar: avatar,
-    identity:identity,
+    identity: identity,
     currentUser:req.currentUser
   });
 })
@@ -233,20 +233,22 @@ router.get('/home',function(req, res, next){
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
+  if(req.currentUser.get('isEnterprise')==true){
     identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
+  }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
    uid = req.query.uid;
    var query = new AV.Query('_User');
    query.equalTo('objectId', uid);
    query.find().then(function (results) {
+
      res.render('users/home',{
        title:"用户中心",
        user: req.currentUser.get('nickname'),
        avatar: avatar,
        identity: identity,
+       currentUser: req.currentUser,
        thisUser: results
      });
   }, function (error) {
@@ -254,7 +256,7 @@ router.get('/home',function(req, res, next){
       title:"用户中心",
       user: req.currentUser.get('nickname'),
       avatar: avatar,
-      identity:identity
+      identity: identity
     });
   });
 
