@@ -492,8 +492,10 @@ router.post('/getMyPost', function(req, res, next) {
   var userId = req.body.user;
   var query = new AV.Query('Post');
   query.equalTo('questionerId');
+  query.descending('createdAt');
   query.limit(5);
   query.find().then( function(result){
+    console.log(result);
     res.json(result);
   }, function(error){
 
@@ -505,8 +507,10 @@ router.post('/getMyReply', function(req, res, next) {
   var userId = req.body.user;
   var query = new AV.Query('Reply');
   query.equalTo('replyFrom');
+  query.descending('createdAt');
   query.limit(3);
   query.find().then( function(result){
+
     res.json(result);
   }, function(error){
 

@@ -112,7 +112,7 @@ layui.use('layer',function(){
         string += '<a href="/jie/{{item.id}}.html">'+data[i].title+'</a>';
         console.log(typeof(data[i].createdAt));
         var time = getDateDiff(data[i].createdAt);
-        string += '<i>'+time+'</i>';
+        string += '<i>'+data[i].createdAt+'</i>';
         string += '<em>'+data[i].visits+'阅/'+data[i].consultations+'答</em>';
         string += '</li>';
         $(".jie-row").append(string);
