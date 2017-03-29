@@ -242,7 +242,7 @@ router.get('/home',function(req, res, next){
    var query = new AV.Query('_User');
    query.equalTo('objectId', uid);
    query.find().then(function (results) {
-
+       console.log(results);
      res.render('users/home',{
        title:"用户中心",
        user: req.currentUser.get('nickname'),

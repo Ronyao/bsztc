@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title><%= title %></title>
 <%- include("../link.ejs") %>
+<script  src="/javascripts/time_conversion.js"></script>
 </head>
 <body>
 
@@ -55,7 +56,10 @@
 
       </p>
       <p>
-        <span>加入时间：<%= jointime %></span>
+        <script>
+          var time = getDateDiff(<%= jointime.getTime() %>);
+          document.write("<span>加入时间：" + time + "</span>");  // 输出语句
+        </script>
       </p>
       <p>
         <span>城市：<%= city %></span>

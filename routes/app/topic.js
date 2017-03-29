@@ -491,11 +491,11 @@ router.post('/reply-accept', function(req, res, next){
 router.post('/getMyPost', function(req, res, next) {
   var userId = req.body.user;
   var query = new AV.Query('Post');
-  query.equalTo('questionerId');
+  query.equalTo('questionerId',userId);
+  query.greaterThanOrEqualTo('status',0);
   query.descending('createdAt');
   query.limit(5);
   query.find().then( function(result){
-    console.log(result);
     res.json(result);
   }, function(error){
 
@@ -506,7 +506,7 @@ router.post('/getMyPost', function(req, res, next) {
 router.post('/getMyReply', function(req, res, next) {
   var userId = req.body.user;
   var query = new AV.Query('Reply');
-  query.equalTo('replyFrom');
+  query.equalTo('replyFrom',userId);
   query.descending('createdAt');
   query.limit(3);
   query.find().then( function(result){
@@ -517,5 +517,12 @@ router.post('/getMyReply', function(req, res, next) {
   });
 
 });
+
+// router.get('/getRanking', function(req, res, next){
+//   var query = new AV.Query('Reply');
+//   var currentTime = new Date();
+//   query.greaterThanOrEqualTo('createdAt');
+//
+// });
 
 module.exports = router;

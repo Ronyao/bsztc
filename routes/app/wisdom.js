@@ -10,9 +10,9 @@ router.get('/', function(req, res, next) {
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
   }
-  if(req.currentUser.get('isEnterprise')=='true'){
+  if(req.currentUser.get('isEnterprise')==true){
     identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')=='true') {
+  }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
 
@@ -32,5 +32,6 @@ router.get('/', function(req, res, next) {
   });
 
 });
+
 
 module.exports = router;

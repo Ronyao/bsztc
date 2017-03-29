@@ -56,15 +56,15 @@
       </script>
     </li>
     <% if(identity == "认证博士"){ %>
-    <li><i class="iconfont icon-chengshi"></i>城市：<span><% if(typeof(thisUser[0].get('city'))==undefined||thisUser[0].get('city')==''){ %>未填写<% }else{ %><%= thisUser[0].get('city') %><% } %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>一级学科：<span><% if(typeof(thisUser[0].get('d_firstDisciplines'))==undefined||thisUser[0].get('d_firstDisciplines')==''){ %> 未填写 <% }else{ %> <%= thisUser[0].get('d_firstDisciplines') %> <% } %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>二级学科：<span><% if(typeof(thisUser[0].get('d_secondDisciplines'))==undefined||thisUser[0].get('d_secondDisciplines')==''){ %>未填写<% }else{ %> <%= thisUser[0].get('d_secondDisciplines') %> <% } %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>研究方向：<span><% if(typeof(thisUser[0].get('d_disciplinesFields'))==undefined||thisUser[0].get('d_disciplinesFields')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_disciplinesFields') %><% } %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>所获奖励：<span><% if(typeof(thisUser[0].get('d_historyAwards'))==undefined||thisUser[0].get('d_historyAwards')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_historyAwards') %><% } %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>既往研究项目：<span><% if(typeof(thisUser[0].get('d_historyProjects'))==undefined||thisUser[0].get('d_historyProjects')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_historyProjects') %><% } %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>发表论著：<span><% if(typeof(thisUser[0].get('d_historyPapers'))==undefined||thisUser[0].get('d_historyPapers')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_historyPapers') %><% } %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>在研项目：<span><% if(typeof(thisUser[0].get('d_nowProjects'))==undefined||thisUser[0].get('d_nowProjects')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_nowProjects') %><% } %></span></li>
-    <li><i class="iconfont icon-chengshi"></i>简介：<span><% if(typeof(thisUser[0].get('d_introduction'))==undefined||thisUser[0].get('d_introduction')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_introduction') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>城市：<span><% if(typeof(thisUser[0].get('city'))=="undefined"||thisUser[0].get('city')==''){ %>未填写<% }else{ %><%= thisUser[0].get('city') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>一级学科：<span><% if(typeof(thisUser[0].get('d_firstDisciplines'))=="undefined"||thisUser[0].get('d_firstDisciplines')==''){ %> 未填写 <% }else{ %> <%= thisUser[0].get('d_firstDisciplines') %> <% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>二级学科：<span><% if(typeof(thisUser[0].get('d_secondDisciplines'))=="undefined"||thisUser[0].get('d_secondDisciplines')==''){ %>未填写<% }else{ %> <%= thisUser[0].get('d_secondDisciplines') %> <% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>研究方向：<span><% if(typeof(thisUser[0].get('d_disciplinesFields'))=="undefined"||thisUser[0].get('d_disciplinesFields')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_disciplinesFields') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>所获奖励：<span><% if(typeof(thisUser[0].get('d_historyAwards'))=="undefined"||thisUser[0].get('d_historyAwards')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_historyAwards') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>既往研究项目：<span><% if(typeof(thisUser[0].get('d_historyProjects'))=="undefined"||thisUser[0].get('d_historyProjects')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_historyProjects') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>发表论著：<span><% if(typeof(thisUser[0].get('d_historyPapers'))=="undefined"||thisUser[0].get('d_historyPapers')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_historyPapers') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>在研项目：<span><% if(typeof(thisUser[0].get('d_nowProjects'))=="undefined"||thisUser[0].get('d_nowProjects')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_nowProjects') %><% } %></span></li>
+    <li><i class="iconfont icon-chengshi"></i>简介：<span><% if(typeof(thisUser[0].get('d_introduction'))=="undefined"||thisUser[0].get('d_introduction')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_introduction') %><% } %></span></li>
     </ul>
     <% } %>
   </div>
@@ -109,10 +109,9 @@ layui.use('layer',function(){
         }else{
           string += '<span class="jie-status">求解中</span>';
         }
-        string += '<a href="/jie/{{item.id}}.html">'+data[i].title+'</a>';
-        console.log(typeof(data[i].createdAt));
-        var time = getDateDiff(data[i].createdAt);
-        string += '<i>'+data[i].createdAt+'</i>';
+        string += '<a href="/topic/detail?qId='+data[i].objectId+'">'+data[i].title+'</a>';
+        var time = new Date(data[i].createdAt);
+        string += '<i>'+getDateDiff(time)+'</i>';
         string += '<em>'+data[i].visits+'阅/'+data[i].consultations+'答</em>';
         string += '</li>';
         $(".jie-row").append(string);

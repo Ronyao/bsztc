@@ -48,4 +48,17 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.post('/usersOfSelect', function(req, res, next) {
+  var discipline = req.body.discipline;
+  var query = new AV.Query('_User');
+  query.descending('createdAt');
+  query.equalTo('d_disciplinesFields', discipline);
+  query.limit(15);
+  query.find().then(function(result){
+    res.json(result);
+  }, function(error){
+
+  });
+});
+
 module.exports = router;

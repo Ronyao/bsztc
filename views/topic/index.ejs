@@ -79,12 +79,7 @@
 
     <h3 class="page-title">月度雷锋 - TOP 12</h3>
     <div class="user-looklog leifeng-rank">
-      <span>
-        <a href="user/home.html">
-          <img src="../res/images/avatar/default.png">
-          <cite>纸飞机</cite>
-          <i>159次回答</i>
-        </a>
+      <span id='rank'>
         <a href="user/home.html">
           <img src="../res/images/avatar/default.png">
           <cite>纸飞机</cite>
@@ -101,12 +96,6 @@
     <ol class="fly-list-one" id="mostConsultations">
     </ol>
 
-    <!-- <div class="fly-link">
-      <span>友情链接：</span>
-      <a href="http://www.layui.com/" target="_blank">Layui</a>
-      <a href="http://layim.layui.com/" target="_blank">LayIM</a>
-      <a href="http://layer.layui.com/" target="_blank">layer</a>
-    </div> -->
   </div>
 </div>
 
@@ -159,7 +148,8 @@ layui.use(['layer','jquery'],function(){
         }
         string += '</h2>';
         string += '<p><span><a href="users/home?uid='+data[i].questionerId+'">'+data[i].questionerNickName+'</a></span>';
-        string += '<span>'+getDateDiff(data[i].createdAt)+'</span>';
+        var time = new Date(data[i].createdAt);
+        string += '<span>'+getDateDiff(time)+'</span>';
         string += '<span>'+data[i].topicClass+'</span>';
         string += '<span class="fly-list-hint">';
         string += '<i class="iconfont" title="回答">&#xe60c;</i> '+data[i].consultations;
@@ -167,7 +157,22 @@ layui.use(['layer','jquery'],function(){
         $("#isTop").append(string);
       }
     }
-  )
+  );
+
+  // $.get(
+  //   "/topic/getRanking",
+  //   function(data) {
+  //     var length = data.length;
+  //     for(var i=1; i<length; i++){
+  //       var string = '';
+  //       string += '<a href="user/home.html">';
+  //       string += '<img src="../res/images/avatar/default.png">';
+  //       string += '<cite>纸飞机</cite>';
+  //       string += '<i>159次回答</i></a>';
+  //       $("#rank").append(string);
+  //     }
+  //   }
+  // );
 
 });
 </script>
