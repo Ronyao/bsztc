@@ -54,7 +54,7 @@ layui.define(['laypage', 'fly'], function(exports){
       if(gather.minelog[type + 'page-' + curr]){
         view(gather.minelog[type + 'page-' + curr]);
       } else {
-        fly.json('/api/'+ type +'/', {
+        fly.json('/topic/'+ type +'/', {
           page: curr
         }, function(res){
           view(res);

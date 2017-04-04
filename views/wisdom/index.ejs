@@ -96,7 +96,7 @@
 
       <div style="text-align: center">
         <div class="laypage-main">
-          <a href="jie/index.html" class="laypage-next">更多求解</a>
+          <a href="jie/index.html" class="laypage-next">更多博士</a>
         </div>
       </div>
 
@@ -115,7 +115,6 @@ layui.use(['jquery','form','layer'], function(){
   ,layer = layui.layer;
 
   form.on('select(disciplines)', function(data){
-    console.log(data.value); //得到被选中的值
     //传递一个类别，返回一个json数组
     $.post(
       "/search/usersOfSelect",
@@ -123,12 +122,11 @@ layui.use(['jquery','form','layer'], function(){
         discipline: data.value,
       },
       function (data, status){
-        if(data == 'success'){
-          layer.msg("成功搜索");
-        }else{
+        if(data == 'error'){
+          layer.msg("搜索失败");
+        }else if(data.length>0){
           $("#userlist").empty();
-          var i = data.length;
-          while (i--) {
+          for(var i=0; i<data.length; i++){
             var string = '';
             string += '<li class="fly-list-li">';
             string += '<a href="users/home?uid='+ data[i].objectId +'" class="fly-list-avatar"><img src="'+ data[i].avatar +'" alt=""></a>';
@@ -150,6 +148,11 @@ layui.use(['jquery','form','layer'], function(){
             $("#userlist").append(string);
           }
 
+        }else{
+          $("#userlist").empty();
+          var string = '';
+          string = '<div class="fly-none">并无相关数据</div>';
+          $("#userlist").append(string);
         }
       }
     )

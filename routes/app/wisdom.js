@@ -19,6 +19,7 @@ router.get('/', function(req, res, next) {
   var query = new AV.Query('_User');
   query.limit(20);
   query.equalTo('isDoctor',true);
+  query.notEqualTo('isBot',true);
   query.find().then(function (results) {
     res.render('wisdom/index',{
       title: "智库-博士直通车",
