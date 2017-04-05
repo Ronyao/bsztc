@@ -17,9 +17,10 @@ router.get('/', function(req, res, next) {
   }
 
   var query = new AV.Query('_User');
-  query.limit(20);
+  query.limit(12);
   query.equalTo('isDoctor',true);
-  query.notEqualTo('isBot',true);
+  query.descending('createdAt');
+//  query.notEqualTo('isBot',true);
   query.find().then(function (results) {
     res.render('wisdom/index',{
       title: "智库-博士直通车",
@@ -29,6 +30,35 @@ router.get('/', function(req, res, next) {
       users: results
     });
   }, function (error) {
+
+  });
+
+});
+
+router.post('/discipline/:discipline/page/:num', function(req, res, next) {
+  var discipline = req.params.discipline;
+  var currentPage = parseInt(req.params.num);
+  var query = new AV.Query('_User');
+  query.equalTo('isDoctor',true);
+  query.notEqualTo('isBot',true);
+  query.count().then(function(count){
+    var pages = Math.ceil(count/15);
+    query.limit(12);
+    query.skip(12*(currentPage-1));
+    if(discipline!='0'){
+      query.equalTo('d_disciplinesFields', discipline);
+    }
+    query.descending('createdAt');
+    query.find().then(function (results) {
+      res.json({
+        data: results,
+        pages: pages
+      });
+
+    }, function (error) {
+
+    });
+  }, function(error){
 
   });
 

@@ -70,35 +70,7 @@
 
       <ul class="fly-list" id="userlist">
 
-        <% users.forEach(function(user){%>
-                <li class="fly-list-li">
-                  <a href="users/home?uid=<%= user.get('objectId') %>" class="fly-list-avatar">
-                    <img src=<%= user.get('avatar') %> alt="">
-                  </a>
-                  <h2 class="fly-tip">
-                    <a href="users/home?uid=<%= user.get('objectId') %>"><%= user.get('nickname') %></a>
-                  </h2>
-                  <p>
-                    <span><%= user.get('d_disciplinesFields') %> ></span>
-                    <span><%= user.get('d_firstDisciplines') %> ></span>
-                    <span><%= user.get('d_secondDisciplines') %></span>
-                    <span class="fly-list-hint">
-                      <i class="iconfont" title="回答">&#xe60c;</i> <% if(user.get('d_consultCount')== undefined ){ %> 0 <% }else{ %><%= user.get('d_consultCount') %> <% } %> 咨询
-                      <i class="iconfont" title="人气">&#xe60b;</i> <% if(user.get('d_follower')== undefined ){ %> 0 <% }else{ %><%= user.get('d_follower') %> <% } %> 关注
-                    </span>
-                  </p>
-                </li>
-        <% }) %>
-
       </ul>
-
-
-
-      <div style="text-align: center">
-        <div class="laypage-main">
-          <a href="jie/index.html" class="laypage-next">更多博士</a>
-        </div>
-      </div>
 
     </div>
   </div>
@@ -108,54 +80,133 @@
 <%- include("../footer.ejs") %>
 
 <script>
-layui.use(['jquery','form','layer'], function(){
+layui.use(['jquery','form','layer','flow'], function(){
 
   var form = layui.form()
   ,$ = layui.jquery
-  ,layer = layui.layer;
+  ,layer = layui.layer
+  ,flow = layui.flow;
+  discipline = '0';
+
+  flow.load({
+    elem: '#userlist' //指定列表容器
+    ,scrollElem: '#userlist'
+    ,isAuto: false
+    ,done: function(page, next){ //到达临界点（默认滚动触发），触发下一页
+      var lis = [];
+      //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+      $.post('/wisdom/discipline/'+discipline+'/page/'+page, function(res){
+        //假设你的列表返回在data集合中
+        layui.each(res.data, function(index, item){
+          var string = '';
+          string += '<li class="fly-list-li">';
+          string += '<a href="users/home?uid='+ item.objectId +'" class="fly-list-avatar"><img src="'+ item.avatar +'" alt=""></a>';
+          string += '<h2 class="fly-tip">';
+          string += '<a href="users/home?uid='+item.objectId+'"> '+ item.nickname +' </a>';
+          string += '</h2>';
+          string += '<p>';
+          string += '<span>'+ item.d_disciplinesFields +' ></span>';
+          string += '<span>'+ item.d_firstDisciplines +' ></span>';
+          string += '<span>'+ item.d_secondDisciplines +'</span>';
+          string += '<span class="fly-list-hint">';
+          if(item.d_consultCount===undefined) item.d_consultCount=0;
+          string += '<i class="iconfont" title="回答">&#xe60c;</i> '+ item.d_consultCount +' 咨询';
+          if(item.d_follower===undefined) item.d_follower=0;
+          string += '<i class="iconfont" title="人气">&#xe60b;</i> '+ item.d_follower +' 关注';
+          string += '</span>';
+          string += '</p>';
+          string += '</li>';
+          lis.push( string );
+        });
+
+        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+        next(lis.join(''), page < res.pages);
+      });
+    }
+  });
 
   form.on('select(disciplines)', function(data){
     //传递一个类别，返回一个json数组
-    $.post(
-      "/search/usersOfSelect",
-      {
-        discipline: data.value,
-      },
-      function (data, status){
-        if(data == 'error'){
-          layer.msg("搜索失败");
-        }else if(data.length>0){
-          $("#userlist").empty();
-          for(var i=0; i<data.length; i++){
+    discipline = data.value;
+    $("#userlist").empty();
+    flow.load({
+      elem: '#userlist' //指定列表容器
+      ,scrollElem: '#userlist'
+      ,isAuto: false
+      ,done: function(page, next){ //到达临界点（默认滚动触发），触发下一页
+        var lis = [];
+        //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+        $.post('/wisdom/discipline/'+discipline+'/page/'+page, function(res){
+          //假设你的列表返回在data集合中
+          layui.each(res.data, function(index, item){
             var string = '';
             string += '<li class="fly-list-li">';
-            string += '<a href="users/home?uid='+ data[i].objectId +'" class="fly-list-avatar"><img src="'+ data[i].avatar +'" alt=""></a>';
+            string += '<a href="users/home?uid='+ item.objectId +'" class="fly-list-avatar"><img src="'+ item.avatar +'" alt=""></a>';
             string += '<h2 class="fly-tip">';
-            string += '<a href="users/home?uid='+data[i].objectId+'"> '+ data[i].nickname +' </a>';
+            string += '<a href="users/home?uid='+item.objectId+'"> '+ item.nickname +' </a>';
             string += '</h2>';
             string += '<p>';
-            string += '<span>'+ data[i].d_disciplinesFields +' ></span>';
-            string += '<span>'+ data[i].d_firstDisciplines +' ></span>';
-            string += '<span>'+ data[i].d_secondDisciplines +'</span>';
+            string += '<span>'+ item.d_disciplinesFields +' ></span>';
+            string += '<span>'+ item.d_firstDisciplines +' ></span>';
+            string += '<span>'+ item.d_secondDisciplines +'</span>';
             string += '<span class="fly-list-hint">';
-            if(data[i].d_consultCount===undefined) data[i].d_consultCount=0;
-            string += '<i class="iconfont" title="回答">&#xe60c;</i> '+ data[i].d_consultCount +' 咨询';
-            if(data[i].d_follower===undefined) data[i].d_follower=0;
-            string += '<i class="iconfont" title="人气">&#xe60b;</i> '+ data[i].d_follower +' 关注';
+            if(item.d_consultCount===undefined) item.d_consultCount=0;
+            string += '<i class="iconfont" title="回答">&#xe60c;</i> '+ item.d_consultCount +' 咨询';
+            if(item.d_follower===undefined) item.d_follower=0;
+            string += '<i class="iconfont" title="人气">&#xe60b;</i> '+ item.d_follower +' 关注';
             string += '</span>';
             string += '</p>';
             string += '</li>';
-            $("#userlist").append(string);
-          }
+            lis.push( string );
+          });
 
-        }else{
-          $("#userlist").empty();
-          var string = '';
-          string = '<div class="fly-none">并无相关数据</div>';
-          $("#userlist").append(string);
-        }
+          //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+          //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+          next(lis.join(''), page < res.pages);
+        });
       }
-    )
+    });
+    // $.post(
+    //   "/search/usersOfSelect/page/1",
+    //   {
+    //     discipline: data.value,
+    //   },
+    //   function (data, status){
+    //     if(data == 'error'){
+    //       layer.msg("搜索失败");
+    //     }else if(data.length>0){
+    //       $("#userlist").empty();
+    //       for(var i=0; i<data.length; i++){
+    //         var string = '';
+    //         string += '<li class="fly-list-li">';
+    //         string += '<a href="users/home?uid='+ data[i].objectId +'" class="fly-list-avatar"><img src="'+ data[i].avatar +'" alt=""></a>';
+    //         string += '<h2 class="fly-tip">';
+    //         string += '<a href="users/home?uid='+data[i].objectId+'"> '+ data[i].nickname +' </a>';
+    //         string += '</h2>';
+    //         string += '<p>';
+    //         string += '<span>'+ data[i].d_disciplinesFields +' ></span>';
+    //         string += '<span>'+ data[i].d_firstDisciplines +' ></span>';
+    //         string += '<span>'+ data[i].d_secondDisciplines +'</span>';
+    //         string += '<span class="fly-list-hint">';
+    //         if(data[i].d_consultCount===undefined) data[i].d_consultCount=0;
+    //         string += '<i class="iconfont" title="回答">&#xe60c;</i> '+ data[i].d_consultCount +' 咨询';
+    //         if(data[i].d_follower===undefined) data[i].d_follower=0;
+    //         string += '<i class="iconfont" title="人气">&#xe60b;</i> '+ data[i].d_follower +' 关注';
+    //         string += '</span>';
+    //         string += '</p>';
+    //         string += '</li>';
+    //         $("#userlist").append(string);
+    //       }
+    //
+    //     }else{
+    //       $("#userlist").empty();
+    //       var string = '';
+    //       string = '<div class="fly-none">并无相关数据</div>';
+    //       $("#userlist").append(string);
+    //     }
+    //   }
+    // )
   });
 
 });

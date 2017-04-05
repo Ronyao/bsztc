@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title><%= title %></title>
+
+  <%- include("../link.ejs") %>
+</head>
+<body>
+
+<%- include("../header.ejs") %>
+
+<div class="main layui-clear">
+  <div class="wrap">
+    <div class="content" style="margin-right:0">
+      <div class="fly-tab">
+
+
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <form class="layui-form" action="">
+              <div class="layui-form-item">
+                <label class="layui-form-label">学科分类</label>
+                <div class="layui-input-inline">
+                  <select name="discipline" id="disciplines" lay-filter="disciplines">
+                    <option value="0">全部</option>
+                    <option value="哲学">哲学</option>
+                    <option value="经济学">经济学</option>
+                    <option value="法学">法学</option>
+                    <option value="教育学">教育学</option>
+                    <option value="文学">文学</option>
+                    <option value="历史学">历史学</option>
+                    <option value="理学">理学</option>
+                    <option value="工学">工学</option>
+                    <option value="农学">农学</option>
+                    <option value="医学">医学</option>
+                    <option value="军事学">军事学</option>
+                    <option value="管理学">管理学</option>
+                    <option value="艺术学">艺术学</option>
+                  </select>
+                </div>
+              </div>
+            </from>
+          </div>
+          <div class="layui-inline">
+            <form action="http://cn.bing.com/search" class="fly-search">
+              <div class="layui-form-item">
+
+               <div class="layui-input-inline">
+              <input class="layui-input" autocomplete="off" placeholder="搜索内容，回车跳转" type="text" name="q">
+              </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+
+      </div>
+
+
+      <ul class="fly-list" id="userlist">
+        <% if(users.length != 0){ %>
+        <% users.forEach(function(user){%>
+                <li class="fly-list-li">
+                  <a href="users/home?uid=<%= user.get('objectId') %>" class="fly-list-avatar">
+                    <img src=<%= user.get('avatar') %> alt="">
+                  </a>
+                  <h2 class="fly-tip">
+                    <a href="users/home?uid=<%= user.get('objectId') %>"><%= user.get('nickname') %></a>
+                  </h2>
+                  <p>
+                    <span><%= user.get('d_disciplinesFields') %> ></span>
+                    <span><%= user.get('d_firstDisciplines') %> ></span>
+                    <span><%= user.get('d_secondDisciplines') %></span>
+                    <span class="fly-list-hint">
+                      <i class="iconfont" title="回答">&#xe60c;</i> <% if(user.get('d_consultCount')== undefined ){ %> 0 <% }else{ %><%= user.get('d_consultCount') %> <% } %> 咨询
+                      <i class="iconfont" title="人气">&#xe60b;</i> <% if(user.get('d_follower')== undefined ){ %> 0 <% }else{ %><%= user.get('d_follower') %> <% } %> 关注
+                    </span>
+                  </p>
+                </li>
+        <% }) %>
+        <% }else{ %>
+          <div class="fly-none">并无相关数据</div>
+        <% } %>
+
+      </ul>
+
+
+
+      <div style="text-align: center">
+        <div class="laypage-main">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<%- include("../footer.ejs") %>
+<script>
+layui.use(['layer','jquery'],function(){
+  var $ = layui.jquery, layer = layui.layer;
+   var max = <%= maxpage %>;
+   var currentPage = <%= currentPage %>;
+   if(max<=4){
+     for(var i=1; i<=max; i++){
+       var string = '';
+       if(i==currentPage){
+         string += '<span class="laypage-curr">'+i+'</span>';
+       }else{
+         string += '<a href="'+i+'" >'+i+'</a>';
+       }
+       $('.laypage-main').append(string);
+     }
+   }else if(currentPage>=max-3&&currentPage<=max){
+    var string = '';
+    string += '<a href="'+(currentPage-1)+'" class="laypage-next">上一页</a>'
+    string += '<a href="1" class="laypage-first" title="首页">首页</a>'
+    string += '<span>…</span>';
+    $('.laypage-main').append(string);
+    for(var i=max-3;i<=max;i++){
+      string = '';
+      if(i==currentPage){
+        string += '<span class="laypage-curr">'+i+'</span>';
+      }else{
+        string += '<a href="'+i+'" >'+i+'</a>';
+      }
+      $('.laypage-main').append(string);
+    }
+    if(currentPage<max){
+      string = '';
+      string += '<a href="'+(currentPage+1)+'" class="laypage-next">下一页</a>';
+      $('.laypage-main').append(string);
+    }
+  }else {
+    for(var i=1;i<=4;i++){
+      var string = '';
+      if(i==currentPage){
+        string += '<span class="laypage-curr">'+i+'</span>';
+      }else{
+        string += '<a href="'+i+'" >'+i+'</a>';
+      }
+      $('.laypage-main').append(string);
+    }
+    string = '';
+    string += '<span>…</span>';
+    string += '<a href="'+max+'" class="laypage-last" title="尾页">尾页</a>';
+    string += '<a href="'+(currentPage+1)+'" class="laypage-next">下一页</a>';
+    $('.laypage-main').append(string);
+  }
+
+});
+</script>
+<script>
+layui.use(['jquery','form','layer'], function(){
+
+  var form = layui.form()
+  ,$ = layui.jquery
+  ,layer = layui.layer;
+
+  form.on('select(disciplines)', function(data){
+    //传递一个类别，返回一个json数组
+    var discipline = data.value;
+    $.post(
+      "/search/usersOfSelect/page/1",
+      {
+        discipline: data.value,
+      },
+      function (data, status){
+        if(data == 'error'){
+          layer.msg("搜索失败");
+        }else if(data.length>0){
+          $("#userlist").empty();
+          for(var i=0; i<data.length; i++){
+            var string = '';
+            string += '<li class="fly-list-li">';
+            string += '<a href="users/home?uid='+ data[i].objectId +'" class="fly-list-avatar"><img src="'+ data[i].avatar +'" alt=""></a>';
+            string += '<h2 class="fly-tip">';
+            string += '<a href="users/home?uid='+data[i].objectId+'"> '+ data[i].nickname +' </a>';
+            string += '</h2>';
+            string += '<p>';
+            string += '<span>'+ data[i].d_disciplinesFields +' ></span>';
+            string += '<span>'+ data[i].d_firstDisciplines +' ></span>';
+            string += '<span>'+ data[i].d_secondDisciplines +'</span>';
+            string += '<span class="fly-list-hint">';
+            if(data[i].d_consultCount===undefined) data[i].d_consultCount=0;
+            string += '<i class="iconfont" title="回答">&#xe60c;</i> '+ data[i].d_consultCount +' 咨询';
+            if(data[i].d_follower===undefined) data[i].d_follower=0;
+            string += '<i class="iconfont" title="人气">&#xe60b;</i> '+ data[i].d_follower +' 关注';
+            string += '</span>';
+            string += '</p>';
+            string += '</li>';
+            $("#userlist").append(string);
+          }
+
+        }else{
+          $("#userlist").empty();
+          var string = '';
+          string = '<div class="fly-none">并无相关数据</div>';
+          $("#userlist").append(string);
+        }
+      }
+    )
+  });
+
+});
+</script>
+
+</body>
+</html>
