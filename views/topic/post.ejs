@@ -36,7 +36,7 @@
             <img src=<%= post.get('questionerAvatar') %> alt="">
           </a>
           <h2 class="fly-tip">
-            <a href="topic/detail?qId=<%= post.get('objectId') %>"><%= post.get('title') %></a>
+            <a href="/topic/detail?qId=<%= post.get('objectId') %>"><%= post.get('title') %></a>
             <% if( post.get('isTop')==1 ){ %>
             <span class="fly-tip-stick">置顶</span>
             <% } if( post.get('recommend')==1 ){ %>

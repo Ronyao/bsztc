@@ -243,6 +243,7 @@ router.post('/reply',function(req, res, next){
   var replyToName = req.body.replyToName;
   var postId = req.body.postId;
   var avatar = req.body.replyAvatar;
+  var postTitle = req.body.postTitle;
 
   if(replyContent==''){
     result = "回复内容不能为空";
@@ -257,7 +258,7 @@ router.post('/reply',function(req, res, next){
     Reply.set('replyToName', replyToName);
     Reply.set('replyFromName', replyFromName);
     Reply.set('replyAvatar', avatar);
-    Reply.set('zan', 0);
+    Reply.set('postTitle', postTitle);
 
     Reply.save().then(function(Reply) {
       //回答数加1

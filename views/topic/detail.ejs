@@ -86,7 +86,7 @@
             <li data-id="<%= reply.get('id') %>" class="jieda-daan">
               <a name=""></a>
               <div class="detail-about detail-about-reply">
-                <a class="jie-user" href="/u/">
+                <a class="jie-user" href="/users/home?uid=<%= reply.get('replyFrom') %>">
                   <img src="<%= reply.get('replyAvatar') %>" alt="">
                   <cite>
                     <i><%= reply.get('replyFromName') %></i>
@@ -243,7 +243,8 @@ layui.use(['layer','jquery','fly'],function(){
         postId: $("#postId").val(),
         replyFromName: $("#replyFromName").val(),
         replyToName: $("#replyToName").val(),
-        replyAvatar: '<%= avatar %>'
+        replyAvatar: '<%= avatar %>',
+        postTitle: '<%= post[0].get('title') %>'
       },
       function(data,status){
         if(data=='success'){

@@ -136,7 +136,8 @@ layui.use('layer',function(){
 
         var string = '';
         string += '<li>';
-        string += '<p><span>{{lay.time(item.time)}}</span>在<a href="/jie/{{item.jid}}.html#item-{{item.time}}" target="_blank">{{= item.title}}</a>中回答：</p>';
+        var time = new Date(data[i].createdAt);
+        string += '<p><span>'+getDateDiff(time)+'</span>在<a href="/topic/detail?qId='+data[i].postId+'" target="_blank">'+data[i].postTitle+'</a>中回答：</p>';
         string += '<div class="home-dacontent">'+data[i].replyContent+'</div>';
         string += '</li>';
         $(".home-jieda").append(string);
