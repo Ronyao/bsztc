@@ -291,6 +291,7 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
     }
     input.val();
   });
+
   $('.icon-sousuo').on('click', function(){
     $('.fly-search').submit();
   });

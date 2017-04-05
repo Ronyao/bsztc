@@ -3,7 +3,8 @@ var router = express.Router();
 
 var AV = require('leanengine');
 
-router.get('/', function(req, res, next) {
+router.get('/:classname', function(req, res, next) {
+  var classname = req.params.classname;
   var keyword = req.query.keyword;
   var currentPage = 1;
   var avatar = req.currentUser.get('avatar');
@@ -17,35 +18,55 @@ router.get('/', function(req, res, next) {
     identity = "认证博士";
   }
 
-  // var titleQuery = new AV.Query('Post');
-  // titleQuery.contains('title',keyword);
-  // var nameQuery = new AV.Query('Post');
-  // nameQuery.contains('questionerNickName',keyword);
-  // var query = AV.Query.or(titleQuery, nameQuery);
-  var query = new AV.Query('Post');
-  query.contains('title',keyword);
-  query.count().then(function(count){
-    query.limit(15);
-    query.skip(15*(currentPage-1));
-    query.descending('createdAt');
-    var pages = Math.ceil(count/15);
-    query.find().then(function (results) {
-      res.render('search/topic-result',{
-        title: "搜索结果",
-        user: req.currentUser.get('nickname'),
-        avatar: avatar,
-        identity: identity,
-        posts: results,
-        maxpage: pages,
-        currentPage: currentPage
+  if(classname=='topic'){
+    var query = new AV.Query('Post');
+    query.contains('title',keyword);
+    query.count().then(function(count){
+      query.limit(15);
+      query.skip(15*(currentPage-1));
+      query.descending('createdAt');
+      var pages = Math.ceil(count/15);
+      query.find().then(function (results) {
+        res.render('search/topic-result',{
+          title: "搜索结果",
+          user: req.currentUser.get('nickname'),
+          avatar: avatar,
+          identity: identity,
+          posts: results,
+          maxpage: pages,
+          currentPage: currentPage
+        });
+      }, function (error) {
+
       });
-    }, function (error) {
+
+    }, function(error){
 
     });
+  }else{
+    var query = new AV.Query('_User');
+    query.contains('nickname',keyword);
+    query.count().then(function(count){
+      query.limit(12);
+      query.skip(12*(currentPage-1));
+      query.descending('createdAt');
+      var pages = Math.ceil(count/15);
+      query.find().then(function (results) {
+        res.render('search/wisdom-result',{
+          title: "搜索结果",
+          user: req.currentUser.get('nickname'),
+          avatar: avatar,
+          identity: identity,
+        });
+      }, function (error) {
 
-  }, function(error){
+      });
 
-  });
+    }, function(error){
+
+    });
+  }
+
 });
 
 // router.post('/usersOfSelect/:page/:num', function(req, res, next) {
@@ -64,5 +85,29 @@ router.get('/', function(req, res, next) {
 //     res.json('error');
 //   });
 // });
+
+router.post('/wisdom/:keyword/page/:num', function(req, res, next){
+  var keyword = req.params.keyword;
+  var currentPage = req.params.num;
+  var query = new AV.Query('_User');
+  query.contains('nickname',keyword);
+  query.count().then(function(count){
+    query.limit(12);
+    query.skip(12*(currentPage-1));
+    query.descending('createdAt');
+    var pages = Math.ceil(count/12);
+    query.find().then(function (results) {
+      res.json({
+        data: results,
+        pages: pages
+      });
+    }, function (error) {
+
+    });
+
+  }, function(error){
+
+  });
+});
 
 module.exports = router;

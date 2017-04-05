@@ -7,6 +7,7 @@
 
   <%- include("../link.ejs") %>
 </head>
+<script  src="/javascripts/time_conversion.js"></script>
 <body>
 
 <%- include("../header.ejs") %>
@@ -14,11 +15,11 @@
 <div class="main layui-clear">
   <div class="wrap">
     <div class="content" style="margin-right:0">
-      <div class="fly-tab">
+      
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
           <legend>搜索结果如下：</legend>
         </fieldset>
-      </div>
+
 
       <ul class="fly-list">
         <% if(posts.length!=0){ %>
