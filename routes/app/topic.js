@@ -167,7 +167,7 @@ router.get('/edit', function(req, res, next){
   var query = new AV.Query('Post');
   query.equalTo('objectId', postId);
   query.find().then(function(post){
-    res.render('topic/add',{
+    res.render('topic/edit',{
       title: "编辑问题",
       user: req.currentUser.get('nickname'),
       avatar: avatar,
