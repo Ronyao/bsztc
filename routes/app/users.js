@@ -382,6 +382,7 @@ router.post('/d_verify',function(req, res, next) {
     user.set('d_callPrice',callPrice);
     user.set('d_chatPrice',chatPrice);
     user.set('d_emptyTime',dataIntArr);
+    user.set('isDoctor', false);
     user.set('applyState', 1);
 
     user.save().then(function (user) {
@@ -446,6 +447,7 @@ router.post('/e_verify', function(req, res, next){
     user.set('e_bussinessLetter',bussinessLetter);
     user.set('e_scale',scale);
     user.set('e_qualification',qualification);
+    user.set('isEnterprise', false);
     user.set('applyState', 1);
 
     user.save().then(function (user) {

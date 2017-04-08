@@ -244,7 +244,6 @@ layui.use(['layer','jquery','fly'],function(){
         replyFromName: $("#replyFromName").val(),
         replyToName: $("#replyToName").val(),
         replyAvatar: '<%= avatar %>',
-        postTitle: '<%= post[0].get('title') %>'
       },
       function(data,status){
         if(data=='success'){

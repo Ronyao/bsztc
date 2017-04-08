@@ -58,7 +58,6 @@ layui.define(['laypage', 'fly'], function(exports){
         fly.json('/topic/delete_post/', {
           id: div.data('id')
         }, function(res){
-          console.log(res);
           if(res.status === 0){
             location.href = '/topic/';
           } else {

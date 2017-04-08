@@ -209,6 +209,7 @@ router.get('/detail', function(req, res, next){
   query.equalTo('objectId', questionId);
   query.greaterThanOrEqualTo('status', 0);
   query.find().then(function (results) {
+
     var Reply = new AV.Query('Reply');
     Reply.equalTo('postId', questionId);
     Reply.find().then(function (replys) {
@@ -459,9 +460,15 @@ router.post('/delete_post', function(req, res, next){
   var post = AV.Object.createWithoutData('Post',postId);
   post.set('status', -1);
   post.save().then(function(result){
-    res.json("success");
+    res.json({
+      status: 0,
+      msg: 'success'
+    });
   }, function(error){
-
+    res.json({
+      status: 0,
+      msg: 'failed'
+    });
   });
 });
 
