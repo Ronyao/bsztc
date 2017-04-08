@@ -13,7 +13,7 @@
 <div class="main layui-clear">
   <h2 class="page-title">发表问题</h2>
 
-  <% if(currentUser.get('id')!=post.get('questionerId')){ %>
+  <% if(currentUser.get('id')!=post.get('questioner').get('id')){ %>
   <div class="fly-none">并无权限</div>
   <% }else { %>
   <div class="layui-form layui-form-pane">

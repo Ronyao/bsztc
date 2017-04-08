@@ -75,9 +75,7 @@ layui.use(['jquery','layer'], function(){
         title: $("#title").val(),
         content: $("#content").val(),
         topicClass: $("#topicClass").val(),
-        reward: $("#reward").val(),
-        identity: '<%= identity %>',
-        isEidt: false
+        reward: $("#reward").val()
       },
       function(data,status){
         if(data == 'success'){

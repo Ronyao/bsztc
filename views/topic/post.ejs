@@ -32,8 +32,8 @@
         <% if(posts.length!=0){ %>
         <% posts.forEach(function(post){ %>
         <li class="fly-list-li">
-          <a href="users/home?uid=<%= post.get('questionerId') %>" class="fly-list-avatar">
-            <img src=<%= post.get('questionerAvatar') %> alt="">
+          <a href="/users/home?uid=<%= post.get('questioner').get('id') %>" class="fly-list-avatar">
+            <img src=<%= post.get('questioner').get('avatar') %> alt="">
           </a>
           <h2 class="fly-tip">
             <a href="/topic/detail?qId=<%= post.get('objectId') %>"><%= post.get('title') %></a>
@@ -44,7 +44,7 @@
             <% } %>
           </h2>
           <p>
-            <span><a href="user/home.html"><%= post.get('questionerNickName') %></a></span>
+            <span><a href="/users/home?uid=<%= post.get('questioner').get('id') %>"><%= post.get('questioner').get('nickname') %></a></span>
             <script>
               var time = getDateDiff(<%= post.get('createdAt').getTime() %>);
               document.write("<span>" + time + "</span>");  // 输出语句

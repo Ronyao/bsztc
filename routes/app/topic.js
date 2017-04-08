@@ -17,15 +17,23 @@ router.get('/', function(req, res, next) {
   var query = new AV.Query('Post');
   query.limit(20);
   query.greaterThanOrEqualTo('status',0);
+  query.include('questioner');
   query.descending('createdAt');
   query.find().then(function (results) {
-    res.render('topic/index',{
-      title: "博士直通车-话题",
-      user: req.currentUser.get('nickname'),
-      avatar: avatar,
-      identity: identity,
-      posts: results
+    query.equalTo('isTop', 1);
+    query.find().then(function(top){
+      res.render('topic/index',{
+        title: "博士直通车-话题",
+        user: req.currentUser.get('nickname'),
+        avatar: avatar,
+        identity: identity,
+        posts: results,
+        tops: top
+      });
+    }, function (error){
+
     });
+
   }, function (error) {
 
   });
@@ -66,17 +74,6 @@ router.post('/getReply',function(req, res, next) {
   });
 });
 
-//获取置顶帖子
-router.get('/getIsTop',function(req, res, next) {
-  var query = new AV.Query('Post');
-  query.equalTo('isTop', 1);
-  query.greaterThanOrEqualTo('status', 0);
-  query.find().then(function(Post){
-    res.json(Post);
-  }, function (error){
-    res.json(error);
-  });
-})
 
 router.get('/add', function(req, res, next){
   var avatar = req.currentUser.get('avatar');
@@ -100,18 +97,11 @@ router.get('/add', function(req, res, next){
 router.post('/add', function(req, res, next){
   var result = '';
   var questionerId = req.currentUser.id;
-  var questionerAvatar = req.currentUser.get('avatar');
-  var questionerNickName = req.currentUser.get('nickname');
   var title = req.body.title;
   var content = req.body.content;
   var topicClass = req.body.topicClass;
   var reward = req.body.reward;
-  var identity = req.body.identity;
   var isEidt =  req.body.isEidt;
-
-  if(isEidt=='true'){
-    var postId = req.body.postId;
-  }
 
   if(title.length==''){
     result = '题目不能为空';
@@ -136,10 +126,6 @@ router.post('/add', function(req, res, next){
     Post.set('content', content);
     Post.set('topicClass', topicClass);
     Post.set('reward', reward);
-    Post.set('questionerId', questionerId);
-    Post.set('questionerAvatar', questionerAvatar);
-    Post.set('questionerNickName', questionerNickName);
-    Post.set('identity', identity);
     var questioner = AV.Object.createWithoutData('_User', questionerId);
     Post.set('questioner', questioner),
 
@@ -212,6 +198,7 @@ router.get('/detail', function(req, res, next){
   }
   var query = new AV.Query('Post');
   query.equalTo('objectId', questionId);
+  query.include('questioner');
   query.greaterThanOrEqualTo('status', 0);
   query.find().then(function (results) {
 
@@ -224,7 +211,7 @@ router.get('/detail', function(req, res, next){
         avatar: avatar,
         identity: identity,
         currentUser: req.currentUser,
-        post: results,
+        post: results[0],
         replys: replys
       });
     });
@@ -286,10 +273,11 @@ router.post('/reply',function(req, res, next){
   }
 });
 
-//全部帖子
 
-router.get('/total/:page/:num', function(req, res, next) {
+router.get('/:type/page/:num', function(req, res, next) {
   var currentPage = req.params.num;
+  var type = req.params.type;
+  var title = '';
   if(typeof(currentPage)=='undefined'){
     currentPage=1;
   }
@@ -304,15 +292,30 @@ router.get('/total/:page/:num', function(req, res, next) {
     identity = "认证博士";
   }
   var query = new AV.Query('Post');
-  query.greaterThanOrEqualTo('status',0);
+
+  if(type=='total'){
+    query.greaterThanOrEqualTo('status',0);
+    title = '全部';
+  }else if(type=='unsolved'){
+    query.equalTo('status',0);
+    title = '未结帖';
+  }else if(type=='solved'){
+    query.equalTo('status',1);
+    title = '已采纳';
+  }else if(type=='excellent'){
+    query.greaterThanOrEqualTo('status',0);
+    query.equalTo('recommend',1);
+    title = '精帖';
+  }
   query.count().then(function(count){
     var pages = Math.ceil(count/15);
     query.limit(15);
     query.skip(15*(currentPage-1));
+    query.include('questioner');
     query.descending('createdAt');
     query.find().then(function (results) {
       res.render('topic/post',{
-        title: "全部",
+        title: title,
         user: req.currentUser.get('nickname'),
         avatar: avatar,
         identity: identity,
@@ -329,135 +332,6 @@ router.get('/total/:page/:num', function(req, res, next) {
 
 });
 
-//未结贴帖子
-
-router.get('/unsolved/:page/:num', function(req, res, next) {
-  var currentPage = req.params.num;
-  if(typeof(currentPage)=='undefined'){
-    currentPage=1;
-  }
-  var avatar = req.currentUser.get('avatar');
-  var identity = "";
-  if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
-    avatar = "../res/images/avatar/default.png";
-  }
-  if(req.currentUser.get('isEnterprise')==true){
-    identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')==true) {
-    identity = "认证博士";
-  }
-  var query = new AV.Query('Post');
-  query.limit(15);
-  query.equalTo('status',0);
-  query.count().then(function(count){
-    var pages = Math.ceil(count/15);
-    query.limit(15);
-    query.skip(15*(currentPage-1));
-    query.descending('createdAt');
-    query.find().then(function (results) {
-      res.render('topic/post',{
-        title: "未结帖",
-        user: req.currentUser.get('nickname'),
-        avatar: avatar,
-        identity: identity,
-        posts: results,
-        maxpage: pages,
-        currentPage: currentPage
-      });
-    }, function (error) {
-
-    });
-  }, function(error){
-
-  });
-});
-
-//已采纳帖子
-
-router.get('/solved/:page/:num', function(req, res, next) {
-  var currentPage = req.params.num;
-  if(typeof(currentPage)=='undefined'){
-    currentPage=1;
-  }
-  var avatar = req.currentUser.get('avatar');
-  var identity = "";
-  if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
-    avatar = "../res/images/avatar/default.png";
-  }
-  if(req.currentUser.get('isEnterprise')==true){
-    identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')==true) {
-    identity = "认证博士";
-  }
-  var query = new AV.Query('Post');
-  query.limit(15);
-  query.equalTo('status',1);
-  query.count().then(function(count){
-    var pages = Math.ceil(count/15);
-    query.limit(15);
-    query.skip(15*(currentPage-1));
-    query.descending('createdAt');
-    query.find().then(function (results) {
-      res.render('topic/post',{
-        title: "已采纳",
-        user: req.currentUser.get('nickname'),
-        avatar: avatar,
-        identity: identity,
-        posts: results,
-        maxpage: pages,
-        currentPage: currentPage
-      });
-    }, function (error) {
-
-    });
-  }, function(error){
-
-  });
-});
-
-//精贴
-
-router.get('/excellent/:page/:num', function(req, res, next) {
-  var currentPage = req.params.num;
-  if(typeof(currentPage)=='undefined'){
-    currentPage=1;
-  }
-  var avatar = req.currentUser.get('avatar');
-  var identity = "";
-  if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
-    avatar = "../res/images/avatar/default.png";
-  }
-  if(req.currentUser.get('isEnterprise')==true){
-    identity = "认证企业";
-  }else if (req.currentUser.get('isDoctor')==true) {
-    identity = "认证博士";
-  }
-  var query = new AV.Query('Post');
-  query.limit(15);
-  query.greaterThanOrEqualTo('status',0);
-  query.equalTo('recommend',1);
-  query.count().then(function(count){
-    var pages = Math.ceil(count/15);
-    query.limit(15);
-    query.skip(15*(currentPage-1));
-    query.descending('createdAt');
-    query.find().then(function (results) {
-      res.render('topic/post',{
-        title: "精帖",
-        user: req.currentUser.get('nickname'),
-        avatar: avatar,
-        identity: identity,
-        posts: results,
-        maxpage: pages,
-        currentPage: currentPage
-      });
-    }, function (error) {
-
-    });
-  }, function(error){
-
-  });
-});
 
 router.post('/delete_post', function(req, res, next){
   var postId = req.body.id;
@@ -504,7 +378,7 @@ router.post('/reply-accept', function(req, res, next){
 router.post('/getMyPost', function(req, res, next) {
   var userId = req.body.user;
   var query = new AV.Query('Post');
-  query.equalTo('questionerId',userId);
+  query.include('questioner.id',userId);
   query.greaterThanOrEqualTo('status',0);
   query.descending('createdAt');
   query.limit(5);

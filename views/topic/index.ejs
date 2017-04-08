@@ -33,14 +33,43 @@
         <a href="topic/add" class="layui-btn jie-add">发布问题</a>
       </div>
 
-      <ul class="fly-list" id="isTop"></ul>
+      <ul class="fly-list">
+        <% tops.forEach(function(top){ %>
+        <li class="fly-list-li">
+          <a href="users/home?uid=<%= top.get('questioner').get('id') %>" class="fly-list-avatar">
+            <img src='<%= top.get('questioner').get('avatar') %>' alt="">
+          </a>
+          <h2 class="fly-tip">
+            <a href="topic/detail?qId=<%= top.get('objectId') %>"><%= top.get('title') %></a>
+            <% if( top.get('isTop')==1 ){ %>
+            <span class="fly-tip-stick">置顶</span>
+            <% } if( top.get('recommend')==1 ){ %>
+            <span class="fly-tip-jing">精帖</span>
+            <% } %>
+          </h2>
+          <p>
+            <span><a href="users/home?uid=<%= top.get('questioner').get('id') %>"><%= top.get('questioner').get('nickname') %></a></span>
+            <script>
+              var time = getDateDiff(<%= top.get('createdAt').getTime() %>);
+              document.write("<span>" + time + "</span>");  // 输出语句
+            </script>
+            <span><%= top.get('topicClass') %></span>
+            <span class="fly-list-hint">
+              <i class="iconfont" title="回答">&#xe60c;</i> <%= top.get('consultations') %>
+              <i class="iconfont" title="人气">&#xe60b;</i> <%= top.get('visits') %>
+            </span>
+          </p>
+        </li>
+        <% }) %>
+      </ul>
+
       <hr>
 
       <ul class="fly-list">
         <% posts.forEach(function(post){ %>
         <li class="fly-list-li">
-          <a href="users/home?uid=<%= post.get('questionerId') %>" class="fly-list-avatar">
-            <img src=<%= post.get('questionerAvatar') %> alt="">
+          <a href="users/home?uid=<%= post.get('questioner').get('id') %>" class="fly-list-avatar">
+            <img src=<%= post.get('questioner').get('avatar') %> alt="">
           </a>
           <h2 class="fly-tip">
             <a href="topic/detail?qId=<%= post.get('objectId') %>"><%= post.get('title') %></a>
@@ -51,7 +80,7 @@
             <% } %>
           </h2>
           <p>
-            <span><a href="users/home?uid=<%= post.get('questionerId') %>"><%= post.get('questionerNickName') %></a></span>
+            <span><a href="users/home?uid=<%= post.get('questioner').get('id') %>"><%= post.get('questioner').get('nickname') %></a></span>
             <script>
               var time = getDateDiff(<%= post.get('createdAt').getTime() %>);
               document.write("<span>" + time + "</span>");  // 输出语句
@@ -130,34 +159,7 @@ layui.use(['layer','jquery'],function(){
     }
   )
 
-  $.get(
-    "/topic/getIsTop",
-    function(data){
-      var length = data.length;
-      for(var i=0;i<length;i++){
-        var string = '';
-        string += '<li class="fly-list-li">';
-        string += '<a href="users/home?uid='+data[i].questionerId+'" class="fly-list-avatar"><img src='+data[i].questionerAvatar+' alt=""></a>';
-        string += '<h2 class="fly-tip">';
-        string += '<a href="topic/detail?qId='+data[i].objectId+'">'+data[i].title+'</a>';
-        if(data[i].isTop==1){
-          string += '<span class="fly-tip-stick">置顶</span>';
-        }
-        if(data[i].recommend==1){
-          string += '<span class="fly-tip-jing">精帖</span>';
-        }
-        string += '</h2>';
-        string += '<p><span><a href="users/home?uid='+data[i].questionerId+'">'+data[i].questionerNickName+'</a></span>';
-        var time = new Date(data[i].createdAt);
-        string += '<span>'+getDateDiff(time)+'</span>';
-        string += '<span>'+data[i].topicClass+'</span>';
-        string += '<span class="fly-list-hint">';
-        string += '<i class="iconfont" title="回答">&#xe60c;</i> '+data[i].consultations;
-        string += '<i class="iconfont" title="人气">&#xe60b;</i> '+data[i].visits+'</span></p></li>';
-        $("#isTop").append(string);
-      }
-    }
-  );
+
 
   // $.get(
   //   "/topic/getRanking",

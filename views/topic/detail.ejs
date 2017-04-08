@@ -16,15 +16,15 @@
 <div class="main layui-clear">
   <div class="wrap">
     <div class="content detail">
-      <h1><%= post[0].get('title') %></h1>
-      <div class="fly-tip fly-detail-hint" data-id="<%= post[0].get('id') %>">
-        <% if( post[0].get('status')==1 ){ %>
+      <h1><%= post.get('title') %></h1>
+      <div class="fly-tip fly-detail-hint" data-id="<%= post.get('id') %>">
+        <% if( post.get('status')==1 ){ %>
           <span class="fly-tip-jie">已采纳</span>
         <% }else { %>
         <span>未结贴</span>
         <% } %>
 
-        <% if( post[0].get('questionerId')==currentUser.get('id') ){ %>
+        <% if( post.get('questioner').get('id')==currentUser.get('id') ){ %>
         <span class="jie-admin" type="del" style="margin-left: 20px;">删除</span>
         <% } %>
 
@@ -39,45 +39,45 @@
 
 
         <div class="fly-list-hint">
-          <i class="iconfont" title="回答">&#xe60c;</i> <%= post[0].get('consultations') %>
-          <i class="iconfont" title="人气">&#xe60b;</i> <%= post[0].get('visits') %>
+          <i class="iconfont" title="回答">&#xe60c;</i> <%= post.get('consultations') %>
+          <i class="iconfont" title="人气">&#xe60b;</i> <%= post.get('visits') %>
         </div>
       </div>
       <div class="detail-about">
-        <a class="jie-user" href="/users/home?uid=<%= post[0].get('questionerId') %>">
-          <img src=<%= post[0].get('questionerAvatar') %> alt="<%= post[0].get('questionerNickName') %>">
+        <a class="jie-user" href="/users/home?uid=<%= post.get('questioner').get('id') %>">
+          <img src="<%= post.get('questioner').get('avatar') %>" alt="<%= post.get('questioner').get('nickname') %>">
           <cite>
-            <%= post[0].get('questionerNickName') %>
+            <%= post.get('questioner').get('nickname') %>
 
-            <em style="padding:0 5px; color: #FF7200;"><%= post[0].get('identity') %></em>
+            <em style="padding:0 5px; color: #FF7200;"><% if(post.get('questioner').get('isDoctor')==true){ %>博士认证<% }else if(post.get('questioner').get('isEnterprise')==true){ %>企业认证<% } %></em>
 
             <script>
-              var time = getDateDiff(<%= post[0].get('createdAt').getTime() %>);
+              var time = getDateDiff(<%= post.get('createdAt').getTime() %>);
               document.write("<em>" + time + "</em>");  // 输出语句
             </script>
 
           </cite>
         </a>
-        <div class="detail-hits" data-id="<%= post[0].get('id') %>">
+        <div class="detail-hits" data-id="<%= post.get('id') %>">
 
-          <span style="color:#FF7200">悬赏：<%= post[0].get('reward') %>博士点</span>
+          <span style="color:#FF7200">悬赏：<%= post.get('reward') %>博士点</span>
 
-          <% if( post[0].get('questionerId')==currentUser.get('id') ){ %>
-          <span class="jie-admin" type="edit"><a href="/topic/edit?pId=<%= post[0].get('id') %>">编辑此贴</a></span>
+          <% if( post.get('questioner').get('id')==currentUser.get('id') ){ %>
+          <span class="jie-admin" type="edit"><a href="/topic/edit?pId=<%= post.get('id') %>">编辑此贴</a></span>
           <% }else{ %>
-            <span class="jie-admin" type="collect"><a href="/topic/collect?pId=<%= post[0].get('id') %>">收藏</a></span>
+            <span class="jie-admin" type="collect"><a href="/topic/collect?pId=<%= post.get('id') %>">收藏</a></span>
             <% } %>
         </div>
       </div>
 
       <div class="detail-body photos" style="margin-bottom: 20px;">
-        <%= post[0].get('content') %>
+        <%= post.get('content') %>
       </div>
 
 
 
       <a name="comment"></a>
-      <h2 class="page-title">热忱回答<span><em id="replyCount"><%= post[0].get('consultations') %></em></span></h2>
+      <h2 class="page-title">热忱回答<span><em id="replyCount"><%= post.get('consultations') %></em></span></h2>
 
       <ul class="jieda photos" id="reply">
         <% if(replys.length>0){ %>
@@ -90,7 +90,7 @@
                   <img src="<%= reply.get('replyAvatar') %>" alt="">
                   <cite>
                     <i><%= reply.get('replyFromName') %></i>
-                    <% if(post[0].get('questionerId') === reply.get('replyFrom') ){ %>
+                    <% if(post.get('questioner').get('id') === reply.get('replyFrom') ){ %>
                     <em>(楼主)</em>
                     <% } %>
 
@@ -142,7 +142,7 @@
 
                 </div>
                 <% } %>
-                <% if(currentUser.get('id')==post[0].get('questionerId')){ %>
+                <% if(currentUser.get('id')==post.get('questioner').get('id')){ %>
                   <span class="jieda-accept" type="accept">
                     采纳
                   </span>
@@ -162,15 +162,15 @@
         <form action="" method="post">
           <div class="layui-form-item layui-form-text">
             <div class="layui-input-block">
-              <textarea id="reply_content" name="reply_content" required lay-verify="required" placeholder="我要<% if(post[0].get('questionerId')==currentUser.get('id')){ %>自问自答<% }else{ %>回答<% } %>"  class="layui-textarea fly-editor" style="height: 150px;"></textarea>
+              <textarea id="reply_content" name="reply_content" required lay-verify="required" placeholder="我要<% if(post.get('questioner').get('id')==currentUser.get('id')){ %>自问自答<% }else{ %>回答<% } %>"  class="layui-textarea fly-editor" style="height: 150px;"></textarea>
             </div>
           </div>
           <div class="layui-form-item">
-            <input type="hidden" id="replyTo" name="replyTo" value="<%= post[0].get('questionerId') %>">
-            <input type="hidden" id="postId" name="postId" value="<%= post[0].get('objectId') %>">
+            <input type="hidden" id="replyTo" name="replyTo" value="<%= post.get('questioner').get('id') %>">
+            <input type="hidden" id="postId" name="postId" value="<%= post.get('objectId') %>">
             <input type="hidden" id="replyFrom" name="replyFrom" value="<%= currentUser.get('id') %>">
             <input type="hidden" id="replyFromName" name="replyFromName" value="<%= currentUser.get('nickname') %>">
-            <input type="hidden" id="replyToName" name="replyToName" value="<%= post[0].get('questionerNickName') %>">
+            <input type="hidden" id="replyToName" name="replyToName" value="<%= post.get('questioner').get('nickname') %>">
             <a class="layui-btn" id="replyButton">提交回答</a>
           </div>
         </form>
