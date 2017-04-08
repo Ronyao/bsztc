@@ -86,11 +86,11 @@
             <li data-id="<%= reply.get('id') %>" class="jieda-daan">
               <a name=""></a>
               <div class="detail-about detail-about-reply">
-                <a class="jie-user" href="/users/home?uid=<%= reply.get('replyFrom') %>">
-                  <img src="<%= reply.get('replyAvatar') %>" alt="">
+                <a class="jie-user" href="/users/home?uid=<%= reply.get('replyFrom').get('id') %>">
+                  <img src="<%= reply.get('replyFrom').get('avatar') %>" alt="">
                   <cite>
-                    <i><%= reply.get('replyFromName') %></i>
-                    <% if(post.get('questioner').get('id') === reply.get('replyFrom') ){ %>
+                    <i><%= reply.get('replyFrom').get('nickname') %></i>
+                    <% if(post.get('questioner').get('id') === reply.get('replyFrom').get('id') ){ %>
                     <em>(楼主)</em>
                     <% } %>
 
@@ -127,17 +127,14 @@
                 <i class="iconfont icon-svgmoban53"></i>
                 回复
               </span>
-              <% if(currentUser.get('id')>reply.get('replyFrom')){ %>
+              <% if(currentUser.get('id')==reply.get('replyFrom').get('id')){ %>
                 <div class="jieda-admin">
 
-                  <span type="edit">
+                  <!-- <span type="edit">
                     编辑
-                  </span>
+                  </span> -->
                   <span type="del">
                     删除
-                  </span>
-                  <span class="jieda-accept" type="accept">
-                    采纳
                   </span>
 
                 </div>
@@ -205,7 +202,6 @@ layui.use(['layer','jquery','fly'],function(){
   var $ = layui.jquery, layer = layui.layer;
   var fly = layui.fly;
 
-
   $.get(
     "/topic/mostVisits",
     function(data){
@@ -240,19 +236,14 @@ layui.use(['layer','jquery','fly'],function(){
         reply: $("#reply_content").val(),
         replyFrom: $("#replyFrom").val(),
         replyTo: $("#replyTo").val(),
-        postId: $("#postId").val(),
-        replyFromName: $("#replyFromName").val(),
-        replyToName: $("#replyToName").val(),
-        replyAvatar: '<%= avatar %>',
+        postId: $("#postId").val()
       },
-      function(data,status){
-        if(data=='success'){
-          //异步加载回复的内容
-          layer.msg(data);
+      function(status,data){
+        if(data==='success'){
           //刷新页面
           location.reload();
         }else{
-          layer.msg(data);
+          layer.msg("回答失败");
         }
       }
     );

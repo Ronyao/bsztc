@@ -203,8 +203,12 @@ router.get('/detail', function(req, res, next){
   query.find().then(function (results) {
 
     var Reply = new AV.Query('Reply');
-    Reply.equalTo('postId', questionId);
+    Reply.include('post.id');
+    Reply.include('replyFrom');
+    Reply.include('replyTo');
+    Reply.include('post');
     Reply.find().then(function (replys) {
+
       res.render('topic/detail',{
         title: "问题详情",
         user: req.currentUser.get('nickname'),
@@ -232,11 +236,9 @@ router.post('/reply',function(req, res, next){
   var replyContent = req.body.reply;
   var replyFrom = req.body.replyFrom;
   var replyTo = req.body.replyTo;
-  var replyFromName = req.body.replyFromName;
-  var replyToName = req.body.replyToName;
   var postId = req.body.postId;
-  var avatar = req.body.replyAvatar;
-  var postTitle = req.body.postTitle;
+
+  console.log(req.body);
 
   if(replyContent==''){
     result = "回复内容不能为空";
@@ -244,25 +246,24 @@ router.post('/reply',function(req, res, next){
   }else {
     var Reply = AV.Object.extend('Reply');
     var Reply = new Reply();
-    Reply.set('replyContent', replyContent);
+
+    var replyFrom = AV.Object.createWithoutData('_User', replyFrom);
+    var replyTo = AV.Object.createWithoutData('_User', replyTo);
+    var post = AV.Object.createWithoutData('Post', postId);
     Reply.set('replyFrom', replyFrom);
     Reply.set('replyTo', replyTo);
-    Reply.set('postId', postId);
-    Reply.set('replyToName', replyToName);
-    Reply.set('replyFromName', replyFromName);
-    Reply.set('replyAvatar', avatar);
-    Reply.set('postTitle', postTitle);
+    Reply.set('post', post);
+
+    Reply.set('replyContent', replyContent);
 
     Reply.save().then(function(Reply) {
       //回答数加1
-      var post = AV.Object.createWithoutData('Post', postId);
       post.save().then(function (post) {
         post.increment('consultations', 1);
         post.save(true);
         return post.save();
       }).then(function (post) {
-        result = 'success';
-        res.json(result);
+        res.json('success');
       }, function (error) {
         res.json(error);
       });
