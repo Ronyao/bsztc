@@ -66,9 +66,11 @@ router.post('/getReply',function(req, res, next) {
   });
 });
 
+//获取置顶帖子
 router.get('/getIsTop',function(req, res, next) {
   var query = new AV.Query('Post');
   query.equalTo('isTop', 1);
+  query.greaterThanOrEqualTo('status', 0);
   query.find().then(function(Post){
     res.json(Post);
   }, function (error){
@@ -138,7 +140,8 @@ router.post('/add', function(req, res, next){
     Post.set('questionerAvatar', questionerAvatar);
     Post.set('questionerNickName', questionerNickName);
     Post.set('identity', identity);
-
+    var questioner = AV.Object.createWithoutData('_User', questionerId);
+    Post.set('questioner', questioner),
 
     Post.save().then(function(Post) {
 
@@ -154,7 +157,7 @@ router.post('/add', function(req, res, next){
 
 router.get('/edit', function(req, res, next){
   var postId = req.query.pId;
-  var avatar = req.currentUser.get('avatar');
+  var avatar = req.currentUser.get('sex');
   var identity = "";
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
@@ -166,6 +169,8 @@ router.get('/edit', function(req, res, next){
   }
   var query = new AV.Query('Post');
   query.equalTo('objectId', postId);
+  query.greaterThanOrEqualTo('status', 0);
+  query.include('questioner');
   query.find().then(function(post){
     res.render('topic/edit',{
       title: "编辑问题",
@@ -173,7 +178,7 @@ router.get('/edit', function(req, res, next){
       avatar: avatar,
       currentUser: req.currentUser,
       identity:identity,
-      post: post
+      post: post[0]
     });
   }, function(error){
 
