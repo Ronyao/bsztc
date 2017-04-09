@@ -204,10 +204,11 @@ router.get('/detail', function(req, res, next){
 
     var Reply = new AV.Query('Reply');
     Reply.notEqualTo('status', -1);
-    Reply.include('post.id');
+    Reply.equalTo('post',post);
     Reply.include('replyFrom');
     Reply.include('replyTo');
     Reply.include('post');
+
 
     Reply.find().then(function (replys) {
 
