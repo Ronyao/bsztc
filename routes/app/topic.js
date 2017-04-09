@@ -43,6 +43,7 @@ router.get('/', function(req, res, next) {
 router.get('/mostVisits',function(req, res, next){
   var query = new AV.Query('Post');
   query.descending('visits');
+  query.greaterThanOrEqualTo('status',0);
   query.limit(10);
   query.find().then(function(visits){
     res.json(visits);
@@ -54,6 +55,7 @@ router.get('/mostVisits',function(req, res, next){
 router.get('/mostConsultations',function(req, res, next) {
   var query = new AV.Query('Post');
   query.descending('consultations');
+  query.greaterThanOrEqualTo('status',0);
   query.limit(10);
   query.find().then(function(consultations){
     res.json(consultations);
@@ -241,8 +243,6 @@ router.post('/reply',function(req, res, next){
   var replyTo = req.body.replyTo;
   var postId = req.body.postId;
 
-  console.log(req.body);
-
   if(replyContent==''){
     result = "回复内容不能为空";
     res.json(result);
@@ -398,15 +398,34 @@ router.post('/reply_post', function(){
 
   });
 });
+
 //采纳
 router.post('/reply-accept', function(req, res, next){
-  var replyId = req.body.id;
+  var postId = req.body.postId;
+  var replyId = req.body.replyId;
   var reply = AV.Object.createWithoutData('Reply', replyId);
   reply.set('accept', 1);
   reply.save().then(function(results){
-    res.json('success');
-  }, function(error){
+    //帖子结贴
+    var post = AV.Object.createWithoutData('Post', postId);
+    post.set('status', 1);
+    post.save().then(function() {
+      res.json({
+        status: 0,
+        msg: '成功采纳'
+      });
+    }, function(error){
+      res.json({
+        status: 1,
+        msg: '采纳失败'
+      });
+    });
 
+  }, function(error){
+    res.json({
+      status: 1,
+      msg: '采纳失败'
+    });
   });
 });
 

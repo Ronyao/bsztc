@@ -19,7 +19,7 @@
       <h1><%= post.get('title') %></h1>
       <div class="fly-tip fly-detail-hint" data-id="<%= post.get('id') %>">
         <% if( post.get('status')==1 ){ %>
-          <span class="fly-tip-jie">已采纳</span>
+          <span class="fly-tip-jie">已结帖</span>
         <% }else { %>
         <span>未结贴</span>
         <% } %>
@@ -139,7 +139,7 @@
 
                 </div>
                 <% } %>
-                <% if(currentUser.get('id')==post.get('questioner').get('id')){ %>
+                <% if(currentUser.get('id')==post.get('questioner').get('id')&&reply.get('accept')!=1&&post.get('status')!=1){ %>
                   <span class="jieda-accept" type="accept">
                     采纳
                   </span>

@@ -114,16 +114,16 @@ layui.define(['laypage', 'fly'], function(exports){
       var othis = $(this);
       layer.confirm('是否采纳该回答为最佳答案？', function(index){
         layer.close(index);
-        fly.json('/topic/reply-accept/', {
-          id: li.data('id')
+        fly.json('/topic/reply-accept', {
+          postId: li.data('post'),
+          replyId: li.data('reply')
         }, function(res){
-          console.log(res);
-          if(res == 'success'){
+          if(res.status === 0){
             $('.jieda-accept').remove();
             li.addClass('jieda-daan');
             li.find('.detail-about').append('<i class="iconfont icon-caina" title="最佳答案"></i>');
           } else {
-            layer.msg(res);
+            layer.msg(res.msg);
           }
         });
       });
