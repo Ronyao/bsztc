@@ -151,8 +151,9 @@ layui.define(['laypage', 'fly'], function(exports){
     ,del: function(li){ //删除
       layer.confirm('确认删除该回答么？', function(index){
         layer.close(index);
-        fly.json('/topic/reply-delete/', {
-          id: li.data('id')
+        fly.json('/topic/reply-delete', {
+          replyId: li.data('reply'),
+          postId: li.data('post')
         }, function(res){
           if(res.status === 0){
             var count = dom.jiedaCount.text()|0;

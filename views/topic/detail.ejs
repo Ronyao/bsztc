@@ -77,13 +77,13 @@
 
 
       <a name="comment"></a>
-      <h2 class="page-title">热忱回答<span><em id="replyCount"><%= post.get('consultations') %></em></span></h2>
+      <h2 class="page-title">热忱回答<span><em id="jiedaCount"><%= post.get('consultations') %></em></span></h2>
 
       <ul class="jieda photos" id="reply">
         <% if(replys.length>0){ %>
           <% replys.forEach(function(reply){ %>
 
-            <li data-id="<%= reply.get('id') %>" class="jieda-daan">
+            <li data-post='<%= post.get('id') %>' data-reply="<%= reply.get('id') %>" class="jieda-daan">
               <a name=""></a>
               <div class="detail-about detail-about-reply">
                 <a class="jie-user" href="/users/home?uid=<%= reply.get('replyFrom').get('id') %>">

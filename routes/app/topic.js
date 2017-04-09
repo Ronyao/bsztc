@@ -203,10 +203,12 @@ router.get('/detail', function(req, res, next){
   query.find().then(function (results) {
 
     var Reply = new AV.Query('Reply');
+    Reply.notEqualTo('status', -1);
     Reply.include('post.id');
     Reply.include('replyFrom');
     Reply.include('replyTo');
     Reply.include('post');
+
     Reply.find().then(function (replys) {
 
       res.render('topic/detail',{
@@ -343,6 +345,38 @@ router.post('/delete_post', function(req, res, next){
     res.json({
       status: 0,
       msg: 'success'
+    });
+  }, function(error){
+    res.json({
+      status: 0,
+      msg: 'failed'
+    });
+  });
+});
+
+router.post('/reply-delete', function(req, res, next) {
+  var replyId = req.body.replyId;
+  var postId = req.body.postId;
+  var reply = AV.Object.createWithoutData('Reply',replyId);
+  var post = AV.Object.createWithoutData('Post', postId);
+
+  reply.set('status', -1);
+  reply.save().then(function(){
+    //回答数-1
+    post.save().then(function (post) {
+      post.increment('consultations', -1);
+      post.save(true);
+      return post.save();
+    }).then(function (post) {
+      res.json({
+        status: 0,
+        msg: 'success'
+      });
+    }, function (error) {
+      res.json({
+        status: 0,
+        msg: 'failed'
+      });
     });
   }, function(error){
     res.json({
