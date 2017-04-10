@@ -64,9 +64,12 @@
 
           <% if( post.get('questioner').get('id')==currentUser.get('id') ){ %>
           <span class="jie-admin" type="edit"><a href="/topic/edit?pId=<%= post.get('id') %>">编辑此贴</a></span>
+          <% } %>
+          <% if( collect==0 ){ %>
+          <span class="jie-admin" type="collect" data-type="collect">收藏</span>
           <% }else{ %>
-            <span class="jie-admin" type="collect"><a href="/topic/collect?pId=<%= post.get('id') %>">收藏</a></span>
-            <% } %>
+          <span class="jie-admin" type="cancelCollect" data-type="removeCollect">取消收藏</span>
+          <% } %>
         </div>
       </div>
 
@@ -252,6 +255,18 @@ layui.use(['layer','jquery','fly'],function(){
   $('.detail-body').each(function(){
     var othis = $(this), html = othis.html();
     othis.html(fly.content(html));
+  });
+
+  $('#collect').click(function(){
+    $.post(
+      "/topic/collect",
+      {
+        qId: '<%= post.get('id') %>'
+      },
+      function(res) {
+
+      }
+    )
   });
 
 });

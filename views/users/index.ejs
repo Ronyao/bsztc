@@ -27,24 +27,46 @@
 
       <div class="fly-tab user-tab">
         <span id="LAY-mine">
-          <a href="javascript:;" class="tab-this"  hash='myreply'>我的求解（<cite>0</cite>）</a>
-          <a href="javascript:;" hash='mynews'>我的消息</a>
+          <!-- 收藏的帖子 -->
+          <a href="javascript:;" class="tab-this" hash='mynews'>我的收藏</a>
+          <!-- 收藏的智库 -->
           <a href="javascript:;" hash='mywisdom'>我的智库</a>
+          <a href="javascript:;" hash='order'>我的订单</a>
           <a href="/users/home?uid=<%= uid %>">我的主页</a>
         </span>
       </div>
       <div class="user-mine">
-        <div class="layui-form layui-form-pane mine-view">
-          <blockquote class="layui-elem-quote">这个貌似不用多介绍，因为你已经在太多的地方都看到</blockquote>
-          <blockquote class="layui-elem-quote">这个貌似不用多介绍，因为你已经在太多的地方都看到</blockquote>
-          <blockquote class="layui-elem-quote">这个貌似不用多介绍，因为你已经在太多的地方都看到</blockquote>
-        </div>
-        <div class="layui-form layui-form-pane mine-view">2</div>
-        <div class="layui-form layui-form-pane mine-view">
 
-        </div>
+        <ul class="mine-view jie-row" style="display:block;">
+          <li>
+            <span class="fly-jing">精</span>
+            <span class="jie-status jie-status-ok">已解决</span>
+            <a class="jie-title" href="/jie/{{d.rows[i].id}}.html" target="_blank">{{= d.rows[i].title}}</a>
+            <i>{{new Date(d.rows[i].time).toLocaleString()}}</i>
+            <a class="mine-edit" href="/jie/edit/{{d.rows[i].id}}">编辑</a>
+            <em>1阅/3答</em>
+          </li>
+        </ul>
+
+        <ul class="mine-view jie-row" style="display:block;">
+
+        </ul>
+
+
+        <ul class="mine-view jie-row" style="display:block;">
+          <li data-id="{{d.rows[i].id}}">
+            <a href="{{d.rows[i].href}}" target="_blank">{{ d.rows[i].content}}</a>
+            <p><span>12天前</span>
+              <a href="javascript:;" class="layui-btn layui-btn-small fly-delete">删除</a>
+              <a href="javascript:;" class="layui-btn layui-btn-small fly-delete">删除</a>
+            </p>
+          </li>
+
+        </ul>
+
       </div>
       <div id="LAY-page"></div>
+
     </div>
   </div>
 

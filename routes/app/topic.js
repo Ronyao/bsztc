@@ -211,18 +211,30 @@ router.get('/detail', function(req, res, next){
     Reply.include('replyTo');
     Reply.include('post');
 
-
     Reply.find().then(function (replys) {
+      var postCollect = new AV.Query('PostCollect');
+      postCollect.equalTo('post', post);
+      var user = AV.Object.createWithoutData('_User', req.currentUser.id);
+      postCollect.equalTo('user', user);
+      postCollect.find().then(function(collect) {
+        
+        if(collect.length==1){
+          var collect = 1;
+        }else{
+          var collect = 0;
+        }
+        res.render('topic/detail',{
+          title: "问题详情",
+          user: req.currentUser.get('nickname'),
+          avatar: avatar,
+          identity: identity,
+          currentUser: req.currentUser,
+          post: results[0],
+          replys: replys,
+          collect: collect
+        });
+      })
 
-      res.render('topic/detail',{
-        title: "问题详情",
-        user: req.currentUser.get('nickname'),
-        avatar: avatar,
-        identity: identity,
-        currentUser: req.currentUser,
-        post: results[0],
-        replys: replys
-      });
     });
 
  }, function (error) {
@@ -466,5 +478,37 @@ router.post('/getMyReply', function(req, res, next) {
 //   query.greaterThanOrEqualTo('createdAt');
 //
 // });
+
+//收藏功能多对多的关系
+router.post('/collect', function(req, res, next){
+
+  var postCollect = new AV.Object('PostCollect');
+
+  var user = AV.Object.createWithoutData('_User', req.currentUser.id);
+  var post = AV.Object.createWithoutData('Post', req.body.qId);
+  postCollect.set('post', post);
+  postCollect.set('user', user);
+  postCollect.save().then(function() {
+    res.json('success');
+  }, function(error) {
+
+  });
+});
+
+//取消收藏功能
+router.post('/collect', function(req, res, next){
+
+  var postCollect = new AV.Object('PostCollect');
+
+  var user = AV.Object.createWithoutData('_User', req.currentUser.id);
+  var post = AV.Object.createWithoutData('Post', req.body.qId);
+  postCollect.equalTo('post', post);
+  postCollect.equalTo('user', user);
+  postCollect.save().then(function() {
+    res.json('success');
+  }, function(error) {
+
+  });
+});
 
 module.exports = router;

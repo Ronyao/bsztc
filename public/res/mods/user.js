@@ -58,7 +58,7 @@ layui.define(['laypage', 'fly'], function(exports){
           page: curr
         }, function(res){
           view(res);
-          gather.minelog[type + 'page-' + curr] = res;
+          gather.minelog[type + 'mine-jie-page-' + curr] = res;
           now || laypage({
             cont: 'LAY-page'
             ,pages: res.pages
