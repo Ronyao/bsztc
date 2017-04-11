@@ -482,14 +482,23 @@ router.post('/getMyReply', function(req, res, next) {
 //收藏功能多对多的关系
 router.post('/collect', function(req, res, next){
 
-  var postCollect = new AV.Object('PostCollect');
+  var postCollect = new AV.Query('PostCollect');
 
   var user = AV.Object.createWithoutData('_User', req.currentUser.id);
   var post = AV.Object.createWithoutData('Post', req.body.qId);
-  postCollect.set('post', post);
-  postCollect.set('user', user);
-  postCollect.save().then(function() {
-    res.json('success');
+  postCollect.equalTo('post', post);
+  postCollect.equalTo('user', user);
+  postCollect.find().then(function(result) {
+    if(result.length==0){
+      var postCollectQuery = new AV.Object('PostCollect');
+      postCollectQuery.set('post', post);
+      postCollectQuery.set('user', user);
+      postCollectQuery.save().then(function() {
+        res.json('success');
+      }, function(error) {
+
+      });
+    }
   }, function(error) {
 
   });
@@ -505,7 +514,9 @@ router.post('/removeCollect', function(req, res, next){
   postCollect.equalTo('post', post);
   postCollect.equalTo('user', user);
   postCollect.find().then(function(result) {
-    console.log(result);
+    console.log(result[0].id);
+    var removeCollect = AV.Object.createWithoutData('PostCollect', result[0].id);
+    removeCollect.destroy();
     res.json('success');
   }, function(error) {
 
