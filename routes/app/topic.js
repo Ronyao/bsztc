@@ -217,7 +217,7 @@ router.get('/detail', function(req, res, next){
       var user = AV.Object.createWithoutData('_User', req.currentUser.id);
       postCollect.equalTo('user', user);
       postCollect.find().then(function(collect) {
-        
+
         if(collect.length==1){
           var collect = 1;
         }else{
@@ -496,15 +496,16 @@ router.post('/collect', function(req, res, next){
 });
 
 //取消收藏功能
-router.post('/collect', function(req, res, next){
+router.post('/removeCollect', function(req, res, next){
 
-  var postCollect = new AV.Object('PostCollect');
+  var postCollect = new AV.Query('PostCollect');
 
   var user = AV.Object.createWithoutData('_User', req.currentUser.id);
   var post = AV.Object.createWithoutData('Post', req.body.qId);
   postCollect.equalTo('post', post);
   postCollect.equalTo('user', user);
-  postCollect.save().then(function() {
+  postCollect.find().then(function(result) {
+    console.log(result);
     res.json('success');
   }, function(error) {
 

@@ -85,7 +85,7 @@ layui.define(['laypage', 'fly'], function(exports){
     ,collect: function(div){
       var othis = $(this), type = othis.data('type');
       fly.json('/topic/'+ type +'/', {
-        qid: div.data('id')
+        qId: div.data('id')
       }, function(res){
         if(type === 'collect'){
           othis.data('type', 'removeCollect').html('取消收藏').addClass('layui-btn-danger');
