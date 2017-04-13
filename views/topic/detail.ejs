@@ -130,7 +130,7 @@
                 <i class="iconfont icon-svgmoban53"></i>
                 回复
               </span>
-              <% if(currentUser.get('id')==reply.get('replyFrom').get('id')){ %>
+              <% if(currentUser.get('id')==reply.get('replyFrom').get('id')&&reply.get('accept')!=1){ %>
                 <div class="jieda-admin">
 
                   <!-- <span type="edit">
@@ -239,7 +239,8 @@ layui.use(['layer','jquery','fly'],function(){
         reply: $("#reply_content").val(),
         replyFrom: $("#replyFrom").val(),
         replyTo: $("#replyTo").val(),
-        postId: $("#postId").val()
+        postId: $("#postId").val(),
+        postTitle: "<%= post.get('title') %>"
       },
       function(status,data){
         if(data==='success'){

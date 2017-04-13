@@ -254,6 +254,7 @@ router.post('/reply',function(req, res, next){
   var replyFrom = req.body.replyFrom;
   var replyTo = req.body.replyTo;
   var postId = req.body.postId;
+  var postTitle = req.body.postTitle;
 
   if(replyContent==''){
     result = "回复内容不能为空";
@@ -268,6 +269,7 @@ router.post('/reply',function(req, res, next){
     Reply.set('replyFrom', replyFrom);
     Reply.set('replyTo', replyTo);
     Reply.set('post', post);
+    Reply.set('postTitle', postTitle);
 
     Reply.set('replyContent', replyContent);
 
@@ -445,7 +447,8 @@ router.post('/reply-accept', function(req, res, next){
 router.post('/getMyPost', function(req, res, next) {
   var userId = req.body.user;
   var query = new AV.Query('Post');
-  query.include('questioner.id',userId);
+  var user = new AV.Object.createWithoutData('_User', userId);
+  query.equalTo('questioner', user);
   query.greaterThanOrEqualTo('status',0);
   query.descending('createdAt');
   query.limit(5);
@@ -460,11 +463,11 @@ router.post('/getMyPost', function(req, res, next) {
 router.post('/getMyReply', function(req, res, next) {
   var userId = req.body.user;
   var query = new AV.Query('Reply');
-  query.equalTo('replyFrom',userId);
+  var user = new AV.Object.createWithoutData('_User', userId);
+  query.equalTo('replyFrom', user);
   query.descending('createdAt');
   query.limit(3);
   query.find().then( function(result){
-
     res.json(result);
   }, function(error){
 

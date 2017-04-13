@@ -133,11 +133,11 @@ layui.use('layer',function(){
     function(data, status){
       length = data.length;
       for(var i=0;i<length;i++){
-
+        console.log(data[i].post);
         var string = '';
         string += '<li>';
         var time = new Date(data[i].createdAt);
-        string += '<p><span>'+getDateDiff(time)+'</span>在<a href="/topic/detail?qId='+data[i].postId+'" target="_blank">'+data[i].postTitle+'</a>中回答：</p>';
+        string += '<p><span>'+getDateDiff(time)+'</span>在<a href="/topic/detail?qId='+data[i].post.objectId+'" target="_blank">'+data[i].postTitle+'</a>中回答：</p>';
         string += '<div class="home-dacontent">'+data[i].replyContent+'</div>';
         string += '</li>';
         $(".home-jieda").append(string);
