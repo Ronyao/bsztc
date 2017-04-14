@@ -36,11 +36,11 @@
       <ul class="fly-list">
         <% tops.forEach(function(top){ %>
         <li class="fly-list-li">
-          <a href="/users/home?uid=<%= top.get('questioner').get('id') %>" class="fly-list-avatar">
+          <a href="users/home?uid=<%= top.get('questioner').get('id') %>" class="fly-list-avatar">
             <img src='<%= top.get('questioner').get('avatar') %>' alt="">
           </a>
           <h2 class="fly-tip">
-            <a href="/topic/detail?qId=<%= top.get('objectId') %>"><%= top.get('title') %></a>
+            <a href="/detail?qId=<%= top.get('objectId') %>"><%= top.get('title') %></a>
             <% if( top.get('isTop')==1 ){ %>
             <span class="fly-tip-stick">置顶</span>
             <% } if( top.get('recommend')==1 ){ %>
@@ -48,7 +48,7 @@
             <% } %>
           </h2>
           <p>
-            <span><a href="/users/home?uid=<%= top.get('questioner').get('id') %>"><%= top.get('questioner').get('nickname') %></a></span>
+            <span><a href="users/home?uid=<%= top.get('questioner').get('id') %>"><%= top.get('questioner').get('nickname') %></a></span>
             <script>
               var time = getDateDiff(<%= top.get('createdAt').getTime() %>);
               document.write("<span>" + time + "</span>");  // 输出语句

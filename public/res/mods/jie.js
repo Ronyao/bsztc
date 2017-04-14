@@ -89,7 +89,7 @@ layui.define(['laypage', 'fly'], function(exports){
       }, function(res){
         if(type === 'collect'){
           othis.data('type', 'removeCollect').html('取消收藏').addClass('layui-btn-danger');
-        } else if(type === 'remove'){
+        } else if(type === 'removeCollect'){
           othis.data('type', 'collect').html('收藏').removeClass('layui-btn-danger');
         }
       });

@@ -103,6 +103,7 @@ router.post('/add', function(req, res, next){
   var content = req.body.content;
   var topicClass = req.body.topicClass;
   var reward = req.body.reward;
+  var postId = req.body.postId;
   var isEidt =  req.body.isEidt;
 
   if(title.length==''){
@@ -118,7 +119,7 @@ router.post('/add', function(req, res, next){
     result = "请输入悬赏博士点";
     res.json(result);
   }else {
-    if(isEidt=='true'){
+    if(isEidt == 'true'){
       var Post = AV.Object.createWithoutData('Post',postId);
     }else {
       var Post = AV.Object.extend('Post');
@@ -145,7 +146,7 @@ router.post('/add', function(req, res, next){
 
 router.get('/edit', function(req, res, next){
   var postId = req.query.pId;
-  var avatar = req.currentUser.get('sex');
+  var avatar = req.currentUser.get('avatar');
   var identity = "";
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
     avatar = "../res/images/avatar/default.png";
@@ -160,6 +161,9 @@ router.get('/edit', function(req, res, next){
   query.greaterThanOrEqualTo('status', 0);
   query.include('questioner');
   query.find().then(function(post){
+    if(post.length == 0){
+      post[0] = [];
+    }
     res.render('topic/edit',{
       title: "编辑问题",
       user: req.currentUser.get('nickname'),
@@ -203,6 +207,9 @@ router.get('/detail', function(req, res, next){
   query.include('questioner');
   query.greaterThanOrEqualTo('status', 0);
   query.find().then(function (results) {
+    if(results.length ==0 ){
+      results[0] = [];
+    }
 
     var Reply = new AV.Query('Reply');
     Reply.notEqualTo('status', -1);
@@ -451,7 +458,7 @@ router.post('/getMyPost', function(req, res, next) {
   query.equalTo('questioner', user);
   query.greaterThanOrEqualTo('status',0);
   query.descending('createdAt');
-  query.limit(5);
+  query.limit(6);
   query.find().then( function(result){
     res.json(result);
   }, function(error){
@@ -466,7 +473,8 @@ router.post('/getMyReply', function(req, res, next) {
   var user = new AV.Object.createWithoutData('_User', userId);
   query.equalTo('replyFrom', user);
   query.descending('createdAt');
-  query.limit(3);
+  query.greaterThanOrEqualTo('status',0);
+  query.limit(6);
   query.find().then( function(result){
     res.json(result);
   }, function(error){
@@ -497,7 +505,9 @@ router.post('/collect', function(req, res, next){
       postCollectQuery.set('post', post);
       postCollectQuery.set('user', user);
       postCollectQuery.save().then(function() {
-        res.json('success');
+        res.json({
+          status: 0
+        });
       }, function(error) {
 
       });
@@ -517,10 +527,11 @@ router.post('/removeCollect', function(req, res, next){
   postCollect.equalTo('post', post);
   postCollect.equalTo('user', user);
   postCollect.find().then(function(result) {
-    console.log(result[0].id);
     var removeCollect = AV.Object.createWithoutData('PostCollect', result[0].id);
     removeCollect.destroy();
-    res.json('success');
+    res.json({
+      status: 0
+    });
   }, function(error) {
 
   });

@@ -16,7 +16,7 @@
 <div class="main layui-clear">
   <div class="wrap">
     <div class="content detail">
-      <h1><%= post.get('title') %></h1>
+      <h1 id="title"><%= post.get('title') %></h1>
       <div class="fly-tip fly-detail-hint" data-id="<%= post.get('id') %>">
         <% if( post.get('status')==1 ){ %>
           <span class="fly-tip-jie">已结帖</span>
@@ -63,12 +63,12 @@
           <span style="color:#FF7200">悬赏：<%= post.get('reward') %>博士点</span>
 
           <% if( post.get('questioner').get('id')==currentUser.get('id') ){ %>
-          <span class="jie-admin" type="edit"><a href="/topic/edit?pId=<%= post.get('id') %>">编辑此贴</a></span>
+          <span class="layui-btn layui-btn-mini jie-admin" type="edit"><a href="/topic/edit?pId=<%= post.get('id') %>">编辑此贴</a></span>
           <% } %>
           <% if( collect==0 ){ %>
-          <span class="jie-admin" type="collect" data-type="collect">收藏</span>
+          <span class="jie-admin layui-btn layui-btn-mini" type="collect" data-type="collect">收藏</span>
           <% }else{ %>
-          <span class="jie-admin layui-btn-dange" type="collect" data-type="removeCollect">取消收藏</span>
+          <span class="jie-admin layui-btn layui-btn-mini layui-btn-danger" type="collect" data-type="removeCollect">取消收藏</span>
           <% } %>
         </div>
       </div>
@@ -240,7 +240,7 @@ layui.use(['layer','jquery','fly'],function(){
         replyFrom: $("#replyFrom").val(),
         replyTo: $("#replyTo").val(),
         postId: $("#postId").val(),
-        postTitle: "<%= post.get('title') %>"
+        postTitle: $("#title").html()
       },
       function(status,data){
         if(data==='success'){
@@ -258,17 +258,6 @@ layui.use(['layer','jquery','fly'],function(){
     othis.html(fly.content(html));
   });
 
-  $('#collect').click(function(){
-    $.post(
-      "/topic/collect",
-      {
-        qId: '<%= post.get('id') %>'
-      },
-      function(res) {
-
-      }
-    )
-  });
 
 });
 </script>

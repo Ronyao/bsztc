@@ -114,8 +114,8 @@ pre{padding: 10px 15px; margin: 10px 0; font-size:12px; border:1px solid #ddd; b
 .nav a:hover, .nav .nav-this{ color:#fff;}
 
 .nav-user{position:absolute; top: 12px; right:0;}
-.nav-user span, 
-.nav-user .unlogin, 
+.nav-user span,
+.nav-user .unlogin,
 .out-login,
 .avatar,
 .avatar *,
@@ -293,7 +293,7 @@ body .leifeng-rank span a img{width: 78px; height: 78px; border-radius: 100%;}
 .detail-body img{max-width: 100%; cursor: crosshair;}
 .detail-body table{margin:10px 0;}
 .detail-body table thead{background-color:#f2f2f2;}
-.detail-body table th, 
+.detail-body table th,
 .detail-body table td{padding:5px 20px; border:1px solid #DFDFDF; font-size:14px; font-weight: 400;}
 .detail-about-reply{background: none; padding: 0;}
 .detail-about-reply .detail-hits{left: 56px; bottom: 0;}
@@ -344,7 +344,7 @@ body .leifeng-rank span a img{width: 78px; height: 78px; border-radius: 100%;}
 
 /* 求解管理 */
 .jie-admin{cursor:pointer;}
-.detail-hits .jie-admin{background-color:#5FB878; color:#fff; padding:0 10px; }
+.detail-hits .jie-admin{color:#fff; padding:0 10px; }
 .detail-hits .jie-admin a{color:#fff;}
 .jieda-admin{position:absolute; right:0; top:0;}
 
@@ -424,7 +424,7 @@ body .leifeng-rank span a img{width: 78px; height: 78px; border-radius: 100%;}
   .main{margin: 10px;}
   .content{margin: 0;}
   img{max-width: 100%;}
-  
+
   .edge{display: block; margin: 20px 0; width: 100%;}
   body .leifeng-rank{width: 100%; margin-left: 5px; text-align: center;}
   .fly-ad{text-align: center; background: none}
@@ -439,18 +439,18 @@ body .leifeng-rank span a img{width: 78px; height: 78px; border-radius: 100%;}
   .nav-user>span,
   .fly-list-li h2 span,
   .fly-list-hint{display:none;}
-  
+
   .nav-user{top: 18px;}
   .nav-user .out-login{display: block; margin-right: 15px;}
   .fly-list-li h2 a{max-width: 100%;}
   .fly-list-one li{margin: 0 10px;}
-  
+
   .detail-hits{}
   .fly-detail-hint .fly-list-hint{display: block; top: 1px;}
   .fly-edit span{padding: 0 6px;}
 
   .jie-add{position: relative; display: inline-block;}
   .laypage-main a, .laypage-main span{display: none;}
-  .laypage-main .laypage-prev, 
+  .laypage-main .laypage-prev,
   .laypage-main .laypage-next{display: inline-block;}
 }
