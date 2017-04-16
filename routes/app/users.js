@@ -20,16 +20,45 @@ router.get('/index', function(req, res, next) {
   }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
-  res.render('users/index',{
-    title: "用户中心-博士直通车",
-    user: req.currentUser.get('nickname'),
-    avatar: avatar,
-    identity:identity,
-    jointime:req.currentUser.get('createdAt'),
-    city:req.currentUser.get('city'),
-    sex:req.currentUser.get('sex'),
-    uid:req.currentUser.get('id')
+  var user = AV.Object.createWithoutData('_User', req.currentUser.id);
+  var postCollect = new AV.Query('PostCollect');
+  postCollect.equalTo('user', user);
+  postCollect.include('post');
+  //postCollect.greaterThanOrEqualTo('post.status', 0);
+  postCollect.find().then(function(mypost){
+    //我的消息
+    var message = new AV.Query('Message');
+    message.equalTo('user', user);
+    message.find().then(function(messages){
+      //我的智库
+      user.relation('collection').query().find().then(function(collection){
+
+        //我的订单
+        var Forder = new AV.Query('Order');
+        Forder.equalTo('user', user);
+        var Torder = new AV.Query('Order');
+        Torder.equalTo('toDoctor', user);
+        var orderQuery = AV.Query.or(Forder, Torder);
+        orderQuery.find().then(function(order){
+          //console.log(order);
+          res.render('users/index',{
+            title: "用户中心-博士直通车",
+            user: req.currentUser.get('nickname'),
+            avatar: avatar,
+            identity:identity,
+            currentUser: req.currentUser,
+            mypost: mypost,
+            messages: messages
+          });
+        })
+
+      });
+
+
+    })
+
   });
+
 });
 
 router.get('/login',function(req, res, next) {

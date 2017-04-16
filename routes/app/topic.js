@@ -14,6 +14,7 @@ router.get('/', function(req, res, next) {
   }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
+  
   var query = new AV.Query('Post');
   query.limit(20);
   query.greaterThanOrEqualTo('status',0);
@@ -75,7 +76,6 @@ router.post('/getReply',function(req, res, next) {
     res.json(error);
   });
 });
-
 
 router.get('/add', function(req, res, next){
   var avatar = req.currentUser.get('avatar');
@@ -299,7 +299,6 @@ router.post('/reply',function(req, res, next){
   }
 });
 
-
 router.get('/:type/page/:num', function(req, res, next) {
   var currentPage = req.params.num;
   var type = req.params.type;
@@ -357,7 +356,6 @@ router.get('/:type/page/:num', function(req, res, next) {
   });
 
 });
-
 
 router.post('/delete_post', function(req, res, next){
   var postId = req.body.id;

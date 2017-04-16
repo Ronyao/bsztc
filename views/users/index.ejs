@@ -33,20 +33,26 @@
           <a href="javascript:;" hash='mywisdom'>我的智库</a>
           <a href="javascript:;" hash='message'>我的消息</a>
           <a href="javascript:;" hash='order'>我的订单</a>
-          <a href="/users/home?uid=<%= uid %>">我的主页</a>
+          <a href="/users/home?uid=<%= currentUser.get('id') %>">我的主页</a>
         </span>
       </div>
       <div class="user-mine">
 
         <ul class="mine-view jie-row" style="display:block;">
-          <li>
-            <span class="fly-jing">精</span>
-            <span class="jie-status jie-status-ok">已解决</span>
-            <a class="jie-title" href="/jie/{{d.rows[i].id}}.html" target="_blank">{{= d.rows[i].title}}</a>
-            <i>{{new Date(d.rows[i].time).toLocaleString()}}</i>
-            <a class="mine-edit" href="/jie/edit/{{d.rows[i].id}}">编辑</a>
-            <em>1阅/3答</em>
-          </li>
+          <% mypost.forEach(function(post){ %>
+            <li>
+              <% if(post.get('post').get('recommend')==1){ %>
+              <span class="fly-jing">精</span>
+              <% } %>
+              <% if(post.get('post').get('status')==1){ %>
+              <span class="jie-status jie-status-ok">已解决</span>
+              <% } %>
+              <a class="jie-title" href="/jie/{{d.rows[i].id}}.html" target="_blank"><%= post.get('post').get('title') %></a>
+              <i><%= post.get('post').get('createdAt')%></i>
+              <a class="mine-edit" href="/topic/edit/{{d.rows[i].id}}">编辑</a>
+              <em>1阅/3答</em>
+            </li>
+          <% }) %>
         </ul>
 
         <ul class="mine-view jie-row" style="display:block;">
@@ -55,14 +61,14 @@
 
 
         <ul class="mine-view jie-row" style="display:block;">
-          <li data-id="{{d.rows[i].id}}">
-            <a href="{{d.rows[i].href}}" target="_blank">{{ d.rows[i].content}}</a>
-            <p><span>12天前</span>
-              <a href="javascript:;" class="layui-btn layui-btn-small fly-delete">删除</a>
-              <a href="javascript:;" class="layui-btn layui-btn-small fly-delete">删除</a>
-            </p>
-          </li>
-
+          <% messages.forEach(function(msg){ %>
+            <li data-id="{{d.rows[i].id}}">
+              <a href="{{d.rows[i].href}}" target="_blank"><%= msg.get('title') %></a>
+              <p><span><%= msg.get('createdAt') %></span>
+                <a href="javascript:;" class="layui-btn layui-btn-small fly-delete">删除</a>
+              </p>
+            </li>
+          <% }) %>
         </ul>
 
       </div>
@@ -84,15 +90,15 @@
       </p>
       <p>
         <script>
-          var time = getDateDiff(<%= jointime.getTime() %>);
+          var time = getDateDiff(<%= currentUser.get('createdAt').getTime() %>);
           document.write("<span>加入时间：" + time + "</span>");  // 输出语句
         </script>
       </p>
       <p>
-        <span>城市：<%= city %></span>
+        <span>城市：<%= currentUser.get('city') %></span>
         <span>
         性别：
-        <% if(sex==1){ %>
+        <% if( currentUser.get('sex')==1){ %>
         男
         <% }else{ %>
           女
