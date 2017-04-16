@@ -118,9 +118,9 @@ layui.define(['laypage', 'fly'], function(exports){
   gather.jiedaActive = {
     zan: function(li){ //赞
       var othis = $(this), ok = othis.hasClass('zanok');
-      fly.json('/api/jieda-zan/', {
+      fly.json('/topic/zan', {
         ok: ok
-        ,id: li.data('id')
+        ,id: li.data('reply')
       }, function(res){
         if(res.status === 0){
           var zans = othis.find('em').html()|0;

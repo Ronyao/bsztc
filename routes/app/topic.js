@@ -219,6 +219,7 @@ router.get('/detail', function(req, res, next){
     Reply.include('post');
 
     Reply.find().then(function (replys) {
+
       var postCollect = new AV.Query('PostCollect');
       postCollect.equalTo('post', post);
       var user = AV.Object.createWithoutData('_User', req.currentUser.id);
@@ -535,6 +536,36 @@ router.post('/removeCollect', function(req, res, next){
   }, function(error) {
 
   });
+});
+
+router.post('/zan', function(req, res, next){
+
+  var user = AV.Object.createWithoutData('_User', req.currentUser.id);
+
+  if(req.body.ok == 'false'){
+    AV.Object.saveAll(user).then(users =>{
+      let reply = AV.Object.createWithoutData('Reply', req.body.id);
+      let relation = reply.relation('zanFrom');
+      relation.add(user);
+      reply.increment('zan', 1);
+      reply.save().then(function() {
+        res.json({
+          status: 0
+        });
+      });
+    });
+  }else{
+    let reply = AV.Object.createWithoutData('Reply', req.body.id);
+    let relation = reply.relation('zanFrom');
+    relation.remove(user);
+    reply.increment('zan', -1);
+    reply.save().then(function() {
+      res.json({
+        status: 0
+      });
+    });
+  }
+
 });
 
 module.exports = router;
