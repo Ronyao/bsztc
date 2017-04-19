@@ -15,7 +15,7 @@
   <div class="layui-form layui-form-pane">
     <form method="post" action="/users/login">
       <div class="layui-form-item">
-        <label for="L_phone" class="layui-form-label">手机号</label>
+        <label for="L_phone" class="layui-form-label">手机或邮箱</label>
         <div class="layui-input-inline">
           <input type="tel" id="L_phone" name="phone" required lay-verify="phone" autocomplete="off" class="layui-input">
         </div>
@@ -27,7 +27,6 @@
         </div>
         <div class="layui-form-mid layui-word-aux">密码至少为6位</div>
       </div>
-
       <div class="layui-form-item">
         <a id="submit" class="layui-btn" lay-filter="test">立即登录</a>
         <span style="padding-left:20px;">

@@ -177,6 +177,52 @@ router.post('/reg',function(req, res, next){
 
 });
 
+router.post('/regForEmail', function(req, res, next){
+  var result = '';
+  var email = req.body.email;
+  var pass = req.body.pass;
+  var repass = req.body.repass;
+  var avatar = "http://ac-6Yy7y0rY.clouddn.com/w50cbAZiVMbeu7wvQU4m1kKpRQTzoe0F9ujCS3eZ.jpeg";
+  var sex = 1;
+  var nickname = "博士直通车用户";
+  var jschar = ['0','1','2','3','4','5','6','7','8','9'];
+  for(var i=0; i<4; i++){
+    var id = Math.floor(Math.random()*10);
+    nickname += jschar[id];
+  }
+  if(!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ .test(email))){
+      result = "邮箱格式不正确！";
+      res.json(result);
+  }else if (pass.length<6) {
+    result = "密码长度至少为6位";
+    res.json(result);
+  }else if (!( pass === repass)) {
+    result = "两者密码不一致，请重新输入";
+    res.json(result);
+  }else {
+    var user = new AV.User();
+    user.set("username", email);
+    user.set("nickname", nickname);
+    user.set("password", pass);
+    user.set("avatar",avatar);
+    user.set("sex",sex);
+    //设置好邮箱后给邮箱发一封验证邮箱
+    user.setEmail(email);
+    user.signUp().then(function(loginedUser){
+      result = "success";
+      res.json(result);
+    },function(error){
+      result = "错误码："+ error.code;
+      if(error.code == "125"){
+        result = "电子邮箱地址无效";
+      }else if(error.code == "203"){
+        result = "电子邮箱地址已经被占用";
+      }
+      res.json(result);
+    });
+  }
+})
+
 router.get('/forget',function(req, res, next) {
   res.render('users/forget',{
     title: "忘记密码-博士直通车",
