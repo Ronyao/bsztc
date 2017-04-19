@@ -20,11 +20,11 @@
 
   <div class="wrap">
     <div class="content">
-
-      <!-- {{# if(user.activate == 0){ }}
-      <div class="fly-msg">您的邮箱尚未验证，这比较影响您的帐号安全，<a href="/user/activate/">立即去激活？</a></div>
-      {{# } }} -->
-
+      <% if(currentUser.get('emailVerified')==false){ %>
+      <div class="fly-msg" style="margin-top: 15px;">
+        您的邮箱尚未验证，这比较影响您的帐号安全，<a target="_blank" href="/users/emailVerify">立即去激活？</a>
+      </div>
+      <% } %>
       <div class="fly-tab user-tab">
         <span id="LAY-mine">
           <!-- 收藏的帖子 -->

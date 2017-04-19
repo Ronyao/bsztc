@@ -76,14 +76,45 @@ router.get('/login',function(req, res, next) {
   }
 });
 
+router.get('/emailVerify', function(req, res, next){
+
+  var avatar = req.currentUser.get('avatar');
+  var identity = "";
+  if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
+    avatar = "../res/images/avatar/default.png";
+  }
+  if(req.currentUser.get('isEnterprise')==true){
+    identity = "认证企业";
+  }else if (req.currentUser.get('isDoctor')==true) {
+    identity = "认证博士";
+  }
+  res.render('users/emailVerify',
+  {
+    title: "邮箱认证-博士直通车",
+    user: req.currentUser.get('nickname'),
+    avatar: avatar,
+    identity:identity,
+    currentUser: req.currentUser,
+  });
+});
+
+router.post('/emailVerify', function(req, res, next){
+  console.log(req.body.email);
+  AV.User.requestEmailVerify(req.body.email).then(function (result) {
+      res.json('success');
+  }, function (error) {
+    res.json(JSON.stringify(error));
+  });
+});
+
 //登录，成功跳转页面，并保持登录状态，header需要改变，失败就返回错误信息
 router.post('/login',function(req, res, next) {
   var result = "网络错误，请重试";
   var username = req.body.phone;
   var password = req.body.pass;
   //判断手机格式是否正确
-  if(!(/^1[34578]\d{9}$/.test(username))){
-      result = "手机号码格式不正确！";
+  if(!(/^1[34578]\d{9}$/.test(username))&&!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(username))){
+      result = "手机或邮箱格式不正确！";
       res.json(result);
   }else if (password.length==0) {
       result = "密码不能为空！";
