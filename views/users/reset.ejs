@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>登入 - <%= title %></title>
+<%- include("../link.ejs") %>
+</head>
+<body>
+
+<%- include("../header.ejs") %>
+
+<div class="main layui-clear">
+  <h2 class="page-title">重置密码</h2>
+  <div class="layui-form layui-form-pane">
+    <form method="post" action="/users/login">
+      <div class="layui-form-item">
+        <label for="L_phone" class="layui-form-label">新密码</label>
+        <div class="layui-input-inline">
+          <input type="text" id="new_pass" name="new_pass" required lay-verify="password" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label for="L_phone" class="layui-form-label">确认密码</label>
+        <div class="layui-input-inline">
+          <input type="text" id="re_pass" name="re_pass" required lay-verify="password" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <a id="submit" class="layui-btn" lay-filter="test">提交</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include("../footer.ejs") %>
+<script>
+
+layui.use(['jquery','layer'], function(){
+  var layer = layui.layer
+  var $ = layui.jquery;
+  //监听提交
+  $("#submit").click(function(){
+    $.post(
+      "/users/resetPass",
+      {
+        new_pass: $("#new_pass").val(),
+        re_pass: $("#re_pass").val(),
+      },
+      function(data,status){
+        if(data=='success'){
+          window.location.href="/users/index";
+        }else{
+          layer.msg(data);
+        }
+      }
+    )
+  });
+});
+</script>
+</body>
+</html>

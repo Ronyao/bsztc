@@ -143,6 +143,8 @@ router.get('/reg',function(req, res, next) {
    });
 });
 
+router.get('/')
+
 router.post('/get_vercode',function(req, res, next){
   var result = "";
   var mobile = req.body.phone;
@@ -405,6 +407,21 @@ router.post('/upload_avatar',function(req, res, next){
   res.json('url');
 });
 
+router.get('/verify', function(req, res, next){
+  var user = AV.Query.createWithoutData('_User', req.currentUser.id);
+  user.set('emailVerify', ture);
+  user.save().then(function(){
+    res.render('users/verifyResult',
+    {
+      msg: "邮箱认证成功！"
+    });
+  }, function(error){
+    res.render('users/verify',
+    {
+      msg: "邮箱认证失败！"
+    });
+  });
+});
 
 router.post('/d_verify',function(req, res, next) {
   //必填的选项有：个人简介，学科门类，省市，真实姓名，身份证，三张图，价格，预约时间
