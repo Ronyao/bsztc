@@ -94,6 +94,20 @@ layui.define(['laypage', 'fly'], function(exports){
         }
       });
     }
+
+    //收藏
+    ,attent: function(div){
+      var othis = $(this), type = othis.data('type');
+      fly.json('/users/'+ type +'/', {
+        id: div.data('id')
+      }, function(res){
+        if(type === 'attent'){
+          othis.data('type', 'removeAttent').html('取消关注').addClass('layui-btn-danger');
+        } else if(type === 'removeAttent'){
+          othis.data('type', 'attent').html('关注').removeClass('layui-btn-danger');
+        }
+      });
+    }
   };
 
   $('.jie-admin').on('click', function(){

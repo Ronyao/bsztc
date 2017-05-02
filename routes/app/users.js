@@ -346,18 +346,28 @@ router.get('/home',function(req, res, next){
   }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
-   uid = req.query.uid;
+   var uid = req.query.uid;
    var query = new AV.Query('_User');
    query.equalTo('objectId', uid);
    query.find().then(function (results) {
-     res.render('users/home',{
-       title:"用户中心",
-       user: req.currentUser.get('nickname'),
-       avatar: avatar,
-       identity: identity,
-       currentUser: req.currentUser,
-       thisUser: results
+     var currentUser = AV.Object.createWithoutData('_User', req.currentUser.id);
+     var relation = currentUser.relation('collection');
+     relation.query().equalTo('objectId', uid).find().then(function(thisPageUser){
+       var isAttent = 0;
+       if(thisPageUser.length!=0){
+         isAttent = 1;
+       }
+       res.render('users/home',{
+         title:"用户中心",
+         user: req.currentUser.get('nickname'),
+         avatar: avatar,
+         identity: identity,
+         currentUser: req.currentUser,
+         thisUser: results,
+         isAttent: isAttent
+       });
      });
+
   }, function (error) {
     res.render('users/home',{
       title:"用户中心",
@@ -585,6 +595,35 @@ router.post('/e_verify', function(req, res, next){
 
 router.post('/upload_pic',function(req, res, next) {
   res.json('success');
+});
+
+//收藏功能多对多的关系
+router.post('/attent', function(req, res, next){
+  var collection = AV.Object.createWithoutData('_User', req.body.id);
+  AV.Object.saveAll(collection).then(users =>{
+    let user = AV.Object.createWithoutData('_User', req.currentUser.id);
+    let relation = user.relation('collection');
+    relation.add(collection);
+    user.save().then(function() {
+      res.json({
+        status: 0
+      });
+    });
+  });
+});
+
+router.post('/removeAttent', function(req, res, next){
+  var collection = AV.Object.createWithoutData('_User', req.body.id);
+  AV.Object.saveAll(collection).then(users =>{
+    let user = AV.Object.createWithoutData('_User', req.currentUser.id);
+    let relation = user.relation('collection');
+    relation.remove(collection);
+    user.save().then(function() {
+      res.json({
+        status: 0
+      });
+    });
+  });
 });
 
 module.exports = router;
