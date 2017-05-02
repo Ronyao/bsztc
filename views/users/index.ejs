@@ -55,8 +55,26 @@
           <% }) %>
         </ul>
 
-        <ul class="mine-view jie-row" style="display:block;">
-
+        <ul class="mine-view fly-list" style="display:block;">
+          <% collections.forEach(function(collection){ %>
+          <li class="fly-list-li">
+            <a href="user/home.html" class="fly-list-avatar">
+              <img src="<%= collection.get('avatar') %>" alt="">
+            </a>
+            <h2 class="fly-tip">
+              <a href="jie/detail.html"><%= collection.get('nickname') %></a>
+            </h2>
+            <p>
+              <span><a href="user/home.html"><%= collection.get('d_disciplinesFields') %></a></span>
+              <span><%= collection.get('d_firstDisciplines') %></span>
+              <span><%= collection.get('d_secondDisciplines') %></span>
+              <span class="fly-list-hint">
+                <i class="iconfont" title="回答">&#xe60c;</i> <%= collection.get('d_consultCount') %>
+                <i class="iconfont" title="人气">&#xe60b;</i> <%= collection.get('d_follower') %>
+              </span>
+            </p>
+          </li>
+          <% }) %>
         </ul>
 
 
