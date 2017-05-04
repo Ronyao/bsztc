@@ -15,7 +15,7 @@
 <div  class="fly-home" style="background-image: url();padding-bottom: 34px;">
   <img src=<%= thisUser[0].get('avatar') %> alt=<%= thisUser[0].get('nickname') %>>
   <h1 data-id="<%= thisUser[0].get('id') %>"><%= thisUser[0].get('nickname') %>
-    <% if( currentUser.get('id')!=thisUser[0].get('id')){ %>
+    <% if( currentUser.get('id')!=thisUser[0].get('id')&&thisUser[0].get('identity')==true ){ %>
       <% if( isAttent ==1 ){ %>
         <span class="jie-admin layui-btn layui-btn-warm layui-btn-danger layui-btn-mini" type="attent" data-type="removeAttent">取消关注</span>
         <% }else{ %>
@@ -61,8 +61,8 @@
         document.write("<span>" + time + "</span>");  // 输出语句
       </script>
     </li>
-    <% if(identity == "认证博士"){ %>
     <li><i class="iconfont icon-chengshi"></i>城市：<span><% if(typeof(thisUser[0].get('city'))=="undefined"||thisUser[0].get('city')==''){ %>未填写<% }else{ %><%= thisUser[0].get('city') %><% } %></span></li>
+    <% if(thisUser[0].get('identity') == true){ %>
     <li><i class="iconfont icon-chengshi"></i>一级学科：<span><% if(typeof(thisUser[0].get('d_firstDisciplines'))=="undefined"||thisUser[0].get('d_firstDisciplines')==''){ %> 未填写 <% }else{ %> <%= thisUser[0].get('d_firstDisciplines') %> <% } %></span></li>
     <li><i class="iconfont icon-chengshi"></i>二级学科：<span><% if(typeof(thisUser[0].get('d_secondDisciplines'))=="undefined"||thisUser[0].get('d_secondDisciplines')==''){ %>未填写<% }else{ %> <%= thisUser[0].get('d_secondDisciplines') %> <% } %></span></li>
     <li><i class="iconfont icon-chengshi"></i>研究方向：<span><% if(typeof(thisUser[0].get('d_disciplinesFields'))=="undefined"||thisUser[0].get('d_disciplinesFields')==''){ %>未填写<% }else{ %><%= thisUser[0].get('d_disciplinesFields') %><% } %></span></li>
