@@ -26,10 +26,12 @@
   <div class="layui-main">
     <p style="display: inline-block; max-width: 800px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #999; margin-top: 10px;">（<%= thisUser[0].get('signature')||'这个人懒得留下签名' %>）</p>
   </div>
+  <% if(thisUser[0].get('isDoctor')==true){ %>
   <div class="fly-sns">
     <span lay-event=""><button id="chat" class="layui-btn">图文咨询 ￥<%= thisUser[0].get('d_chatPrice') %>/次</button>
     <button id="call" class="layui-btn layui-btn-normal">电话咨询 ￥<%= thisUser[0].get('d_callPrice') %>/分钟</button></span>
   </div>
+  <% } %>
 </div>
 
 <div class="main layui-clear">

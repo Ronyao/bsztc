@@ -370,7 +370,7 @@ layui.define(['layer', 'laytpl', 'form', 'upload', 'util'], function(exports){
     bar1: true
     ,click: function(type){
       if(type === 'bar1'){
-        layer.msg('bar1');
+        window.location.href='/feedback';
       }
     }
   });

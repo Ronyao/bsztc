@@ -17,8 +17,8 @@
       <div class="menu"> <a class="toggleMenu" href="#"><img src="/res/images/nav_icon.png" alt="" /> </a>
         <ul class="nav" id="nav">
           <li><a href="/about">关于我们</a></li>
-          <li class="current"><a href="/contact">联系我们</a></li>
-          <li><a href="/feedback">反馈</a></li>
+          <li><a href="/contact">联系我们</a></li>
+          <li class="current"><a href="/feedback">反馈</a></li>
           <li><a href="users/login">登录</a></li>
           <li><a href="users/reg">注册</a></li>
           <div class="clear"></div>
@@ -27,29 +27,21 @@
       </div>
     </div>
   </div>
-<div class="about">
+<div class="contact" style="padding-bottom: 100px;">
   <div class="container">
-    <section class="title-section">
-      <h1 class="title-header">联系我们</h1>
-    </section>
-  </div>
-</div>
-<div class="contact" style="padding-bottom: 100px;padding-top: 60px;">
-  <div class="container">
-    <div class="row contact_top">
-      <div class="col-md-12 contact_details">
-        <h5>地址:</h5>
-        <div class="contact_address">广州市天河区翰景路1号金星大厦501号F08房</div>
-      </div>
-      <div class="col-md-12 contact_details">
-        <h5>电话:</h5>
-        <div class="contact_address"> 180 2860 1339（王博士）<br>
+    <div class="contact_bottom">
+      <h3>反馈</h3>
+      <p>您对本站的网页设计,用户体验等方面有很好的建议和意见； 如果您在浏览过程中发现了错误的文字或链接； 如果您想与本站在某一方面进行合作； 欢迎您留言反馈。</p>
+      <form method="post" action="">
+        <div class="contact-to">
+          <input id="name" name="name" type="text" class="text" value=""  placeholder="姓名">
+          <input id="email" name="email" type="text" class="text" value=""  style="margin-left: 10px" placeholder="邮件">
         </div>
-      </div>
-      <div class="col-md-12 contact_details">
-        <h5>邮箱:</h5>
-        <div class="contact_mail"> info@companyname.com</div>
-      </div>
+        <div class="text2">
+          <textarea id="content" name="content" value=""  placeholder="内容.."></textarea>
+        </div>
+        <div> <a id="submit" class="submit">发送</a> </div>
+      </form>
     </div>
 
   </div>
@@ -63,5 +55,30 @@
 </div>
 <script src="/javascripts/bootstrap.min.js"></script>
 <script src="/javascripts/jquery.flexslider.js"></script>
+<script src="/res/layui/layui.js"></script>
+<script>
+  layui.use(['layer','jquery'],function(){
+    var $ = layui.jquery, layer = layui.layer;
+    $("#submit").click(function(){
+      $.post(
+        "/feedback",
+        {
+          name: $("#name").val(),
+          email: $("#email").val(),
+          content: $("#content").val(),
+        },
+        function(data){
+          if(data == 'success'){
+            layer.msg("感谢您的反馈，我们将会做得更好。");
+          }else{
+            layer.msg(data);
+          }
+
+        }
+      )
+    });
+
+  })
+</script>
 </body>
 </html>

@@ -56,7 +56,7 @@ app.use(function (req, res, next) {
       arr[i] = arr[i].split('?')[0];
     }
     // 判断请求路径是否为根、登录、注册、登出，如果是不做拦截
-    if (arr.length > 1 && arr[1] == '' || arr[1] == 'index' || arr[1] == 'contact' || arr[1] == 'about') {
+    if (arr.length > 1 && arr[1] == '' || arr[1] == 'index' || arr[1] == 'contact' || arr[1] == 'about' || arr[1] == 'feedback') {
       next();
     } else if (arr.length > 2 && arr[1] == 'users' && (arr[2] == 'reg' || arr[2] == 'regForEmail' || arr[2] == 'login' || arr[2] == 'logout' || arr[2] == 'get_vercode' || arr[2] == 'forget' || arr[2] == 'get_vercode_forget')) {
       next();
