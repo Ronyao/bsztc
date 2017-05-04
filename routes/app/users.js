@@ -32,7 +32,6 @@ router.get('/index', function(req, res, next) {
     message.find().then(function(messages){
       //我的智库
       user.relation('collection').query().find().then(function(collections){
-        console.log(collections);
         //我的订单
         var Forder = new AV.Query('Order');
         Forder.equalTo('user', user);

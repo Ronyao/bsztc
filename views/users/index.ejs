@@ -47,10 +47,10 @@
               <% if(post.get('post').get('status')==1){ %>
               <span class="jie-status jie-status-ok">已解决</span>
               <% } %>
-              <a class="jie-title" href="/jie/{{d.rows[i].id}}.html" target="_blank"><%= post.get('post').get('title') %></a>
-              <i><%= post.get('post').get('createdAt')%></i>
-              <a class="mine-edit" href="/topic/edit/{{d.rows[i].id}}">编辑</a>
-              <em>1阅/3答</em>
+              <a class="jie-title" href="/topic/detail?qId=<%= post.get('post').get('id') %>" target="_blank"><%= post.get('post').get('title') %></a>
+              <i><%= post.get('post').get('createdAt').toLocaleDateString() %></i>
+              <a class="mine-edit" href="/topic/edit?pId=<%= post.get('post').get('id') %>">编辑</a>
+              <em><%= post.get('post').get('visits') %>阅/<%= post.get('post').get('consultations') %>答</em>
             </li>
           <% }) %>
         </ul>
