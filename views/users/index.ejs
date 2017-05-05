@@ -20,7 +20,7 @@
 
   <div class="wrap">
     <div class="content">
-      <% if(currentUser.get('emailVerified')==false){ %>
+      <% if( (/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(currentUser.get('username')))&&currentUser.get('emailVerified')==false){ %>
       <div class="fly-msg" style="margin-top: 15px;">
         您的邮箱尚未验证，这比较影响您的帐号安全，<a target="_blank" href="/users/emailVerify">立即去激活？</a>
       </div>
