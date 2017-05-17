@@ -163,6 +163,7 @@
         },
         function(data, status){
           if(data=='success'){
+            layer.msg("注册成功。");
             window.location.href="/topic";
           }else{
             layer.msg(data);
