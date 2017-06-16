@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var AV = require('leanengine');
+var sleep = require('sleep');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+
   var avatar = req.currentUser.get('avatar');
   var identity = "";
   if(avatar == 'http://7xnito.com1.z0.glb.clouddn.com/default_avatar.png'){
@@ -14,7 +16,7 @@ router.get('/', function(req, res, next) {
   }else if (req.currentUser.get('isDoctor')==true) {
     identity = "认证博士";
   }
-  
+
   var query = new AV.Query('Post');
   query.limit(20);
   query.greaterThanOrEqualTo('status',0);
@@ -40,6 +42,58 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.get('/inputpro/:num',function(req,res,next){
+  var num = req.params.num;
+  console.log(num);
+  sleep.sleep(1000);
+  //setTimeout(function(){},100000);
+  //var fs = require('fs');
+//   fs.readFile('professor.json',function(err,data){
+//     if(err)
+//       throw err;
+//
+//     var jsonObj=JSON.parse(data);
+//     var User = AV.Object.extend('_User');
+//     //size=jsonObj.length
+//     for(var i=0, size=15; i<size; i++){
+//
+//         var user = new User();
+//         var record = jsonObj[i];
+//         console.log(i);
+//         user.set('nickname', record['name']);
+//         user.set('d_realName', record['name']);
+//         if(record['sex']=='男'){
+//           user.set('sex', 1);
+//         }else if(record['sex']=='女'){
+//           user.set('sex', 0);
+//         }
+//         user.set('d_secondDisciplines',record['profession']);
+//         if(record['introduction']!=null){
+//           user.set('d_introduction', record['introduction'].substring(0,150));
+//         }
+//
+//         user.set('city',"广州");
+//         var username = "bot";
+//         var jschar = ['0','1','2','3','4','5','6','7','8','9'];
+//         for(var j=0; j<8; j++){
+//           var id = Math.floor(Math.random()*10);
+//           username += jschar[id];
+//         }
+//         user.set('username',username);
+//         user.set('d_chatPrice',1)
+//         user.set('d_callPrice',1);
+//         user.set('isImport',true);
+//         user.set('password','bsztc2017');
+//         user.set('isDoctor',true);
+//         user.set('province','广东省');
+//         user.set('avatar','http://ac-6Yy7y0rY.clouddn.com/w50cbAZiVMbeu7wvQU4m1kKpRQTzoe0F9ujCS3eZ.jpeg');
+//         user.save();
+//
+//     }
+// });
+    num++;
+    res.redirect('/topic/inputpro/'+num);
+});
 
 router.get('/mostVisits',function(req, res, next){
   var query = new AV.Query('Post');

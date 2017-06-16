@@ -20,7 +20,7 @@ router.get('/', function(req, res, next) {
   query.limit(12);
   query.equalTo('isDoctor',true);
   query.descending('createdAt');
-//  query.notEqualTo('isBot',true);
+  query.notEqualTo('isBot',true);
   query.find().then(function (results) {
     res.render('wisdom/index',{
       title: "智库-博士直通车",
