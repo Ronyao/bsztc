@@ -42,12 +42,10 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.get('/inputpro/:num',function(req,res,next){
-  var num = req.params.num;
-  console.log(num);
-  sleep.sleep(1000);
-  //setTimeout(function(){},100000);
-  //var fs = require('fs');
+// router.get('/inputpro/:num',function(req,res,next){
+//   var num = req.params.num;
+//   console.log(num);
+//   var fs = require('fs');
 //   fs.readFile('professor.json',function(err,data){
 //     if(err)
 //       throw err;
@@ -55,11 +53,9 @@ router.get('/inputpro/:num',function(req,res,next){
 //     var jsonObj=JSON.parse(data);
 //     var User = AV.Object.extend('_User');
 //     //size=jsonObj.length
-//     for(var i=0, size=15; i<size; i++){
-//
+//         var i = num;
 //         var user = new User();
 //         var record = jsonObj[i];
-//         console.log(i);
 //         user.set('nickname', record['name']);
 //         user.set('d_realName', record['name']);
 //         if(record['sex']=='男'){
@@ -72,7 +68,7 @@ router.get('/inputpro/:num',function(req,res,next){
 //           user.set('d_introduction', record['introduction'].substring(0,150));
 //         }
 //
-//         user.set('city',"广州");
+//         user.set('city',"广州市");
 //         var username = "bot";
 //         var jschar = ['0','1','2','3','4','5','6','7','8','9'];
 //         for(var j=0; j<8; j++){
@@ -89,11 +85,11 @@ router.get('/inputpro/:num',function(req,res,next){
 //         user.set('avatar','http://ac-6Yy7y0rY.clouddn.com/w50cbAZiVMbeu7wvQU4m1kKpRQTzoe0F9ujCS3eZ.jpeg');
 //         user.save();
 //
-//     }
+//       });
+//     num++;
+//     sleep.sleep(1);
+//     res.redirect(302,'/topic/inputpro/'+num);
 // });
-    num++;
-    res.redirect('/topic/inputpro/'+num);
-});
 
 router.get('/mostVisits',function(req, res, next){
   var query = new AV.Query('Post');
