@@ -18,6 +18,7 @@ var wisdom = require('./routes/app/wisdom');
 var search = require('./routes/app/search');
 var pay = require('./routes/app/pay');
 var chat = require('./routes/app/chat');
+var importUser = require('./routes/app/importUser');
 
 var app = express();
 
@@ -132,6 +133,7 @@ app.use('/wisdom', wisdom);
 app.use('/search', search);
 app.use('/pay', pay);
 app.use('/chat', chat);
+app.use('/importUser', importUser);
 
 // 如果任何路由都没匹配到，则认为 404
 // 生成一个异常让后面的 err handler 捕获

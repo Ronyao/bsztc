@@ -41,55 +41,6 @@ router.get('/', function(req, res, next) {
   });
 });
 
-// router.get('/inputpro/:num',function(req,res,next){
-//   var num = req.params.num;
-//   console.log(num);
-//   var fs = require('fs');
-//   fs.readFile('professor.json',function(err,data){
-//     if(err)
-//       throw err;
-//
-//     var jsonObj=JSON.parse(data);
-//     var User = AV.Object.extend('_User');
-//     //size=jsonObj.length
-//         var i = num;
-//         var user = new User();
-//         var record = jsonObj[i];
-//         user.set('nickname', record['name']);
-//         user.set('d_realName', record['name']);
-//         if(record['sex']=='男'){
-//           user.set('sex', 1);
-//         }else if(record['sex']=='女'){
-//           user.set('sex', 0);
-//         }
-//         user.set('d_secondDisciplines',record['profession']);
-//         if(record['introduction']!=null){
-//           user.set('d_introduction', record['introduction'].substring(0,150));
-//         }
-//
-//         user.set('city',"广州市");
-//         var username = "bot";
-//         var jschar = ['0','1','2','3','4','5','6','7','8','9'];
-//         for(var j=0; j<8; j++){
-//           var id = Math.floor(Math.random()*10);
-//           username += jschar[id];
-//         }
-//         user.set('username',username);
-//         user.set('d_chatPrice',1)
-//         user.set('d_callPrice',1);
-//         user.set('isImport',true);
-//         user.set('password','bsztc2017');
-//         user.set('isDoctor',true);
-//         user.set('province','广东省');
-//         user.set('avatar','http://ac-6Yy7y0rY.clouddn.com/w50cbAZiVMbeu7wvQU4m1kKpRQTzoe0F9ujCS3eZ.jpeg');
-//         user.save();
-//
-//       });
-//     num++;
-//     sleep.sleep(1);
-//     res.redirect(302,'/topic/inputpro/'+num);
-// });
-
 router.get('/mostVisits',function(req, res, next){
   var query = new AV.Query('Post');
   query.descending('visits');
