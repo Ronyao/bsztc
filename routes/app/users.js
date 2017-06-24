@@ -113,13 +113,7 @@ router.post('/login',function(req, res, next) {
   var username = req.body.phone;
   var password = req.body.pass;
   //判断手机格式是否正确
-  if(!(/^1[34578]\d{9}$/.test(username))&&!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(username))){
-      result = "手机或邮箱格式不正确！";
-      res.json(result);
-  }else if (password.length==0) {
-      result = "密码不能为空！";
-      res.json(result);
-  } else{
+  if(username.match("bot")){
     AV.User.logIn(username, password).then(function(user) {
       res.saveCurrentUser(user);
       result = "success";
@@ -132,7 +126,29 @@ router.post('/login',function(req, res, next) {
       }
       res.json(result);
     }).catch(next);
+  }else{
+    if(!(/^1[34578]\d{9}$/.test(username))&&!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(username))){
+        result = "手机或邮箱格式不正确！";
+        res.json(result);
+    }else if (password.length==0) {
+        result = "密码不能为空！";
+        res.json(result);
+    } else{
+      AV.User.logIn(username, password).then(function(user) {
+        res.saveCurrentUser(user);
+        result = "success";
+        res.json(result);
+      }, function(error) {
+        if(error.code=="210"){
+          result = "用户名和密码不匹配";
+        }else if(error.code=="211"){
+          result = "找不到用户";
+        }
+        res.json(result);
+      }).catch(next);
+    }
   }
+
 
 });
 
